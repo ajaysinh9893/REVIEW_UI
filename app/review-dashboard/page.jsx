@@ -397,14 +397,18 @@ export default function ReviewDashboard() {
         </div>
 
         <nav className="space-y-1.5">
-          <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
-            <LayoutGrid size={19} />
-            <span>Overview</span>
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium bg-indigo-50 text-indigo-600 rounded-lg">
-            <Star size={19} />
-            <span>Google Reviews</span>
-          </button>
+          <Link href="/review-dashboard">
+            <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
+              <LayoutGrid size={19} />
+              <span>Overview</span>
+            </button>
+          </Link>
+          <Link href="/review-dashboard">
+            <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium bg-indigo-50 text-indigo-600 rounded-lg">
+              <Star size={19} />
+              <span>Google Reviews</span>
+            </button>
+          </Link>
           <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
             <Tag size={19} />
             <span>Keywords</span>
@@ -417,10 +421,12 @@ export default function ReviewDashboard() {
             <BarChart3 size={19} />
             <span>Analytics</span>
           </button>
-          <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
-            <Settings size={19} />
-            <span>Settings</span>
-          </button>
+          <Link href="/login">
+            <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
+              <Settings size={19} />
+              <span>Logout</span>
+            </button>
+          </Link>
         </nav>
       </div>
 
