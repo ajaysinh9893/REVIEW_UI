@@ -1,0 +1,17 @@
+
+> review-ui@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.33
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+ ✓ Ready in 1632ms
+ ○ Compiling / ...
+ ✓ Compiled / in 4s (460 modules)
+ GET / 307 in 4329ms
+ ○ Compiling /login ...
+ ✓ Compiled /login in 3.9s (524 modules)
+ GET /login 200 in 4037ms
+ ○ Compiling /review-dashboard ...
+ ✓ Compiled /review-dashboard in 3.5s (1471 modules)
