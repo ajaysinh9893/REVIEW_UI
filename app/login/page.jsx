@@ -68,7 +68,7 @@ export default function Login() {
             <span className="text-2xl font-bold text-gray-900">Kinety</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Don't have an account?</span>
+            <span className="text-sm text-gray-600">Don&apos;t have an account?</span>
             <Link href="/create-account" className="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors">
               Register Now
             </Link>

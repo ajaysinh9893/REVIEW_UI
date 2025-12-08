@@ -124,7 +124,7 @@ export default function PasswordResetSuccess() {
           <div className="mt-8 p-4 bg-gray-100 rounded-xl">
             <p className="text-xs text-gray-700 font-semibold mb-2">Security Tip:</p>
             <p className="text-xs text-gray-600">
-              Make sure to keep your password safe and don't share it with anyone. 
+              Make sure to keep your password safe and don&apos;t share it with anyone. 
               Consider using a password manager to store it securely.
             </p>
           </div>
