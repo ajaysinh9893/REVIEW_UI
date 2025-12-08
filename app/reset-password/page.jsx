@@ -240,9 +240,9 @@ export default function ResetPassword() {
 
           {/* Back to Login */}
           <div className="text-center mt-6">
-            <button className="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors">
+            <Link href="/login" className="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors">
               ← Back to Login
-            </button>
+            </Link>
           </div>
         </div>
       </div>

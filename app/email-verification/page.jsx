@@ -58,7 +58,7 @@ export default function EmailVerification() {
           <div className="text-center mb-10">
             <h1 className="text-4xl font-bold text-gray-900 mb-3">Verify your email</h1>
             <p className="text-base text-gray-500 mb-2">
-              We've sent a verification link to
+              We&apos;ve sent a verification link to
             </p>
             <p className="text-base font-semibold text-gray-900">{email}</p>
           </div>
@@ -77,7 +77,7 @@ export default function EmailVerification() {
               </li>
               <li className="flex items-start gap-2">
                 <span className="font-semibold text-indigo-600">3.</span>
-                <span>You'll be redirected to log in</span>
+                <span>You&apos;ll be redirected to log in</span>
               </li>
             </ol>
           </div>
@@ -92,7 +92,7 @@ export default function EmailVerification() {
 
           {/* Resend Email */}
           <div className="text-center">
-            <p className="text-sm text-gray-600 mb-4">Didn't receive the email?</p>
+            <p className="text-sm text-gray-600 mb-4">Didn&apos;t receive the email?</p>
             <button
               onClick={handleResendEmail}
               disabled={isResending}
@@ -105,7 +105,7 @@ export default function EmailVerification() {
           {/* Help Text */}
           <div className="mt-8 p-4 bg-gray-100 rounded-xl">
             <p className="text-xs text-gray-600 text-center">
-              <strong>Note:</strong> Check your spam folder if you don't see the email. 
+              <strong>Note:</strong> Check your spam folder if you don&apos;t see the email. 
               The link will expire in 24 hours.
             </p>
           </div>
