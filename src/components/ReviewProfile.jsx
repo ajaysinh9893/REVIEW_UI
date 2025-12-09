@@ -100,10 +100,10 @@ export default function ReviewProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex font-sans">
+    <div className="min-h-screen bg-gray-50 font-sans">
       <Sidebar />
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      <div className="ml-72 overflow-auto">
         {/* Header */}
         <div className="bg-white border-b border-gray-200 px-10 py-5 flex justify-between items-center sticky top-0 z-10">
           <h1 className="text-2xl font-semibold text-gray-900">Profile</h1>
