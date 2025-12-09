@@ -99,51 +99,16 @@ export default function ReviewProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex font-sans">
-      {/* Sidebar */}
-      <div className="w-72 bg-white border-r border-gray-200 p-8">
-        <div className="flex items-center gap-3 mb-10">
-          <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center shadow-sm">
-            <span className="text-white text-base font-bold">A</span>
-          </div>
-          <span className="text-lg font-semibold text-gray-900">App Name</span>
-        </div>
-
-        <div className="mb-10 pb-6 border-b border-gray-100">
-          <h3 className="text-base font-semibold text-gray-900">Jane Doe</h3>
-          <p className="text-sm text-gray-500 mt-0.5">Admin</p>
-        </div>
-
-        <nav className="space-y-1.5">
-          <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
-            <BarChart3 size={19} />
-            <span>Dashboard</span>
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium bg-indigo-600 text-white rounded-lg shadow-sm">
-            <User size={19} />
-            <span>Profile</span>
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
-            <BarChart3 size={19} />
-            <span>Reports</span>
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
-            <Settings size={19} />
-            <span>Settings</span>
-          </button>
-        </nav>
+    <div className="min-h-screen bg-gray-50 flex-1 overflow-auto">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 px-10 py-5 flex justify-between items-center sticky top-0 z-10">
+        <h1 className="text-2xl font-semibold text-gray-900">Profile</h1>
+        <button className="p-2.5 hover:bg-gray-100 rounded-lg transition-all">
+          <Settings size={22} className="text-gray-600" />
+        </button>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 overflow-auto">
-        <div className="bg-white border-b border-gray-200 px-10 py-5 flex justify-between items-center sticky top-0 z-10">
-          <h1 className="text-2xl font-semibold text-gray-900">Profile</h1>
-          <button className="p-2.5 hover:bg-gray-100 rounded-lg transition-all">
-            <Settings size={22} className="text-gray-600" />
-          </button>
-        </div>
-
-        <div className="p-10 max-w-7xl mx-auto">
+      <div className="p-10 max-w-7xl mx-auto">
           {/* User Profile Section */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-8">User Profile</h2>
@@ -456,7 +421,6 @@ export default function ReviewProfile() {
             © 2025 App Name. All rights reserved.
           </div>
         </div>
-      </div>
     </div>
   );
 }
