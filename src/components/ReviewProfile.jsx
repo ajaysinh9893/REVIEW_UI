@@ -1,24 +1,46 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { LayoutGrid, Star, Tag, MessageSquare, BarChart3, Settings, Search, ChevronDown, Calendar, X, RefreshCw, Send, Heart } from 'lucide-react';
+import { User, BarChart3, Settings, Lock } from 'lucide-react';
 
 export default function ReviewProfile() {
-  const [selectedReviews, setSelectedReviews] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [replyModal, setReplyModal] = useState({ open: false, review: null });
-  const [selectedTone, setSelectedTone] = useState('professional');
-  const [selectedReply, setSelectedReply] = useState('');
-  const [filters, setFilters] = useState({
-    rating: 'Rating',
-    sentiment: 'Sentiment',
-    repliedStatus: 'Replied Status',
-    images: 'Images',
-    sortBy: 'Newest'
+  const [formData, setFormData] = useState({
+    fullName: 'Jane Doe',
+    email: 'jane.doe@example.com',
+    username: 'janedoe123',
+    phone: '+1 (555) 123-4567',
+    address: '123 Business Blvd\nSuite 400\nCityville, State 12345\nCountryland',
+    bio: 'Passionate about empowering businesses with innovative technology solutions. Focused on optimizing digital presence and customer engagement.',
+    linkedin: 'https://linkedin.com/in/janedoe',
+    twitter: 'https://twitter.com/janedoe',
+    github: 'GitHub Profile URL',
+    role: 'Digital Marketing Specialist',
+    emailNotifications: true,
+    smsNotifications: false,
+    businessName: 'Innovate Digital Solutions',
+    businessPhone: '+1 (555) 987-6543',
+    businessWebsite: 'https://innovatedigital.com',
+    businessAddress: '789 Tech Drive\nInnovation Hub, CA 90210\nUSA',
+    hoursOfOperation: 'Mon-Fri: 9:00 AM - 6:00 PM, Sat-Sun: Closed',
+    categories: 'Software Company, Digital Marketing Agency',
+    businessDescription: 'Innovate Digital Solutions is a leading provider of comprehensive digital marketing and software development services, helping businesses thrive online.',
+    googlePlaceId: 'ChIJOvXEc-Vw4jQRBL_e.5J9P7Q'
   });
-  const [openDropdown, setOpenDropdown] = useState(null);
 
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleSave = () => {
+    console.log('Saving profile data:', formData);
+    alert('Profile saved successfully!');
+  };
+
+  // Sample data - replace with API calls in future
   const normalReviews = [
     {
       id: 1,
@@ -42,6 +64,15 @@ export default function ReviewProfile() {
     }
   ];
 
+  const userProfile = {
+    name: 'John Doe',
+    role: 'Business Owner',
+    email: 'john@example.com',
+    location: 'New York, USA',
+    memberSince: 'January 2024'
+  };
+
+  // Utility functions
   const renderStars = (rating) => {
     return [...Array(5)].map((_, i) => (
       <Star
@@ -52,26 +83,8 @@ export default function ReviewProfile() {
     ));
   };
 
-  const toggleDropdown = (dropdown) => {
-    setOpenDropdown(openDropdown === dropdown ? null : dropdown);
-  };
-
-  const handleFilterChange = (filterType, value) => {
-    setFilters(prev => ({ ...prev, [filterType]: value }));
-    setOpenDropdown(null);
-  };
-
-  const dropdownOptions = {
-    rating: ['All', '5 Stars', '4 Stars', '3 Stars', '2 Stars', '1 Star'],
-    sentiment: ['All', 'Positive', 'Neutral', 'Negative'],
-    repliedStatus: ['All', 'Replied', 'Unreplied'],
-    images: ['All', 'With Images', 'Without Images'],
-    sortBy: ['Newest', 'Oldest', 'Highest Rating', 'Lowest Rating']
-  };
-
   const openReplyModal = (review) => {
     setReplyModal({ open: true, review });
-    setSelectedTone('professional');
   };
 
   const closeReplyModal = () => {
@@ -79,259 +92,371 @@ export default function ReviewProfile() {
     setSelectedReply('');
   };
 
-  const Dropdown = ({ label, filterKey, options }) => (
-    <div className="relative">
-      <button
-        onClick={() => toggleDropdown(filterKey)}
-        className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
-      >
-        {filters[filterKey]} <ChevronDown size={16} />
-      </button>
-      {openDropdown === filterKey && (
-        <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-20">
-          {options.map((option, index) => (
-            <button
-              key={index}
-              onClick={() => handleFilterChange(filterKey, option)}
-              className={`w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 transition-all ${
-                index === 0 ? 'rounded-t-lg' : ''
-              } ${index === options.length - 1 ? 'rounded-b-lg' : ''} ${
-                filters[filterKey] === option ? 'bg-indigo-50 text-indigo-600 font-medium' : 'text-gray-700'
-              }`}
-            >
-              {option}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  const handleSendReply = () => {
+    console.log('Reply sent:', selectedReply);
+    alert('Reply sent successfully!');
+    closeReplyModal();
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex font-sans">
       {/* Sidebar */}
       <div className="w-72 bg-white border-r border-gray-200 p-8">
         <div className="flex items-center gap-3 mb-10">
-          <div className="w-9 h-9 bg-indigo-100 rounded-lg flex items-center justify-center">
-            <span className="text-indigo-600 text-base font-bold">R</span>
+          <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center shadow-sm">
+            <span className="text-white text-base font-bold">A</span>
           </div>
-          <span className="text-lg font-semibold text-indigo-600">RepuScope AI</span>
+          <span className="text-lg font-semibold text-gray-900">App Name</span>
+        </div>
+
+        <div className="mb-10 pb-6 border-b border-gray-100">
+          <h3 className="text-base font-semibold text-gray-900">Jane Doe</h3>
+          <p className="text-sm text-gray-500 mt-0.5">Admin</p>
         </div>
 
         <nav className="space-y-1.5">
-          <Link href="/">
-            <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
-              <LayoutGrid size={19} />
-              <span>Overview</span>
-            </button>
-          </Link>
-          <Link href="/review-dashboard">
-            <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
-              <Star size={19} />
-              <span>Google Reviews</span>
-            </button>
-          </Link>
-          <Link href="/review-profile">
-            <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium bg-indigo-50 text-indigo-600 rounded-lg">
-              <Tag size={19} />
-              <span>Profile</span>
-            </button>
-          </Link>
           <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
-            <MessageSquare size={19} />
-            <span>Negative Reviews</span>
+            <BarChart3 size={19} />
+            <span>Dashboard</span>
+          </button>
+          <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium bg-indigo-600 text-white rounded-lg shadow-sm">
+            <User size={19} />
+            <span>Profile</span>
           </button>
           <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
             <BarChart3 size={19} />
-            <span>Analytics</span>
+            <span>Reports</span>
           </button>
-          <Link href="/login">
-            <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
-              <Settings size={19} />
-              <span>Logout</span>
-            </button>
-          </Link>
+          <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
+            <Settings size={19} />
+            <span>Settings</span>
+          </button>
         </nav>
       </div>
 
       {/* Main Content */}
       <div className="flex-1 overflow-auto">
-        {/* Header */}
         <div className="bg-white border-b border-gray-200 px-10 py-5 flex justify-between items-center sticky top-0 z-10">
-          <div className="flex items-center gap-3">
-            <Calendar size={20} className="text-gray-500" />
-            <button className="flex items-center gap-2 text-base font-medium text-gray-700 hover:text-gray-900">
-              <span>December 8th, 2025</span>
-              <ChevronDown size={18} />
-            </button>
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="p-2.5 hover:bg-gray-100 rounded-lg transition-all">
-              <Search size={20} className="text-gray-600" />
-            </button>
-            <Link href="/review-profile">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-400 to-purple-400 rounded-full cursor-pointer hover:opacity-80 transition-opacity"></div>
-            </Link>
-          </div>
+          <h1 className="text-2xl font-semibold text-gray-900">Profile</h1>
+          <button className="p-2.5 hover:bg-gray-100 rounded-lg transition-all">
+            <Settings size={22} className="text-gray-600" />
+          </button>
         </div>
 
         <div className="p-10 max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">My Profile & Recent Reviews</h1>
+          {/* User Profile Section */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-8">User Profile</h2>
 
-          <div className="grid grid-cols-3 gap-8">
-            {/* Left Column - Profile Card */}
-            <div className="col-span-1">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-24">
-                <div className="flex flex-col items-center mb-6">
-                  <div className="w-20 h-20 bg-gradient-to-br from-indigo-400 to-purple-400 rounded-full mb-4"></div>
-                  <h2 className="text-xl font-bold text-gray-900">John Doe</h2>
-                  <p className="text-sm text-gray-500 mt-1">Business Owner</p>
-                </div>
-
-                <div className="border-t border-gray-100 pt-6 space-y-4">
-                  <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wide">Email</p>
-                    <p className="text-sm text-gray-900 mt-1">john@example.com</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wide">Location</p>
-                    <p className="text-sm text-gray-900 mt-1">New York, USA</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wide">Member Since</p>
-                    <p className="text-sm text-gray-900 mt-1">January 2024</p>
-                  </div>
-                </div>
-
-                <button className="w-full mt-6 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-all">
-                  Edit Profile
-                </button>
+            {/* Profile Photo */}
+            <div className="flex items-center gap-5 mb-8 pb-8 border-b border-gray-100">
+              <div className="w-24 h-24 bg-gradient-to-br from-amber-400 to-pink-400 rounded-full flex items-center justify-center shadow-md">
+                <User size={44} className="text-white" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">{formData.fullName}</h3>
+                <button className="text-sm font-medium text-indigo-600 hover:text-indigo-700 mt-1 transition-colors">Upload new photo</button>
               </div>
             </div>
 
-            {/* Right Column - Reviews */}
-            <div className="col-span-2">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-5">Recent Reviews</h2>
+            {/* Form Fields */}
+            <div className="grid grid-cols-2 gap-6 mb-8">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Full Name</label>
+                <input
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Username</label>
+                <input
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Phone Number</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                />
+              </div>
+            </div>
 
-                <div className="space-y-6">
-                  {normalReviews.map((review) => (
-                    <div key={review.id} className="pb-6 border-b border-gray-100 last:border-b-0 last:pb-0">
-                      <div className="flex items-start gap-4">
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-2">
-                            <div>
-                              <h3 className="text-base font-semibold text-gray-900">{review.name}</h3>
-                              <div className="flex items-center gap-1 mt-1">
-                                {renderStars(review.rating)}
-                              </div>
-                            </div>
-                            <span className="text-sm text-gray-500">{review.date}</span>
-                          </div>
+            {/* Password */}
+            <div className="mb-8">
+              <label className="block text-sm font-semibold text-gray-700 mb-2.5">Password</label>
+              <button className="flex items-center gap-2.5 text-base font-medium text-indigo-600 hover:text-indigo-700 transition-colors">
+                <Lock size={18} />
+                <span>Change Password</span>
+              </button>
+            </div>
 
-                          {review.image && (
-                            <div className="mb-3">
-                              <img
-                                src={review.image}
-                                alt="Review"
-                                className="w-32 h-24 object-cover rounded-lg"
-                              />
-                            </div>
-                          )}
+            {/* Address and Bio */}
+            <div className="grid grid-cols-2 gap-6 mb-8">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Address</label>
+                <textarea
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  rows={5}
+                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Bio</label>
+                <textarea
+                  name="bio"
+                  value={formData.bio}
+                  onChange={handleChange}
+                  rows={5}
+                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none transition-all"
+                />
+              </div>
+            </div>
 
-                          <p className="text-sm text-gray-700 mb-3 leading-relaxed">{review.comment}</p>
-
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                                review.sentiment === 'Positive' ? 'bg-green-100 text-green-700' :
-                                review.sentiment === 'Neutral' ? 'bg-amber-100 text-amber-700' :
-                                'bg-red-100 text-red-700'
-                              }`}>
-                                {review.sentiment}
-                              </span>
-                              {review.replied && (
-                                <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">
-                                  Replied ✓
-                                </span>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <button 
-                                onClick={() => openReplyModal(review)}
-                                className="px-4 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all">
-                                Reply
-                              </button>
-                              <button className="p-2 hover:bg-gray-100 rounded-lg transition-all">
-                                <Heart size={18} className="text-gray-600" />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+            {/* Social Links */}
+            <div className="mb-8">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Social Links</label>
+              <div className="grid grid-cols-3 gap-5">
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-2">LinkedIn</label>
+                  <input
+                    type="url"
+                    name="linkedin"
+                    value={formData.linkedin}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-base transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-2">Twitter</label>
+                  <input
+                    type="url"
+                    name="twitter"
+                    value={formData.twitter}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-base transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-2">GitHub</label>
+                  <input
+                    type="url"
+                    name="github"
+                    value={formData.github}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-base transition-all"
+                  />
                 </div>
               </div>
+            </div>
+
+            {/* Role and Notifications */}
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Role</label>
+                <input
+                  type="text"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                />
+                <p className="text-xs text-gray-500 mt-2.5">Map Account to Google Place (for review setup)</p>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3.5">Notification Preferences</label>
+                <div className="space-y-3">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="emailNotifications"
+                      checked={formData.emailNotifications}
+                      onChange={handleChange}
+                      className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 cursor-pointer"
+                    />
+                    <span className="text-base text-gray-700">Email Notifications</span>
+                  </label>
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="smsNotifications"
+                      checked={formData.smsNotifications}
+                      onChange={handleChange}
+                      className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 cursor-pointer"
+                    />
+                    <span className="text-base text-gray-700">SMS Notifications</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-4 mt-8 pt-8 border-t border-gray-200">
+              <button className="px-6 py-2.5 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all border border-gray-300">
+                Cancel
+              </button>
+              <button onClick={handleSave} className="px-6 py-2.5 text-base font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all shadow-sm">
+                Save Changes
+              </button>
+            </div>
+          </div>
+
+          {/* Google Business Profile Section */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-8">Google Business Profile</h2>
+
+            <div className="grid grid-cols-2 gap-6 mb-8">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Business Name</label>
+                <input
+                  type="text"
+                  name="businessName"
+                  value={formData.businessName}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Business Phone</label>
+                <input
+                  type="tel"
+                  name="businessPhone"
+                  value={formData.businessPhone}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Business Website</label>
+                <input
+                  type="url"
+                  name="businessWebsite"
+                  value={formData.businessWebsite}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Verification Status</label>
+                <span className="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 text-sm font-semibold rounded-full mt-1">
+                  ✓ Verified
+                </span>
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <label className="block text-sm font-semibold text-gray-700 mb-2.5">Business Address</label>
+              <textarea
+                name="businessAddress"
+                value={formData.businessAddress}
+                onChange={handleChange}
+                rows={3}
+                className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none transition-all"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-6 mb-8">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Hours of Operation</label>
+                <input
+                  type="text"
+                  name="hoursOfOperation"
+                  value={formData.hoursOfOperation}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Categories</label>
+                <input
+                  type="text"
+                  name="categories"
+                  value={formData.categories}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                />
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <label className="block text-sm font-semibold text-gray-700 mb-2.5">Business Description</label>
+              <textarea
+                name="businessDescription"
+                value={formData.businessDescription}
+                onChange={handleChange}
+                rows={3}
+                className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none transition-all"
+              />
+            </div>
+
+            {/* Photos */}
+            <div className="mb-8">
+              <label className="block text-sm font-semibold text-gray-700 mb-3.5">Photos</label>
+              <div className="grid grid-cols-3 gap-5">
+                <div className="aspect-video bg-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer">
+                  <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=400" alt="Office" className="w-full h-full object-cover" />
+                </div>
+                <div className="aspect-video bg-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer">
+                  <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400" alt="Team" className="w-full h-full object-cover" />
+                </div>
+                <div className="aspect-video bg-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer">
+                  <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400" alt="Workspace" className="w-full h-full object-cover" />
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <label className="block text-sm font-semibold text-gray-700 mb-2.5">Google Place ID</label>
+              <input
+                type="text"
+                name="googlePlaceId"
+                value={formData.googlePlaceId}
+                onChange={handleChange}
+                className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+              />
+              <p className="text-xs text-gray-500 mt-2.5">Map Business Profile to Google Place</p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-4 pt-8 border-t border-gray-200">
+              <button className="px-6 py-2.5 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all border border-gray-300">
+                Edit Profile
+              </button>
+              <button className="px-6 py-2.5 text-base font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all shadow-sm">
+                Sync from Google
+              </button>
             </div>
           </div>
 
           {/* Footer */}
           <div className="text-center text-sm text-gray-500 mt-10 py-6">
-            © 2025 RepuScope AI. All rights reserved.
+            © 2025 App Name. All rights reserved.
           </div>
         </div>
       </div>
-
-      {/* Reply Modal */}
-      {replyModal.open && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-900">Reply to Review</h2>
-              <button onClick={closeReplyModal} className="p-2 hover:bg-gray-100 rounded-lg">
-                <X size={20} className="text-gray-600" />
-              </button>
-            </div>
-
-            <div className="p-6">
-              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                <h3 className="font-semibold text-gray-900">{replyModal.review?.name}</h3>
-                <p className="text-sm text-gray-700 mt-2">{replyModal.review?.comment}</p>
-              </div>
-
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Your Reply</h3>
-                <textarea
-                  value={selectedReply}
-                  onChange={(e) => setSelectedReply(e.target.value)}
-                  rows={6}
-                  className="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
-                  placeholder="Type your reply here..."
-                />
-              </div>
-
-              <div className="flex justify-end gap-3">
-                <button
-                  onClick={closeReplyModal}
-                  className="px-6 py-2.5 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg border border-gray-300">
-                  Cancel
-                </button>
-                <button
-                  onClick={() => {
-                    console.log('Reply sent:', selectedReply);
-                    alert('Reply sent successfully!');
-                    closeReplyModal();
-                  }}
-                  className="flex items-center gap-2 px-6 py-2.5 text-base font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                  <Send size={18} />
-                  Send Reply
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
