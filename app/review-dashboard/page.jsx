@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { LayoutGrid, Star, Tag, MessageSquare, BarChart3, Settings, Search, ChevronDown, Heart, TrendingUp, Calendar, X, RefreshCw, Send } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import Sidebar from '@/src/components/Sidebar';
 
 export default function ReviewDashboard() {
   const [selectedReviews, setSelectedReviews] = useState([]);
@@ -386,9 +387,12 @@ export default function ReviewDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 flex-1 overflow-auto">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-10 py-5 flex justify-between items-center sticky top-0 z-10">
+    <div className="min-h-screen bg-gray-50 flex font-sans">
+      <Sidebar />
+      {/* Main Content */}
+      <div className="flex-1 overflow-auto">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200 px-10 py-5 flex justify-between items-center sticky top-0 z-10">
           <div className="flex items-center gap-3">
             <Calendar size={20} className="text-gray-500" />
             <button className="flex items-center gap-2 text-base font-medium text-gray-700 hover:text-gray-900">
@@ -740,6 +744,7 @@ export default function ReviewDashboard() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

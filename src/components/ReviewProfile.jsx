@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { User, BarChart3, Settings, Lock } from 'lucide-react';
+import { User, Settings, Lock } from 'lucide-react';
+import Sidebar from '@/src/components/Sidebar';
 
 export default function ReviewProfile() {
   const [formData, setFormData] = useState({
@@ -99,16 +100,19 @@ export default function ReviewProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex-1 overflow-auto">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-10 py-5 flex justify-between items-center sticky top-0 z-10">
-        <h1 className="text-2xl font-semibold text-gray-900">Profile</h1>
-        <button className="p-2.5 hover:bg-gray-100 rounded-lg transition-all">
-          <Settings size={22} className="text-gray-600" />
-        </button>
-      </div>
+    <div className="min-h-screen bg-gray-50 flex font-sans">
+      <Sidebar />
+      {/* Main Content */}
+      <div className="flex-1 overflow-auto">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200 px-10 py-5 flex justify-between items-center sticky top-0 z-10">
+          <h1 className="text-2xl font-semibold text-gray-900">Profile</h1>
+          <button className="p-2.5 hover:bg-gray-100 rounded-lg transition-all">
+            <Settings size={22} className="text-gray-600" />
+          </button>
+        </div>
 
-      <div className="p-10 max-w-7xl mx-auto">
+        <div className="p-10 max-w-7xl mx-auto">
           {/* User Profile Section */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-8">User Profile</h2>
@@ -421,6 +425,7 @@ export default function ReviewProfile() {
             © 2025 App Name. All rights reserved.
           </div>
         </div>
+      </div>
     </div>
   );
 }
