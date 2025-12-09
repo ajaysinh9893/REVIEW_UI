@@ -18,7 +18,7 @@ export default function Sidebar() {
         <p className="text-sm text-gray-500 mt-0.5">Admin</p>
       </div>
 
-      <nav className="space-y-1.5 flex-1">
+      <nav className="space-y-1.5">
         <Link href="/review-dashboard">
           <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
             <BarChart3 size={19} />
@@ -36,16 +36,6 @@ export default function Sidebar() {
           <span>Reports</span>
         </button>
       </nav>
-
-      <div className="mt-auto pt-6 border-t border-gray-100">
-        <Link href="/review-profile">
-          <button className="w-full flex items-center justify-center">
-            <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center shadow-sm hover:bg-indigo-700 transition-all">
-              <User size={20} className="text-white" />
-            </div>
-          </button>
-        </Link>
-      </div>
     </div>
   );
 }

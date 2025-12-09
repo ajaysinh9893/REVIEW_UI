@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { User, Settings, Lock } from 'lucide-react';
 import Sidebar from '@/src/components/Sidebar';
+import Header from '@/src/components/Header';
 
 export default function ReviewProfile() {
   const [formData, setFormData] = useState({
@@ -104,13 +105,7 @@ export default function ReviewProfile() {
       <Sidebar />
       {/* Main Content */}
       <div className="ml-72 overflow-auto">
-        {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-10 py-5 flex justify-between items-center sticky top-0 z-10">
-          <h1 className="text-2xl font-semibold text-gray-900">Profile</h1>
-          <button className="p-2.5 hover:bg-gray-100 rounded-lg transition-all">
-            <Settings size={22} className="text-gray-600" />
-          </button>
-        </div>
+        <Header />
 
         <div className="p-10 max-w-7xl mx-auto">
           {/* User Profile Section */}
