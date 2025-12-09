@@ -1,9 +1,12 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { BarChart3, User } from 'lucide-react';
 
 export default function Sidebar() {
+  const pathname = usePathname();
+
   return (
     <div className="fixed left-0 top-0 h-screen w-72 bg-white border-r border-gray-200 p-8 flex flex-col">
       <div className="flex items-center gap-3 mb-10">
@@ -20,13 +23,21 @@ export default function Sidebar() {
 
       <nav className="space-y-1.5">
         <Link href="/review-dashboard">
-          <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
+          <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
+            pathname === '/review-dashboard'
+              ? 'bg-gray-100 text-gray-900'
+              : 'text-gray-700 hover:bg-gray-50'
+          }`}>
             <BarChart3 size={19} />
             <span>Dashboard</span>
           </button>
         </Link>
         <Link href="/review-profile">
-          <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium bg-indigo-600 text-white rounded-lg shadow-sm">
+          <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
+            pathname === '/review-profile'
+              ? 'bg-gray-100 text-gray-900'
+              : 'text-gray-700 hover:bg-gray-50'
+          }`}>
             <User size={19} />
             <span>Profile</span>
           </button>
