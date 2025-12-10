@@ -75,6 +75,17 @@ export default function ReviewDashboard() {
 
   const calculateVisibilityMetrics = () => {
     const data = visibilityData;
+    
+    // Handle edge case where data has fewer than 2 elements
+    if (data.length < 2) {
+      return {
+        impressions: { total: 0, change: '0.0', trend: 'stable' },
+        clicks: { total: 0, change: '0.0', trend: 'stable' },
+        calls: { total: 0, change: '0.0', trend: 'stable' },
+        directions: { total: 0, change: '0.0', trend: 'stable' }
+      };
+    }
+
     const lastIndex = data.length - 1;
     const prevIndex = lastIndex - 1;
 
@@ -90,26 +101,32 @@ export default function ReviewDashboard() {
       return 'stable';
     };
 
+    // Calculate changes once and reuse
+    const impressionsChange = calcChange(data[lastIndex].impressions, data[prevIndex].impressions);
+    const clicksChange = calcChange(data[lastIndex].clicks, data[prevIndex].clicks);
+    const callsChange = calcChange(data[lastIndex].calls, data[prevIndex].calls);
+    const directionsChange = calcChange(data[lastIndex].directions, data[prevIndex].directions);
+
     const metrics = {
       impressions: {
         total: data.reduce((sum, item) => sum + item.impressions, 0),
-        change: calcChange(data[lastIndex].impressions, data[prevIndex].impressions),
-        trend: detectTrend(calcChange(data[lastIndex].impressions, data[prevIndex].impressions))
+        change: impressionsChange,
+        trend: detectTrend(impressionsChange)
       },
       clicks: {
         total: data.reduce((sum, item) => sum + item.clicks, 0),
-        change: calcChange(data[lastIndex].clicks, data[prevIndex].clicks),
-        trend: detectTrend(calcChange(data[lastIndex].clicks, data[prevIndex].clicks))
+        change: clicksChange,
+        trend: detectTrend(clicksChange)
       },
       calls: {
         total: data.reduce((sum, item) => sum + item.calls, 0),
-        change: calcChange(data[lastIndex].calls, data[prevIndex].calls),
-        trend: detectTrend(calcChange(data[lastIndex].calls, data[prevIndex].calls))
+        change: callsChange,
+        trend: detectTrend(callsChange)
       },
       directions: {
         total: data.reduce((sum, item) => sum + item.directions, 0),
-        change: calcChange(data[lastIndex].directions, data[prevIndex].directions),
-        trend: detectTrend(calcChange(data[lastIndex].directions, data[prevIndex].directions))
+        change: directionsChange,
+        trend: detectTrend(directionsChange)
       }
     };
 
