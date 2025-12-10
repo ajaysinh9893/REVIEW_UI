@@ -1,17 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { Calendar, ChevronDown, Search } from 'lucide-react';
+import { Calendar, Search } from 'lucide-react';
 
 export default function Header() {
   return (
     <div className="bg-white border-b border-gray-200 px-10 py-5 flex justify-between items-center sticky top-0 z-10">
       <div className="flex items-center gap-3">
         <Calendar size={20} className="text-gray-500" />
-        <button className="flex items-center gap-2 text-base font-medium text-gray-700 hover:text-gray-900">
-          <span>December 4th, 2025</span>
-          <ChevronDown size={18} />
-        </button>
+        <span className="text-base font-medium text-gray-700">December 4th, 2025</span>
       </div>
       <div className="flex items-center gap-4">
         <button className="p-2.5 hover:bg-gray-100 rounded-lg transition-all">
