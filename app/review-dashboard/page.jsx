@@ -20,6 +20,7 @@ export default function ReviewDashboard() {
     sortBy: 'Newest'
   });
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [visibilityPeriod, setVisibilityPeriod] = useState('daily');
 
   // Chart data
   const weekChartData = [
@@ -40,6 +41,99 @@ export default function ReviewDashboard() {
   ];
 
   const chartData = selectedPeriod === 'week' ? weekChartData : monthChartData;
+
+  // Visibility data
+  const dailyVisibilityData = [
+    { name: 'Mon', impressions: 1250, clicks: 85, calls: 12, directions: 28 },
+    { name: 'Tue', impressions: 1180, clicks: 78, calls: 11, directions: 25 },
+    { name: 'Wed', impressions: 1420, clicks: 95, calls: 14, directions: 32 },
+    { name: 'Thu', impressions: 1550, clicks: 105, calls: 16, directions: 38 },
+    { name: 'Fri', impressions: 1680, clicks: 115, calls: 18, directions: 42 },
+    { name: 'Sat', impressions: 1890, clicks: 128, calls: 20, directions: 48 },
+    { name: 'Sun', impressions: 1520, clicks: 98, calls: 15, directions: 35 }
+  ];
+
+  const weeklyVisibilityData = [
+    { name: 'Week 1', impressions: 8500, clicks: 580, calls: 85, directions: 195 },
+    { name: 'Week 2', impressions: 9200, clicks: 630, calls: 92, directions: 210 },
+    { name: 'Week 3', impressions: 8800, clicks: 595, calls: 88, directions: 205 },
+    { name: 'Week 4', impressions: 10500, clicks: 720, calls: 105, directions: 245 }
+  ];
+
+  const monthlyVisibilityData = [
+    { name: 'Jul', impressions: 32000, clicks: 2240, calls: 320, directions: 780 },
+    { name: 'Aug', impressions: 35000, clicks: 2450, calls: 350, directions: 850 },
+    { name: 'Sep', impressions: 33500, clicks: 2345, calls: 335, directions: 815 },
+    { name: 'Oct', impressions: 38000, clicks: 2660, calls: 380, directions: 920 },
+    { name: 'Nov', impressions: 36500, clicks: 2555, calls: 365, directions: 890 },
+    { name: 'Dec', impressions: 40000, clicks: 2800, calls: 400, directions: 980 }
+  ];
+
+  const visibilityData = visibilityPeriod === 'daily' ? dailyVisibilityData :
+                         visibilityPeriod === 'weekly' ? weeklyVisibilityData :
+                         monthlyVisibilityData;
+
+  const calculateVisibilityMetrics = () => {
+    const data = visibilityData;
+    
+    // Handle edge case where data has fewer than 2 elements
+    if (data.length < 2) {
+      return {
+        impressions: { total: 0, change: '0.0', trend: 'stable' },
+        clicks: { total: 0, change: '0.0', trend: 'stable' },
+        calls: { total: 0, change: '0.0', trend: 'stable' },
+        directions: { total: 0, change: '0.0', trend: 'stable' }
+      };
+    }
+
+    const lastIndex = data.length - 1;
+    const prevIndex = lastIndex - 1;
+
+    const calcChange = (current, previous) => {
+      if (previous === 0) return 0;
+      return ((current - previous) / previous * 100).toFixed(1);
+    };
+
+    const detectTrend = (change) => {
+      const val = parseFloat(change);
+      if (val >= 20) return 'spike';
+      if (val <= -20) return 'drop';
+      return 'stable';
+    };
+
+    // Calculate changes once and reuse
+    const impressionsChange = calcChange(data[lastIndex].impressions, data[prevIndex].impressions);
+    const clicksChange = calcChange(data[lastIndex].clicks, data[prevIndex].clicks);
+    const callsChange = calcChange(data[lastIndex].calls, data[prevIndex].calls);
+    const directionsChange = calcChange(data[lastIndex].directions, data[prevIndex].directions);
+
+    const metrics = {
+      impressions: {
+        total: data.reduce((sum, item) => sum + item.impressions, 0),
+        change: impressionsChange,
+        trend: detectTrend(impressionsChange)
+      },
+      clicks: {
+        total: data.reduce((sum, item) => sum + item.clicks, 0),
+        change: clicksChange,
+        trend: detectTrend(clicksChange)
+      },
+      calls: {
+        total: data.reduce((sum, item) => sum + item.calls, 0),
+        change: callsChange,
+        trend: detectTrend(callsChange)
+      },
+      directions: {
+        total: data.reduce((sum, item) => sum + item.directions, 0),
+        change: directionsChange,
+        trend: detectTrend(directionsChange)
+      }
+    };
+
+    return metrics;
+  };
+
+  const visibilityMetrics = calculateVisibilityMetrics();
 
   const normalReviews = [
     {
@@ -519,6 +613,216 @@ export default function ReviewDashboard() {
                       name={selectedPeriod === 'week' ? 'This Week' : 'This Month'}
                       dot={{ fill: '#6366f1', r: 5 }}
                       activeDot={{ r: 7, fill: '#6366f1' }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* Visibility Trends */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp size={20} className="text-indigo-600" />
+                    <h2 className="text-lg font-semibold text-gray-900">Visibility Trends</h2>
+                  </div>
+                  <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
+                    <button
+                      onClick={() => setVisibilityPeriod('daily')}
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                        visibilityPeriod === 'daily'
+                          ? 'bg-white text-indigo-600 shadow-sm'
+                          : 'text-gray-700 hover:text-gray-900'
+                      }`}
+                    >
+                      Daily
+                    </button>
+                    <button
+                      onClick={() => setVisibilityPeriod('weekly')}
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                        visibilityPeriod === 'weekly'
+                          ? 'bg-white text-indigo-600 shadow-sm'
+                          : 'text-gray-700 hover:text-gray-900'
+                      }`}
+                    >
+                      Weekly
+                    </button>
+                    <button
+                      onClick={() => setVisibilityPeriod('monthly')}
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                        visibilityPeriod === 'monthly'
+                          ? 'bg-white text-indigo-600 shadow-sm'
+                          : 'text-gray-700 hover:text-gray-900'
+                      }`}
+                    >
+                      Monthly
+                    </button>
+                  </div>
+                </div>
+
+                {/* Metric Summary Cards */}
+                <div className="grid grid-cols-4 gap-4 mb-6">
+                  {/* Impressions Card */}
+                  <div className="bg-blue-50 rounded-lg p-4">
+                    <div className="text-sm font-medium text-blue-700 mb-1">Impressions</div>
+                    <div className="text-2xl font-bold text-gray-900 mb-2">
+                      {visibilityMetrics.impressions.total.toLocaleString()}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm font-medium ${
+                        parseFloat(visibilityMetrics.impressions.change) >= 0 ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                        {parseFloat(visibilityMetrics.impressions.change) >= 0 ? '+' : ''}{visibilityMetrics.impressions.change}%
+                      </span>
+                      {visibilityMetrics.impressions.trend === 'spike' && (
+                        <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-green-100 text-green-700">
+                          Spike
+                        </span>
+                      )}
+                      {visibilityMetrics.impressions.trend === 'drop' && (
+                        <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-red-100 text-red-700">
+                          Drop
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Clicks Card */}
+                  <div className="bg-indigo-50 rounded-lg p-4">
+                    <div className="text-sm font-medium text-indigo-700 mb-1">Clicks</div>
+                    <div className="text-2xl font-bold text-gray-900 mb-2">
+                      {visibilityMetrics.clicks.total.toLocaleString()}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm font-medium ${
+                        parseFloat(visibilityMetrics.clicks.change) >= 0 ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                        {parseFloat(visibilityMetrics.clicks.change) >= 0 ? '+' : ''}{visibilityMetrics.clicks.change}%
+                      </span>
+                      {visibilityMetrics.clicks.trend === 'spike' && (
+                        <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-green-100 text-green-700">
+                          Spike
+                        </span>
+                      )}
+                      {visibilityMetrics.clicks.trend === 'drop' && (
+                        <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-red-100 text-red-700">
+                          Drop
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Calls Card */}
+                  <div className="bg-emerald-50 rounded-lg p-4">
+                    <div className="text-sm font-medium text-emerald-700 mb-1">Calls</div>
+                    <div className="text-2xl font-bold text-gray-900 mb-2">
+                      {visibilityMetrics.calls.total.toLocaleString()}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm font-medium ${
+                        parseFloat(visibilityMetrics.calls.change) >= 0 ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                        {parseFloat(visibilityMetrics.calls.change) >= 0 ? '+' : ''}{visibilityMetrics.calls.change}%
+                      </span>
+                      {visibilityMetrics.calls.trend === 'spike' && (
+                        <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-green-100 text-green-700">
+                          Spike
+                        </span>
+                      )}
+                      {visibilityMetrics.calls.trend === 'drop' && (
+                        <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-red-100 text-red-700">
+                          Drop
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Directions Card */}
+                  <div className="bg-amber-50 rounded-lg p-4">
+                    <div className="text-sm font-medium text-amber-700 mb-1">Directions</div>
+                    <div className="text-2xl font-bold text-gray-900 mb-2">
+                      {visibilityMetrics.directions.total.toLocaleString()}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm font-medium ${
+                        parseFloat(visibilityMetrics.directions.change) >= 0 ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                        {parseFloat(visibilityMetrics.directions.change) >= 0 ? '+' : ''}{visibilityMetrics.directions.change}%
+                      </span>
+                      {visibilityMetrics.directions.trend === 'spike' && (
+                        <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-green-100 text-green-700">
+                          Spike
+                        </span>
+                      )}
+                      {visibilityMetrics.directions.trend === 'drop' && (
+                        <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-red-100 text-red-700">
+                          Drop
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Line Chart */}
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={visibilityData} margin={{ top: 10, right: 30, left: 0, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis 
+                      dataKey="name" 
+                      stroke="#6b7280"
+                      style={{ fontSize: '12px', fontWeight: '500' }}
+                    />
+                    <YAxis 
+                      stroke="#6b7280"
+                      style={{ fontSize: '12px', fontWeight: '500' }}
+                    />
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: '#ffffff',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        padding: '12px'
+                      }}
+                      cursor={{ stroke: '#d1d5db', strokeWidth: 1 }}
+                    />
+                    <Legend 
+                      wrapperStyle={{ paddingTop: '20px' }}
+                      iconType="line"
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="impressions"
+                      stroke="#3b82f6"
+                      strokeWidth={3}
+                      name="Impressions"
+                      dot={{ fill: '#3b82f6', r: 5 }}
+                      activeDot={{ r: 7, fill: '#3b82f6' }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="clicks"
+                      stroke="#6366f1"
+                      strokeWidth={3}
+                      name="Clicks"
+                      dot={{ fill: '#6366f1', r: 5 }}
+                      activeDot={{ r: 7, fill: '#6366f1' }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="calls"
+                      stroke="#10b981"
+                      strokeWidth={3}
+                      name="Calls"
+                      dot={{ fill: '#10b981', r: 5 }}
+                      activeDot={{ r: 7, fill: '#10b981' }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="directions"
+                      stroke="#f59e0b"
+                      strokeWidth={3}
+                      name="Directions"
+                      dot={{ fill: '#f59e0b', r: 5 }}
+                      activeDot={{ r: 7, fill: '#f59e0b' }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
