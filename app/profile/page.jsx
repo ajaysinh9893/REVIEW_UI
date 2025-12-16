@@ -1,5 +1,5 @@
 import ReviewProfile from '@/src/components/ReviewProfile';
 
-export default function ReviewProfilePage() {
+export default function ProfilePage() {
   return <ReviewProfile />;
 }

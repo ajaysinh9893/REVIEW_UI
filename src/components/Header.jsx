@@ -14,7 +14,7 @@ export default function Header() {
         <button className="p-2.5 hover:bg-gray-100 rounded-lg transition-all">
           <Search size={20} className="text-gray-600" />
         </button>
-        <Link href="/review-profile">
+        <Link href="/profile">
           <div className="w-10 h-10 bg-gradient-to-br from-indigo-400 to-purple-400 rounded-full cursor-pointer hover:opacity-80 transition-opacity"></div>
         </Link>
       </div>

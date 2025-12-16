@@ -8,8 +8,8 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   const menuItems = [
-    { name: 'Dashboard', href: '/review-dashboard', icon: <Star size={19} /> },
-    { name: 'Profile', href: '/review-profile', icon: <User size={19} /> },
+    { name: 'Dashboard', href: '/dashboard', icon: <Star size={19} /> },
+    { name: 'Profile', href: '/profile', icon: <User size={19} /> },
     { name: 'Logout', href: '/login', icon: <Lock size={19} /> },
   ];
 

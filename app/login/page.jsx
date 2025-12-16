@@ -52,7 +52,7 @@ export default function Login() {
       console.log('Login attempt:', { ...formData, rememberMe });
       alert('Login successful!');
       // Navigate to dashboard
-      router.push('/review-dashboard');
+      router.push('/dashboard');
     }
   };
 

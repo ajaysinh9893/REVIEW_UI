@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { BarChart3, User } from 'lucide-react';
+import { BarChart3, User, FileText, TrendingUp, Clock } from 'lucide-react';
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -22,9 +22,9 @@ export default function Sidebar() {
       </div>
 
       <nav className="space-y-1.5">
-        <Link href="/review-dashboard">
+        <Link href="/dashboard">
           <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
-            pathname === '/review-dashboard'
+            pathname === '/dashboard'
               ? 'bg-gray-100 text-gray-900'
               : 'text-gray-700 hover:bg-gray-50'
           }`}>
@@ -32,9 +32,49 @@ export default function Sidebar() {
             <span>Dashboard</span>
           </button>
         </Link>
-        <Link href="/review-profile">
+        <Link href="/reviews">
           <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
-            pathname === '/review-profile'
+            pathname === '/reviews'
+              ? 'bg-gray-100 text-gray-900'
+              : 'text-gray-700 hover:bg-gray-50'
+          }`}>
+            <FileText size={19} />
+            <span>Reviews</span>
+          </button>
+        </Link>
+        <Link href="/visibility">
+          <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
+            pathname === '/visibility'
+              ? 'bg-gray-100 text-gray-900'
+              : 'text-gray-700 hover:bg-gray-50'
+          }`}>
+            <TrendingUp size={19} />
+            <span>Visibility</span>
+          </button>
+        </Link>
+        <Link href="/activity">
+          <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
+            pathname === '/activity'
+              ? 'bg-gray-100 text-gray-900'
+              : 'text-gray-700 hover:bg-gray-50'
+          }`}>
+            <Clock size={19} />
+            <span>Activity / Busy Times</span>
+          </button>
+        </Link>
+        <Link href="/reports">
+          <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
+            pathname === '/reports'
+              ? 'bg-gray-100 text-gray-900'
+              : 'text-gray-700 hover:bg-gray-50'
+          }`}>
+            <BarChart3 size={19} />
+            <span>Reports</span>
+          </button>
+        </Link>
+        <Link href="/profile">
+          <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
+            pathname === '/profile'
               ? 'bg-gray-100 text-gray-900'
               : 'text-gray-700 hover:bg-gray-50'
           }`}>
@@ -42,10 +82,6 @@ export default function Sidebar() {
             <span>Profile</span>
           </button>
         </Link>
-        <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
-          <BarChart3 size={19} />
-          <span>Reports</span>
-        </button>
       </nav>
     </div>
   );
