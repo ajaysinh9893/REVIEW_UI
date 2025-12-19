@@ -2,11 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { LayoutGrid, Star, Tag, MessageSquare, Settings, Search, ChevronDown, Heart, TrendingUp, Calendar, X, RefreshCw, Send, ArrowUp, ArrowDown, Users, AlertCircle, CheckCircle, Clock } from 'lucide-react';
+import { LayoutGrid, Star, Tag, MessageSquare, Settings, Search, ChevronDown, Heart, TrendingUp, Calendar, X, RefreshCw, Send, ArrowUp, ArrowDown, Users, AlertCircle, CheckCircle, Clock, Phone, Eye } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import Sidebar from '@/src/components/Sidebar';
-import Header from '@/src/components/Header';
 import KPIOverviewCard from '@/src/components/KPIOverviewCard';
+import AlertSection from '@/src/components/AlertSection';
 
 export default function Dashboard() {
   const [selectedReviews, setSelectedReviews] = useState([]);
@@ -108,6 +107,51 @@ export default function Dashboard() {
     { name: 'Support', count: 22 }
   ];
 
+  // Alerts data
+  const alerts = [
+    {
+      id: '1',
+      type: 'review',
+      severity: 'critical',
+      title: 'Negative reviews spike',
+      description: '5 negative reviews in the last 2 days',
+      changePercent: -25,
+      period: 'last week'
+    },
+    {
+      id: '2',
+      type: 'calls',
+      severity: 'warning',
+      title: 'Call volume dropping',
+      description: 'Phone calls down this week',
+      changePercent: -15,
+      period: 'last week'
+    },
+    {
+      id: '3',
+      type: 'visibility',
+      severity: 'warning',
+      title: 'Visibility decreased',
+      description: 'Impressions lower than usual',
+      changePercent: -10,
+      period: 'last month'
+    }
+  ];
+
+  // Alert icon mapping (needed by AlertSection)
+  const alertIconMap = {
+    review: AlertCircle,
+    calls: Phone,
+    visibility: Eye
+  };
+
+  // Alert route mapping
+  const alertRouteMap = {
+    review: '/reviews',
+    calls: '/dashboard',
+    visibility: '/visibility'
+  };
+
   const handleSendReply = () => {
     alert('Reply sent successfully!');
     closeReplyModal();
@@ -129,54 +173,53 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
-      <Sidebar />
-      {/* Main Content */}
-      <div className="ml-72 overflow-auto">
-        <Header />
-
-        <div className="p-10 max-w-7xl mx-auto">
+    <div className="p-10 max-w-7xl mx-auto">
           {/* Top Row - Visibility Snapshot & Overall Rating */}
-          {/* Top Row - Visibility Snapshot & Overall Rating */}
-<div className="grid grid-cols-12 gap-8 mb-8">
-  {/* Visibility Snapshot - 70% width */}
-  <div className="col-span-8">
-    <KPIOverviewCard visibilityData={visibilityData} period="daily" />
-  </div>
-  
-  {/* Overall Rating - 30% width */}
-  <div className="col-span-4">
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-full flex flex-col">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Overall Rating Summary</h2>
-      <div className="flex items-center gap-3 mb-4">
-        <div className="text-5xl font-bold text-gray-900">4.7</div>
-        <Star size={32} className="fill-amber-400 text-amber-400" />
-        <span className="text-sm text-gray-500 mt-2">based on 256 reviews</span>
-      </div>
-      <div className="space-y-3">
-        {[
-          { stars: 5, count: 180, percentage: 70 },
-          { stars: 4, count: 50, percentage: 20 },
-          { stars: 3, count: 10, percentage: 4 },
-          { stars: 2, count: 8, percentage: 3 },
-          { stars: 1, count: 8, percentage: 3 }
-        ].map((item) => (
-          <div key={item.stars} className="flex items-center gap-3">
-            <span className="text-sm font-medium text-gray-700 w-12">{item.stars} Star</span>
-            <div className="flex-1 bg-gray-200 rounded-full h-2.5 overflow-hidden">
-              <div className="bg-indigo-600 h-full rounded-full transition-all" style={{ width: `${item.percentage}%` }}></div>
+          {/* Top Row - Visibility Snapshot, Overall Rating & Alerts */}
+          <div className="grid grid-cols-12 gap-4 mb-8">
+            {/* Visibility Snapshot - 50% width */}
+            <div className="col-span-6">
+              <KPIOverviewCard visibilityData={visibilityData} period="daily" />
             </div>
-            <span className="text-sm text-gray-600 w-12 text-right">({item.count})</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-</div>
+            
+            {/* Overall Rating - 25% width */}
+            <div className="col-span-3">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 h-full flex flex-col">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">Overall Rating</h2>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="text-5xl font-bold text-gray-900">4.7</div>
+                  <Star size={32} className="fill-amber-400 text-amber-400" />
+                </div>
+                <p className="text-sm text-gray-500 mb-4">based on 256 reviews</p>
+                <div className="space-y-3 flex-1">
+                  {[
+                    { stars: 5, count: 180, percentage: 70 },
+                    { stars: 4, count: 50, percentage: 20 },
+                    { stars: 3, count: 10, percentage: 4 },
+                    { stars: 2, count: 8, percentage: 3 },
+                    { stars: 1, count: 8, percentage: 3 }
+                  ].map((item) => (
+                    <div key={item.stars} className="flex items-center gap-3">
+                      <span className="text-sm font-medium text-gray-700 w-12">{item.stars}★</span>
+                      <div className="flex-1 bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                        <div className="bg-indigo-600 h-full rounded-full transition-all" style={{ width: `${item.percentage}%` }}></div>
+                      </div>
+                      <span className="text-sm text-gray-600 w-12 text-right">({item.count})</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
 
-          {/* Second Row - Review Trends & Metrics Overview */}
-          <div className="grid grid-cols-12 gap-8 mb-8">
-            {/* Review Trends - 30% width */}
+            {/* Alerts Section - 25% width - NEW! */}
+            <div className="col-span-3">
+              <AlertSection alerts={alerts} />
+            </div>
+          </div>
+
+          {/* Third Row - Review Trends, Metrics Overview & Top Keywords */}
+          <div className="grid grid-cols-12 gap-4 mb-8">
+            {/* Review Trends */}
             <div className="col-span-4">
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-full flex flex-col">
                 <div className="flex items-center justify-between mb-4">
@@ -205,7 +248,7 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                <ResponsiveContainer width="100%" height={200}>
+                <ResponsiveContainer width="100%" height={280}>
                   <LineChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                     <XAxis 
@@ -253,19 +296,20 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Metrics Overview - 70% width */}
-            <div className="col-span-8">
+            {/* Metrics Overview */}
+            <div className="col-span-5">
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-full flex flex-col">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Metrics Overview</h2>
-                <div className="grid grid-cols-4 gap-3 flex-1">
+                <div className="grid grid-cols-2 gap-3 flex-1">
                   {[
                     {
                       title: 'Total Reviews',
                       value: '256',
                       change: '+12.5%',
                       isPositive: true,
-                      icon: <MessageSquare size={24} />,
-                      color: 'from-blue-500 to-blue-600',
+                      icon: <MessageSquare size={18} />,
+                      color: 'text-blue-600',
+                      bgColor: 'bg-blue-50',
                       subtitle: 'vs last period'
                     },
                     {
@@ -273,8 +317,9 @@ export default function Dashboard() {
                       value: '4.7',
                       change: '+0.3',
                       isPositive: true,
-                      icon: <TrendingUp size={24} />,
-                      color: 'from-green-500 to-emerald-600',
+                      icon: <TrendingUp size={18} />,
+                      color: 'text-green-600',
+                      bgColor: 'bg-green-50',
                       subtitle: 'out of 5'
                     },
                     {
@@ -282,8 +327,9 @@ export default function Dashboard() {
                       value: '87.5%',
                       change: '+5.2%',
                       isPositive: true,
-                      icon: <TrendingUp size={24} />,
-                      color: 'from-pink-500 to-rose-600',
+                      icon: <TrendingUp size={18} />,
+                      color: 'text-pink-600',
+                      bgColor: 'bg-pink-50',
                       subtitle: 'average response'
                     },
                     {
@@ -291,63 +337,63 @@ export default function Dashboard() {
                       value: '224',
                       change: '+8.3%',
                       isPositive: true,
-                      icon: <CheckCircle size={24} />,
-                      color: 'from-purple-500 to-indigo-600',
+                      icon: <CheckCircle size={18} />,
+                      color: 'text-purple-600',
+                      bgColor: 'bg-purple-50',
                       subtitle: 'of total reviews'
                     }
                   ].map((stat, index) => (
-                    <div key={index} className="bg-gray-50 rounded-xl border border-gray-200 p-3 hover:shadow-md transition-all">
-                      <div className="flex items-start justify-between mb-2">
-                        <div className={`w-10 h-10 bg-gradient-to-br ${stat.color} rounded-lg flex items-center justify-center text-white`}>
+                    <div key={index} className={`${stat.bgColor} rounded-lg border border-gray-200 p-3 hover:shadow-md transition-all`}>
+                      <div className="flex items-start justify-between mb-1">
+                        <div className={`w-8 h-8 rounded flex items-center justify-center ${stat.color}`}>
                           {stat.icon}
                         </div>
-                        <div className={`flex items-center gap-1 text-xs font-semibold ${stat.isPositive ? 'text-green-600' : 'text-red-600'}`}>
-                          {stat.isPositive ? <ArrowUp size={12} /> : <ArrowDown size={12} />}
+                        <div className={`flex items-center gap-0.5 text-xs font-semibold ${stat.isPositive ? 'text-green-600' : 'text-red-600'}`}>
+                          {stat.isPositive ? <ArrowUp size={10} /> : <ArrowDown size={10} />}
                           {stat.change}
                         </div>
                       </div>
                       <h3 className="text-xs font-medium text-gray-600 mb-0.5 uppercase tracking-wide">{stat.title}</h3>
-                      <p className="text-xl font-bold text-gray-900 mb-0.5">{stat.value}</p>
-                      {stat.subtitle && <p className="text-xs text-gray-500">{stat.subtitle}</p>}
+                      <p className="text-lg font-bold text-gray-900 mb-0">{stat.value}</p>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Top Keywords */}
-          <div className="mb-8">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-6">Top Keywords</h2>
-              <div className="grid grid-cols-2 gap-8">
-                <div>
-                  <h3 className="text-sm font-semibold text-green-700 mb-4">Positive</h3>
+            {/* Top Keywords - aligned with Alerts */}
+            <div className="col-span-3">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 h-full flex flex-col">
+                <h2 className="text-base font-semibold text-gray-900 mb-3">Top Keywords</h2>
+                <div className="flex-1 overflow-y-auto">
                   <div className="space-y-2">
-                    {positiveKeywords.slice(0, 3).map((keyword, index) => (
-                      <div key={index} className="flex items-center justify-between py-2 px-3 hover:bg-green-50 rounded-lg transition-all cursor-pointer border-l-2 border-green-500">
-                        <span className="text-sm text-gray-700 font-medium">{keyword.name}</span>
-                        <span className="text-sm font-semibold text-green-700 bg-green-100 px-2.5 py-1 rounded-full">{keyword.count}</span>
+                    <div>
+                      <h3 className="text-sm font-semibold text-green-700 mb-2">Positive</h3>
+                      <div className="space-y-1.5 mb-4">
+                        {positiveKeywords.slice(0, 3).map((keyword, index) => (
+                          <div key={index} className="flex items-center justify-between py-1.5 px-2 hover:bg-green-50 rounded-lg transition-all cursor-pointer border-l-2 border-green-500">
+                            <span className="text-xs text-gray-700 font-medium">{keyword.name}</span>
+                            <span className="text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">{keyword.count}</span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-red-700 mb-4">Negative</h3>
-                  <div className="space-y-2">
-                    {negativeKeywords.slice(0, 3).map((keyword, index) => (
-                      <div key={index} className="flex items-center justify-between py-2 px-3 hover:bg-red-50 rounded-lg transition-all cursor-pointer border-l-2 border-red-500">
-                        <span className="text-sm text-gray-700 font-medium">{keyword.name}</span>
-                        <span className="text-sm font-semibold text-red-700 bg-red-100 px-2.5 py-1 rounded-full">{keyword.count}</span>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-red-700 mb-2">Negative</h3>
+                      <div className="space-y-1.5">
+                        {negativeKeywords.slice(0, 3).map((keyword, index) => (
+                          <div key={index} className="flex items-center justify-between py-1.5 px-2 hover:bg-red-50 rounded-lg transition-all cursor-pointer border-l-2 border-red-500">
+                            <span className="text-xs text-gray-700 font-medium">{keyword.name}</span>
+                            <span className="text-xs font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded-full">{keyword.count}</span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
     </div>
   );
 }

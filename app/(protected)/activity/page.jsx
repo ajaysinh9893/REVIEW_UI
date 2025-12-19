@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import { BarChart3 } from 'lucide-react';
-import Sidebar from '@/src/components/Sidebar';
-import Header from '@/src/components/Header';
 
 export default function ActivityPage() {
   const [heatmapActivityType, setHeatmapActivityType] = useState('calls');
@@ -49,11 +47,7 @@ export default function ActivityPage() {
   const total = currentData.reduce((sum, [,,c]) => sum + c, 0);
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
-      <Sidebar />
-      <div className="ml-72 overflow-auto">
-        <Header />
-        <div className="p-10 max-w-7xl mx-auto">
+    <div className="p-10 max-w-7xl mx-auto">
           <h1 className="text-3xl font-bold text-gray-900 mb-8">Activity / Busy Times</h1>
 
           {/* Activity Heatmaps */}
@@ -135,7 +129,5 @@ export default function ActivityPage() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
   );
 }

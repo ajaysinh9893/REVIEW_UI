@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import { User, Settings, Lock } from 'lucide-react';
-import Sidebar from '@/src/components/Sidebar';
-import Header from '@/src/components/Header';
 
 export default function ReviewProfile() {
   const [formData, setFormData] = useState({
@@ -11,19 +9,20 @@ export default function ReviewProfile() {
     email: 'jane.doe@example.com',
     username: 'janedoe123',
     phone: '+1 (555) 123-4567',
-    address: '123 Business Blvd\nSuite 400\nCityville, State 12345\nCountryland',
-    bio: 'Passionate about empowering businesses with innovative technology solutions. Focused on optimizing digital presence and customer engagement.',
-    linkedin: 'https://linkedin.com/in/janedoe',
-    twitter: 'https://twitter.com/janedoe',
-    github: 'GitHub Profile URL',
-    role: 'Digital Marketing Specialist',
-    emailNotifications: true,
-    smsNotifications: false,
     businessName: 'Innovate Digital Solutions',
     businessPhone: '+1 (555) 987-6543',
     businessWebsite: 'https://innovatedigital.com',
     businessAddress: '789 Tech Drive\nInnovation Hub, CA 90210\nUSA',
     hoursOfOperation: 'Mon-Fri: 9:00 AM - 6:00 PM, Sat-Sun: Closed',
+    hours: {
+      monday: { open: '09:00', close: '18:00', closed: false },
+      tuesday: { open: '09:00', close: '18:00', closed: false },
+      wednesday: { open: '09:00', close: '18:00', closed: false },
+      thursday: { open: '09:00', close: '18:00', closed: false },
+      friday: { open: '09:00', close: '18:00', closed: false },
+      saturday: { open: '10:00', close: '16:00', closed: false },
+      sunday: { open: '00:00', close: '00:00', closed: true }
+    },
     categories: 'Software Company, Digital Marketing Agency',
     businessDescription: 'Innovate Digital Solutions is a leading provider of comprehensive digital marketing and software development services, helping businesses thrive online.',
     googlePlaceId: 'ChIJOvXEc-Vw4jQRBL_e.5J9P7Q'
@@ -101,15 +100,10 @@ export default function ReviewProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
-      <Sidebar />
-      {/* Main Content */}
-      <div className="ml-72 overflow-auto">
-        <Header />
-
-        <div className="p-10 max-w-7xl mx-auto">
+    <div className="p-10 max-w-7xl mx-auto">
+      <div className="grid grid-cols-2 gap-8">
           {/* User Profile Section */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-8">User Profile</h2>
 
             {/* Profile Photo */}
@@ -176,106 +170,6 @@ export default function ReviewProfile() {
               </button>
             </div>
 
-            {/* Address and Bio */}
-            <div className="grid grid-cols-2 gap-6 mb-8">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Address</label>
-                <textarea
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  rows={5}
-                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Bio</label>
-                <textarea
-                  name="bio"
-                  value={formData.bio}
-                  onChange={handleChange}
-                  rows={5}
-                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none transition-all"
-                />
-              </div>
-            </div>
-
-            {/* Social Links */}
-            <div className="mb-8">
-              <label className="block text-sm font-semibold text-gray-700 mb-3">Social Links</label>
-              <div className="grid grid-cols-3 gap-5">
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-2">LinkedIn</label>
-                  <input
-                    type="url"
-                    name="linkedin"
-                    value={formData.linkedin}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-base transition-all"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-2">Twitter</label>
-                  <input
-                    type="url"
-                    name="twitter"
-                    value={formData.twitter}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-base transition-all"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-2">GitHub</label>
-                  <input
-                    type="url"
-                    name="github"
-                    value={formData.github}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-base transition-all"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Role and Notifications */}
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Role</label>
-                <input
-                  type="text"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                />
-                <p className="text-xs text-gray-500 mt-2.5">Map Account to Google Place (for review setup)</p>
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3.5">Notification Preferences</label>
-                <div className="space-y-3">
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      name="emailNotifications"
-                      checked={formData.emailNotifications}
-                      onChange={handleChange}
-                      className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 cursor-pointer"
-                    />
-                    <span className="text-base text-gray-700">Email Notifications</span>
-                  </label>
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      name="smsNotifications"
-                      checked={formData.smsNotifications}
-                      onChange={handleChange}
-                      className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 cursor-pointer"
-                    />
-                    <span className="text-base text-gray-700">SMS Notifications</span>
-                  </label>
-                </div>
-              </div>
-            </div>
 
             {/* Action Buttons */}
             <div className="flex justify-end gap-4 mt-8 pt-8 border-t border-gray-200">
@@ -342,27 +236,73 @@ export default function ReviewProfile() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-6 mb-8">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Hours of Operation</label>
-                <input
-                  type="text"
-                  name="hoursOfOperation"
-                  value={formData.hoursOfOperation}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                />
+            <div className="mb-8">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Hours of Operation</label>
+              <div className="border border-gray-300 rounded-lg overflow-hidden">
+                <table className="w-full">
+                  <thead className="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Day</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Open</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Close</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Closed</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map((day) => (
+                      <tr key={day} className="hover:bg-gray-50">
+                        <td className="px-4 py-3 text-sm font-medium text-gray-900 capitalize">{day}</td>
+                        <td className="px-4 py-3">
+                          <input
+                            type="time"
+                            disabled={formData.hours[day].closed}
+                            value={formData.hours[day].open}
+                            onChange={(e) => setFormData(prev => ({
+                              ...prev,
+                              hours: { ...prev.hours, [day]: { ...prev.hours[day], open: e.target.value } }
+                            }))}
+                            className="px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                          />
+                        </td>
+                        <td className="px-4 py-3">
+                          <input
+                            type="time"
+                            disabled={formData.hours[day].closed}
+                            value={formData.hours[day].close}
+                            onChange={(e) => setFormData(prev => ({
+                              ...prev,
+                              hours: { ...prev.hours, [day]: { ...prev.hours[day], close: e.target.value } }
+                            }))}
+                            className="px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                          />
+                        </td>
+                        <td className="px-4 py-3">
+                          <input
+                            type="checkbox"
+                            checked={formData.hours[day].closed}
+                            onChange={(e) => setFormData(prev => ({
+                              ...prev,
+                              hours: { ...prev.hours, [day]: { ...prev.hours[day], closed: e.target.checked } }
+                            }))}
+                            className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 cursor-pointer"
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2.5">Categories</label>
-                <input
-                  type="text"
-                  name="categories"
-                  value={formData.categories}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                />
-              </div>
+            </div>
+
+            <div className="mb-8">
+              <label className="block text-sm font-semibold text-gray-700 mb-2.5">Categories</label>
+              <input
+                type="text"
+                name="categories"
+                value={formData.categories}
+                onChange={handleChange}
+                className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+              />
             </div>
 
             <div className="mb-8">
@@ -414,12 +354,11 @@ export default function ReviewProfile() {
               </button>
             </div>
           </div>
+      </div>
 
-          {/* Footer */}
-          <div className="text-center text-sm text-gray-500 mt-10 py-6">
-            © 2025 App Name. All rights reserved.
-          </div>
-        </div>
+      {/* Footer */}
+      <div className="text-center text-sm text-gray-500 mt-10 py-6">
+        © 2025 App Name. All rights reserved.
       </div>
     </div>
   );

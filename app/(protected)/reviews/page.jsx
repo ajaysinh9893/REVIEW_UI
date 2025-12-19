@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import { Search, Star, X } from 'lucide-react';
-import Sidebar from '@/src/components/Sidebar';
-import Header from '@/src/components/Header';
 
 export default function ReviewsPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -132,13 +130,9 @@ export default function ReviewsPage() {
   );
 
   return (
-    <div className="flex">
-      <Sidebar />
-      <div className="ml-72 w-full">
-        <Header />
-        <div className="p-10">
-          <div className="max-w-7xl mx-auto">
-            {/* Normal Reviews */}
+    <div className="p-10">
+      <div className="max-w-7xl mx-auto">
+
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
               <h2 className="text-lg font-semibold text-gray-900 mb-5">Reviews</h2>
 
@@ -263,7 +257,6 @@ export default function ReviewsPage() {
               </div>
             </div>
           </div>
-        </div>
 
         {/* Reply Modal */}
         {replyModal.open && (
@@ -308,6 +301,5 @@ export default function ReviewsPage() {
           </div>
         )}
       </div>
-    </div>
   );
 }

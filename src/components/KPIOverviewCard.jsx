@@ -73,9 +73,9 @@ export default function KPIOverviewCard({ visibilityData, period = 'daily' }) {
       change: `${parseFloat(kpiData.impressions.change) > 0 ? '+' : ''}${kpiData.impressions.change}%`,
       isPositive: parseFloat(kpiData.impressions.change) >= 0,
       icon: <Eye size={20} />,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50',
-      chartColor: '#3b82f6',
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-50',
+      chartColor: '#a855f7',
       data: kpiData.impressions.data,
       subtitle: `${kpiData.impressions.current.toString()} latest`
     },
@@ -133,54 +133,55 @@ export default function KPIOverviewCard({ visibilityData, period = 'daily' }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-2">
         {kpis.map((kpi, index) => (
-          <div key={index} className="relative overflow-hidden rounded-lg border border-gray-200 p-3 hover:shadow-md transition-all group">
-            {/* Icon Badge */}
-            <div className={`w-8 h-8 ${kpi.bgColor} rounded-lg flex items-center justify-center mb-1 ${kpi.color}`}>
-              {kpi.icon}
+          <div key={index} className="relative overflow-hidden rounded-lg border border-gray-200 p-1.5 hover:shadow-md transition-all group bg-white">
+            {/* Header - Icon & Title */}
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex items-center gap-1.5">
+                <div className={`w-6 h-6 ${kpi.bgColor} rounded flex items-center justify-center flex-shrink-0 ${kpi.color}`}>
+                  {kpi.icon}
+                </div>
+                <h3 className="text-xs font-medium text-gray-600 uppercase tracking-wide leading-6">
+                  {kpi.title}
+                </h3>
+              </div>
             </div>
 
-            {/* Title */}
-            <h3 className="text-xs font-medium text-gray-600 mb-1 uppercase tracking-wide">
-              {kpi.title}
-            </h3>
-
-            {/* NEW LAYOUT - 2 Columns */}
-            <div className="flex justify-between gap-2">
-              {/* LEFT COLUMN - Value & Subtitle */}
+            {/* Content Row - Value, Subtitle & Chart with Change on right */}
+            <div className="flex items-end justify-between gap-1">
               <div>
-                <p className="text-2xl font-bold text-gray-900 mb-1">{kpi.value}</p>
-                <p className="text-xs text-gray-500">{kpi.subtitle}</p>
+                <p className="text-base font-bold text-gray-900">{kpi.value}</p>
+                <p className="text-xs text-gray-500 leading-none">{kpi.subtitle}</p>
               </div>
 
-              {/* RIGHT COLUMN - Change & Chart */}
-              <div className="flex flex-col items-end">
-                <div className={`flex items-center gap-1 text-sm font-semibold mb-2 ${
-                  kpi.isPositive ? 'text-green-600' : 'text-red-600'
-                }`}>
-                  {kpi.isPositive ? (
-                    <TrendingUp size={14} />
-                  ) : (
-                    <TrendingDown size={14} />
-                  )}
-                  {kpi.change}
-                </div>
-
+              <div className="flex flex-col items-end gap-0.5">
                 {/* Mini Sparkline Chart */}
-                <div className="h-8 w-14">
+                <div className="h-6 w-12 flex-shrink-0">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={kpi.data.map((value, i) => ({ value, index: i }))}>
                       <Line
                         type="monotone"
                         dataKey="value"
                         stroke={kpi.chartColor}
-                        strokeWidth={2}
+                        strokeWidth={1.5}
                         dot={false}
                         isAnimationActive={false}
                       />
                     </LineChart>
                   </ResponsiveContainer>
+                </div>
+
+                {/* Change percentage */}
+                <div className={`flex items-center gap-0.5 text-xs font-semibold ${
+                  kpi.isPositive ? 'text-green-600' : 'text-red-600'
+                }`}>
+                  {kpi.isPositive ? (
+                    <TrendingUp size={9} />
+                  ) : (
+                    <TrendingDown size={9} />
+                  )}
+                  {kpi.change}
                 </div>
               </div>
             </div>

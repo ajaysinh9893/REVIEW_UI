@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import { TrendingUp } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import Sidebar from '@/src/components/Sidebar';
-import Header from '@/src/components/Header';
 
 export default function VisibilityPage() {
   const [visibilityPeriod, setVisibilityPeriod] = useState('weekly');
@@ -88,12 +86,8 @@ export default function VisibilityPage() {
   const visibilityMetrics = calculateVisibilityMetrics();
 
   return (
-    <div className="flex">
-      <Sidebar />
-      <div className="ml-72 w-full">
-        <Header />
-        <div className="p-10">
-          <div className="max-w-7xl mx-auto">
+    <div className="p-10">
+      <div className="max-w-7xl mx-auto">
             {/* Visibility Trends Line Chart */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-6">
@@ -283,8 +277,6 @@ export default function VisibilityPage() {
               </ResponsiveContainer>
             </div>
             {/* ============ VISIBILITY TRENDS UI SECTION END ============ */}
-          </div>
-        </div>
       </div>
     </div>
   );
