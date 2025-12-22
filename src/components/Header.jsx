@@ -1,12 +1,21 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Bell, Settings, LogOut, User } from 'lucide-react';
 
 export default function Header() {
+  const router = useRouter();
   const [currentDate, setCurrentDate] = useState('');
   const [showUserMenu, setShowUserMenu] = useState(false);
+
+  const handleLogout = () => {
+    if (confirm('Are you sure you want to logout?')) {
+      // Clear any auth data (cookies, localStorage, etc.)
+      router.push('/login');
+    }
+  };
 
   useEffect(() => {
     const today = new Date();
@@ -51,7 +60,7 @@ export default function Header() {
                 <Settings size={16} />
                 Settings
               </button>
-              <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-all">
+              <button onClick={handleLogout} className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-all">
                 <LogOut size={16} />
                 Logout
               </button>
