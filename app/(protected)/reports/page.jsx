@@ -212,7 +212,7 @@ export default function ReportsPage() {
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">Report Results</h3>
-                  <p className="text-sm text-gray-500 mt-1">Query: "{reportData.query}"</p>
+                  <p className="text-sm text-gray-500 mt-1">Query: &quot;{reportData.query}&quot;</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-all">

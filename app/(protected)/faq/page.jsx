@@ -196,7 +196,7 @@ export default function FAQPage() {
         </div>
         <h1 className="text-4xl font-bold text-gray-900 mb-3">Frequently Asked Questions</h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Find answers to common questions about our platform. Can't find what you're looking for? Contact our support team.
+          Find answers to common questions about our platform. Can&apos;t find what you&apos;re looking for? Contact our support team.
         </p>
       </div>
 
@@ -324,7 +324,7 @@ export default function FAQPage() {
         <div className="text-center mb-10">
           <h2 className="text-3xl font-bold text-gray-900 mb-3">Still need help?</h2>
           <p className="text-lg text-gray-600">
-            If you couldn't find the answer you're looking for, our support team is ready to assist you.
+            If you couldn&apos;t find the answer you&apos;re looking for, our support team is ready to assist you.
           </p>
         </div>
 

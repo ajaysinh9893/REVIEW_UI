@@ -7,6 +7,7 @@ export default function SubscriptionMinimal() {
   const [scrollY, setScrollY] = useState(0);
   const fadeDistance = 80; // Smaller fade distance
   const fadeOpacity = Math.max(0, 1 - scrollY / fadeDistance);
+  const scrollOpacity = Math.max(0, 1 - scrollY / fadeDistance);
 
   useEffect(() => {
     const handleScroll = () => {
