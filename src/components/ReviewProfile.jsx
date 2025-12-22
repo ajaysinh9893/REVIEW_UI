@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { User, Settings, Lock } from 'lucide-react';
 
 export default function ReviewProfile() {
-  const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState({
     fullName: 'Jane Doe',
     email: 'jane.doe@example.com',
     username: 'janedoe123',
@@ -101,7 +101,7 @@ export default function ReviewProfile() {
 
   return (
     <div className="p-10 max-w-7xl mx-auto">
-      <div className="grid grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 gap-8">
           {/* User Profile Section */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-8">User Profile</h2>
@@ -169,7 +169,6 @@ export default function ReviewProfile() {
                 <span>Change Password</span>
               </button>
             </div>
-
 
             {/* Action Buttons */}
             <div className="flex justify-end gap-4 mt-8 pt-8 border-t border-gray-200">

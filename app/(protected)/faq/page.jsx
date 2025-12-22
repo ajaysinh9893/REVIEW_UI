@@ -1,9 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, ChevronDown, ChevronUp, Mail, Phone, MessageCircle, HelpCircle, Book, Video, FileText, ExternalLink, Clock, MapPin, Send } from 'lucide-react';
 
 export default function FAQPage() {
+  const [scrollY, setScrollY] = useState(0);
+  const fadeDistance = 80; // Smaller fade distance
+  const fadeOpacity = Math.max(0, 1 - scrollY / fadeDistance);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   const [searchQuery, setSearchQuery] = useState('');
   const [openFAQ, setOpenFAQ] = useState(null);
   const [activeCategory, setActiveCategory] = useState('all');
@@ -119,7 +131,7 @@ export default function FAQPage() {
       description: 'Chat with us in real-time',
       contact: 'Available Mon-Fri, 9AM-6PM EST',
       action: 'Start Chat',
-      colorClass: 'blue'
+      colorClass: 'purple'
     }
   ];
 
@@ -169,13 +181,14 @@ export default function FAQPage() {
     const colors = {
       indigo: { bg: 'bg-indigo-100', text: 'text-indigo-600', button: 'bg-indigo-600 hover:bg-indigo-700' },
       green: { bg: 'bg-green-100', text: 'text-green-600', button: 'bg-green-600 hover:bg-green-700' },
-      blue: { bg: 'bg-blue-100', text: 'text-blue-600', button: 'bg-blue-600 hover:bg-blue-700' }
+      purple: { bg: 'bg-purple-100', text: 'text-purple-600', button: 'bg-purple-600 hover:bg-purple-700' }
     };
     return colors[colorClass] || colors.indigo;
   };
 
   return (
-    <div className="p-10 max-w-7xl mx-auto">
+    <div className="min-h-screen">
+      <div className="p-10 max-w-7xl mx-auto pr-24">
       {/* Header Section */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-full mb-4">
@@ -228,7 +241,7 @@ export default function FAQPage() {
                 {category.questions.map((faq) => (
                   <div
                     key={faq.id}
-                    className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-all"
+                    className="rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-all"
                   >
                     <button
                       onClick={() => toggleFAQ(faq.id)}
@@ -264,7 +277,7 @@ export default function FAQPage() {
         {/* Sidebar - Quick Links & Contact */}
         <div className="col-span-4 space-y-6">
           {/* Quick Links */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-6">
+          <div className="rounded-xl border border-gray-200 p-6 sticky top-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h3>
             <div className="space-y-2">
               {categories.slice(1).map(category => (
@@ -280,7 +293,7 @@ export default function FAQPage() {
           </div>
 
           {/* Resources */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="rounded-xl border border-gray-200 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Helpful Resources</h3>
             <div className="space-y-3">
               {resources.map((resource, idx) => (
@@ -307,7 +320,7 @@ export default function FAQPage() {
       </div>
 
       {/* Contact Support Section */}
-      <div className="mt-16 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-10 border border-indigo-100">
+      <div className="mt-16 rounded-2xl p-10 border border-gray-200" style={{ backgroundColor: '#F3F1ED' }}>
         <div className="text-center mb-10">
           <h2 className="text-3xl font-bold text-gray-900 mb-3">Still need help?</h2>
           <p className="text-lg text-gray-600">
@@ -321,7 +334,7 @@ export default function FAQPage() {
             return (
               <div
                 key={idx}
-                className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all"
+                className="rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-all"
               >
                 <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${colors.bg} ${colors.text} mb-4`}>
                   {option.icon}
@@ -338,7 +351,7 @@ export default function FAQPage() {
         </div>
 
         {/* Contact Form */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 max-w-3xl mx-auto">
+        <div className="rounded-xl border border-gray-200 p-8 max-w-3xl mx-auto">
           <h3 className="text-xl font-bold text-gray-900 mb-6">Send us a message</h3>
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
@@ -382,7 +395,7 @@ export default function FAQPage() {
       </div>
 
       {/* Business Hours */}
-      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="mt-8 rounded-xl border border-gray-200 p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
@@ -403,6 +416,7 @@ export default function FAQPage() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

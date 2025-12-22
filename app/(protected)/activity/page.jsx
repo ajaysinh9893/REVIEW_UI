@@ -1,9 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BarChart3 } from 'lucide-react';
 
 export default function ActivityPage() {
+  const [scrollY, setScrollY] = useState(0);
+  const fadeDistance = 80; // Smaller fade distance
+  const fadeOpacity = Math.max(0, 1 - scrollY / fadeDistance);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   const [heatmapActivityType, setHeatmapActivityType] = useState('calls');
 
   const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -47,11 +59,10 @@ export default function ActivityPage() {
   const total = currentData.reduce((sum, [,,c]) => sum + c, 0);
 
   return (
-    <div className="p-10 max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Activity / Busy Times</h1>
-
+    <div className="min-h-screen">
+      <div className="p-10 max-w-7xl mx-auto pr-24">
           {/* Activity Heatmaps */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="rounded-xl border border-gray-200 p-6">
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
@@ -129,5 +140,6 @@ export default function ActivityPage() {
             </div>
           </div>
         </div>
+    </div>
   );
 }

@@ -50,7 +50,7 @@ export default function AlertSection({ alerts = [] }) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 h-full flex flex-col">
+    <div className="rounded-xl border border-gray-200 p-4 h-full flex flex-col">
       <h2 className="text-base font-semibold text-gray-900 mb-3">Alerts</h2>
       
       <div className="space-y-2 flex-1 overflow-y-auto">
@@ -67,28 +67,28 @@ export default function AlertSection({ alerts = [] }) {
                   <div className={`flex items-center gap-2 ${styles.icon}`}>
                     {getAlertIcon(alert.type)}
                   </div>
-                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${styles.badge}`}>
+                  <span className={`text-sm font-semibold px-2 py-0.5 rounded-full ${styles.badge}`}>
                     {alert.severity.charAt(0).toUpperCase() + alert.severity.slice(1)}
                   </span>
                 </div>
 
                 {/* Title */}
-                <h3 className="text-xs font-semibold text-gray-900 mb-0.5">
+                <h3 className="text-sm font-semibold text-gray-900 mb-0.5">
                   {alert.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-xs text-gray-600 mb-1">
+                <p className="text-sm text-gray-600 mb-1">
                   {alert.description}
                 </p>
 
                 {/* Change percentage and period */}
                 <div className="flex items-center justify-between">
-                  <span className={`text-xs font-semibold flex items-center gap-1 ${styles.change}`}>
+                  <span className={`text-sm font-semibold flex items-center gap-1 ${styles.change}`}>
                     <TrendingDown size={12} />
                     {alert.changePercent}%
                   </span>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-sm text-gray-500">
                     {alert.period}
                   </span>
                 </div>
@@ -97,7 +97,7 @@ export default function AlertSection({ alerts = [] }) {
           })
         ) : (
           <div className="flex items-center justify-center h-20 text-gray-500">
-            <p className="text-xs">No active alerts</p>
+            <p className="text-sm">No active alerts</p>
           </div>
         )}
       </div>

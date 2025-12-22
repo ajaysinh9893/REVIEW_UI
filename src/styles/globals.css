@@ -10,6 +10,7 @@
 
 html {
   scroll-behavior: smooth;
+  background-color: #FAF9F5;
 }
 
 body {
@@ -18,6 +19,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #FAF9F5;
 }
 
 button {

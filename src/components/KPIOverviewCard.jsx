@@ -73,9 +73,9 @@ export default function KPIOverviewCard({ visibilityData, period = 'daily' }) {
       change: `${parseFloat(kpiData.impressions.change) > 0 ? '+' : ''}${kpiData.impressions.change}%`,
       isPositive: parseFloat(kpiData.impressions.change) >= 0,
       icon: <Eye size={20} />,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50',
-      chartColor: '#a855f7',
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-50',
+      chartColor: '#2563eb',
       data: kpiData.impressions.data,
       subtitle: `${kpiData.impressions.current.toString()} latest`
     },
@@ -85,9 +85,9 @@ export default function KPIOverviewCard({ visibilityData, period = 'daily' }) {
       change: `${parseFloat(kpiData.clicks.change) > 0 ? '+' : ''}${kpiData.clicks.change}%`,
       isPositive: parseFloat(kpiData.clicks.change) >= 0,
       icon: <MousePointer size={20} />,
-      color: 'text-indigo-600',
-      bgColor: 'bg-indigo-50',
-      chartColor: '#6366f1',
+      color: 'text-red-600',
+      bgColor: 'bg-red-50',
+      chartColor: '#dc2626',
       data: kpiData.clicks.data,
       subtitle: `${kpiData.ctr}% CTR`
     },
@@ -97,9 +97,9 @@ export default function KPIOverviewCard({ visibilityData, period = 'daily' }) {
       change: `${parseFloat(kpiData.calls.change) > 0 ? '+' : ''}${kpiData.calls.change}%`,
       isPositive: parseFloat(kpiData.calls.change) >= 0,
       icon: <Phone size={20} />,
-      color: 'text-emerald-600',
-      bgColor: 'bg-emerald-50',
-      chartColor: '#10b981',
+      color: 'text-yellow-600',
+      bgColor: 'bg-yellow-50',
+      chartColor: '#d97706',
       data: kpiData.calls.data,
       subtitle: `${kpiData.calls.current} latest`
     },
@@ -109,9 +109,9 @@ export default function KPIOverviewCard({ visibilityData, period = 'daily' }) {
       change: `${parseFloat(kpiData.directions.change) > 0 ? '+' : ''}${kpiData.directions.change}%`,
       isPositive: parseFloat(kpiData.directions.change) >= 0,
       icon: <Navigation size={20} />,
-      color: 'text-amber-600',
-      bgColor: 'bg-amber-50',
-      chartColor: '#f59e0b',
+      color: 'text-green-600',
+      bgColor: 'bg-green-50',
+      chartColor: '#16a34a',
       data: kpiData.directions.data,
       subtitle: `${kpiData.directions.current} latest`
     }
@@ -121,7 +121,7 @@ export default function KPIOverviewCard({ visibilityData, period = 'daily' }) {
   const periodLabel = period === 'daily' ? 'This Week' : period === 'weekly' ? 'This Month' : 'Last 6 Months';
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div className="rounded-xl border border-gray-200 p-6 h-full flex flex-col">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h2 className="text-lg font-semibold text-gray-900">Visibility Snapshot</h2>
@@ -133,9 +133,9 @@ export default function KPIOverviewCard({ visibilityData, period = 'daily' }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-2 flex-1">
         {kpis.map((kpi, index) => (
-          <div key={index} className="relative overflow-hidden rounded-lg border border-gray-200 p-1.5 hover:shadow-md transition-all group bg-white">
+          <div key={index} className="relative overflow-hidden rounded-lg border border-gray-200 p-2 hover:shadow-md transition-all group flex flex-col justify-between">
             {/* Header - Icon & Title */}
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center gap-1.5">
@@ -152,7 +152,7 @@ export default function KPIOverviewCard({ visibilityData, period = 'daily' }) {
             <div className="flex items-end justify-between gap-1">
               <div>
                 <p className="text-base font-bold text-gray-900">{kpi.value}</p>
-                <p className="text-xs text-gray-500 leading-none">{kpi.subtitle}</p>
+                <p className="text-sm text-gray-500 leading-none">{kpi.subtitle}</p>
               </div>
 
               <div className="flex flex-col items-end gap-0.5">

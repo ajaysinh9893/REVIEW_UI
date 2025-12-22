@@ -1,9 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Users, Plus, Search, Edit2, Trash2, X, Mail, Phone, MapPin, Building, Tag, Star, Filter, Download, Upload, MoreVertical, Calendar, Globe, Check } from 'lucide-react';
 
 export default function ContactsDirectory() {
+  const [scrollY, setScrollY] = useState(0);
+  const fadeDistance = 80; // Smaller fade distance
+  const fadeOpacity = Math.max(0, 1 - scrollY / fadeDistance);
   const [contacts, setContacts] = useState([
     {
       id: 1,
@@ -93,6 +96,29 @@ export default function ContactsDirectory() {
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
 
+  // Scroll effect
+  // Scroll fade effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showModal]);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -180,8 +206,8 @@ export default function ContactsDirectory() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
-      <div className="p-8 space-y-6">
+    <div className="min-h-screen font-sans" style={{ backgroundColor: '#FAF9F5' }}>
+      <div className="p-8 space-y-6 pr-24">
           {/* Add Contact Button */}
           <div className="mb-6">
             <button
@@ -195,7 +221,7 @@ export default function ContactsDirectory() {
 
           {/* Stats Cards */}
           <div className="grid grid-cols-4 gap-4 mb-6">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+            <div className="rounded-xl border border-gray-200 p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 mb-1">Total Contacts</p>
@@ -207,7 +233,7 @@ export default function ContactsDirectory() {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+            <div className="rounded-xl border border-gray-200 p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 mb-1">Favorites</p>
@@ -219,7 +245,7 @@ export default function ContactsDirectory() {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+            <div className="rounded-xl border border-gray-200 p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 mb-1">Companies</p>
@@ -231,7 +257,7 @@ export default function ContactsDirectory() {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+            <div className="rounded-xl border border-gray-200 p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 mb-1">Categories</p>
@@ -245,7 +271,7 @@ export default function ContactsDirectory() {
           </div>
 
           {/* Search and Filter Bar */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+          <div className="rounded-xl border border-gray-200 p-4 mb-6">
             <div className="flex items-center gap-4 flex-wrap lg:flex-nowrap">
               {/* Search */}
               <div className="flex-1 min-w-64 relative">
@@ -278,13 +304,13 @@ export default function ContactsDirectory() {
               <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`px-3 py-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'}`}
+                  className={`px-3 py-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-gray-200' : 'hover:bg-gray-200'}`}
                 >
                   <MoreVertical size={18} className="rotate-90" />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`px-3 py-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'}`}
+                  className={`px-3 py-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-gray-200' : 'hover:bg-gray-200'}`}
                 >
                   <MoreVertical size={18} />
                 </button>
@@ -318,7 +344,7 @@ export default function ContactsDirectory() {
           {viewMode === 'grid' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredContacts.map(contact => (
-                <div key={contact.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all">
+                <div key={contact.id} className="rounded-xl border border-gray-200 p-6 hover:shadow-md transition-all">
                   {/* Header with favorite and menu */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
@@ -388,7 +414,7 @@ export default function ContactsDirectory() {
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="rounded-xl border border-gray-200 overflow-hidden">
               <table className="w-full">
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
@@ -457,7 +483,7 @@ export default function ContactsDirectory() {
 
           {/* Empty State */}
           {filteredContacts.length === 0 && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+            <div className="rounded-xl border border-gray-200 p-12 text-center">
               <Users size={48} className="mx-auto text-gray-400 mb-4" />
               <h3 className="text-lg font-semibold text-gray-900 mb-2">No contacts found</h3>
               <p className="text-gray-600 mb-6">Try adjusting your search or filters</p>
@@ -475,9 +501,9 @@ export default function ContactsDirectory() {
       {/* Add/Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="rounded-xl max-w-2xl w-full max-h-[85vh] flex flex-col border border-gray-200 shadow-2xl overflow-hidden" style={{ backgroundColor: '#FAF9F5' }}>
             {/* Modal Header */}
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+            <div className="border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-xl" style={{ backgroundColor: '#FAF9F5' }}>
               <h2 className="text-xl font-bold text-gray-900">
                 {modalMode === 'add' ? 'Add New Contact' : 'Edit Contact'}
               </h2>
@@ -490,102 +516,102 @@ export default function ContactsDirectory() {
             </div>
 
             {/* Modal Body */}
-            <div className="p-6 space-y-6">
+            <div className="flex-1 p-4 space-y-3">
               {/* Basic Info */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Full Name *
                   </label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     placeholder="John Doe"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Email *
                   </label>
                   <input
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     placeholder="john@example.com"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Phone
                   </label>
                   <input
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     placeholder="+1 (555) 123-4567"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Company
                   </label>
                   <input
                     type="text"
                     value={formData.company}
                     onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     placeholder="Acme Inc"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Position
                   </label>
                   <input
                     type="text"
                     value={formData.position}
                     onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     placeholder="Marketing Manager"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Location
                   </label>
                   <input
                     type="text"
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     placeholder="New York, NY"
                   />
                 </div>
               </div>
 
-              {/* Tags */}
+              {/* Service */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Tags
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Service
                 </label>
                 <input
                   type="text"
                   onKeyDown={handleTagInput}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  placeholder="Type a tag and press Enter"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  placeholder="Type a service type and press Enter"
                 />
-                <div className="flex flex-wrap gap-2 mt-3">
+                <div className="flex flex-wrap gap-1.5 mt-2">
                   {formData.tags.map((tag, idx) => (
-                    <span key={idx} className="flex items-center gap-2 px-3 py-1.5 bg-indigo-100 text-indigo-700 text-sm font-medium rounded-lg">
+                    <span key={idx} className="flex items-center gap-2 px-2.5 py-1 bg-indigo-100 text-indigo-700 text-xs font-medium rounded-lg">
                       {tag}
                       <button
                         onClick={() => removeTag(tag)}
@@ -600,14 +626,14 @@ export default function ContactsDirectory() {
 
               {/* Notes */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Notes
                 </label>
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  rows={4}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                  rows={2}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
                   placeholder="Additional notes about this contact..."
                 />
               </div>
@@ -628,16 +654,16 @@ export default function ContactsDirectory() {
             </div>
 
             {/* Modal Footer */}
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 flex items-center justify-end gap-3">
+            <div className="border-t border-gray-200 px-4 py-3 flex items-center justify-end gap-3 rounded-b-xl" style={{ backgroundColor: '#FAF9F5' }}>
               <button
                 onClick={() => setShowModal(false)}
-                className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-all font-medium"
+                className="px-5 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-all font-medium"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveContact}
-                className="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all font-medium shadow-sm hover:shadow-md flex items-center gap-2"
+                className="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all font-medium shadow-sm hover:shadow-md flex items-center gap-2"
               >
                 <Check size={18} />
                 {modalMode === 'add' ? 'Add Contact' : 'Save Changes'}

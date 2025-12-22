@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { BarChart3, User, FileText, TrendingUp, Clock, HelpCircle, Users, Settings, LogOut, Lock } from 'lucide-react';
+import { BarChart3, User, FileText, TrendingUp, Clock, HelpCircle, Users, Settings, LogOut, Lock, CreditCard } from 'lucide-react';
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -94,24 +94,14 @@ export default function Sidebar() {
       <div className="border-t border-gray-200 mt-auto pt-4 mb-4"></div>
 
       <nav className="space-y-1.5">
-        <Link href="/profile">
+        <Link href="/subscription">
           <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
-            pathname === '/profile'
+            pathname === '/subscription'
               ? 'bg-gray-100 text-gray-900'
               : 'text-gray-700 hover:bg-gray-50'
           }`}>
-            <User size={19} />
-            <span>Profile</span>
-          </button>
-        </Link>
-        <Link href="/account">
-          <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
-            pathname === '/account'
-              ? 'bg-gray-100 text-gray-900'
-              : 'text-gray-700 hover:bg-gray-50'
-          }`}>
-            <Lock size={19} />
-            <span>Account</span>
+            <CreditCard size={19} />
+            <span>Subscription</span>
           </button>
         </Link>
         <Link href="/settings">

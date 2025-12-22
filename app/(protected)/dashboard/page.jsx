@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { LayoutGrid, Star, Tag, MessageSquare, Settings, Search, ChevronDown, Heart, TrendingUp, Calendar, X, RefreshCw, Send, ArrowUp, ArrowDown, Users, AlertCircle, CheckCircle, Clock, Phone, Eye } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -8,7 +8,19 @@ import KPIOverviewCard from '@/src/components/KPIOverviewCard';
 import AlertSection from '@/src/components/AlertSection';
 
 export default function Dashboard() {
-  const [selectedReviews, setSelectedReviews] = useState([]);
+  const [scrollY, setScrollY] = useState(0);
+  const fadeDistance = 80; // Smaller fade distance
+  const fadeOpacity = Math.max(0, 1 - scrollY / fadeDistance);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+    const [selectedReviews, setSelectedReviews] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [replyModal, setReplyModal] = useState({ open: false, review: null });
   const [selectedTone, setSelectedTone] = useState('professional');
@@ -173,24 +185,25 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-10 max-w-7xl mx-auto">
+    <div className="min-h-screen font-sans" style={{ backgroundColor: '#FAF9F5' }}>
+      <div className="p-10 max-w-7xl mx-auto pr-24">
           {/* Top Row - Visibility Snapshot & Overall Rating */}
           {/* Top Row - Visibility Snapshot, Overall Rating & Alerts */}
           <div className="grid grid-cols-12 gap-4 mb-8">
             {/* Visibility Snapshot - 50% width */}
-            <div className="col-span-6">
+            <div className="col-span-6 h-full">
               <KPIOverviewCard visibilityData={visibilityData} period="daily" />
             </div>
             
             {/* Overall Rating - 25% width */}
             <div className="col-span-3">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 h-full flex flex-col">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Overall Rating</h2>
+              <div className="rounded-xl border border-gray-200 p-5 h-full flex flex-col">
+                <h2 className={`text-lg font-semibold mb-4 ${'text-gray-900'}`}>Overall Rating</h2>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="text-5xl font-bold text-gray-900">4.7</div>
+                  <div className={`text-5xl font-bold ${'text-gray-900'}`}>4.7</div>
                   <Star size={32} className="fill-amber-400 text-amber-400" />
                 </div>
-                <p className="text-sm text-gray-500 mb-4">based on 256 reviews</p>
+                <p className={`text-base mb-4 ${'text-gray-500'}`}>based on 256 reviews</p>
                 <div className="space-y-3 flex-1">
                   {[
                     { stars: 5, count: 180, percentage: 70 },
@@ -200,11 +213,11 @@ export default function Dashboard() {
                     { stars: 1, count: 8, percentage: 3 }
                   ].map((item) => (
                     <div key={item.stars} className="flex items-center gap-3">
-                      <span className="text-sm font-medium text-gray-700 w-12">{item.stars}★</span>
-                      <div className="flex-1 bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                      <span className={`text-base font-medium w-12 ${'text-gray-700'}`}>{item.stars}<span className="text-amber-500">★</span></span>
+                      <div className={`flex-1 rounded-full h-2.5 overflow-hidden ${'bg-gray-200'}`}>
                         <div className="bg-indigo-600 h-full rounded-full transition-all" style={{ width: `${item.percentage}%` }}></div>
                       </div>
-                      <span className="text-sm text-gray-600 w-12 text-right">({item.count})</span>
+                      <span className={`text-base w-12 text-right ${'text-gray-600'}`}>({item.count})</span>
                     </div>
                   ))}
                 </div>
@@ -221,15 +234,15 @@ export default function Dashboard() {
           <div className="grid grid-cols-12 gap-4 mb-8">
             {/* Review Trends */}
             <div className="col-span-4">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-full flex flex-col">
+              <div className="rounded-xl border border-gray-200 p-6 h-full flex flex-col">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold text-gray-900">Review Trends</h2>
-                  <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
+                  <h2 className={`text-lg font-semibold ${'text-gray-900'}`}>Review Trends</h2>
+                  <div className={`flex gap-2 p-1 rounded-lg ${'bg-gray-100'}`}>
                     <button
                       onClick={() => setSelectedPeriod('week')}
                       className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
                         selectedPeriod === 'week'
-                          ? 'bg-white text-indigo-600 shadow-sm'
+                          ? 'bg-indigo-600 text-white shadow-sm'
                           : 'text-gray-700 hover:text-gray-900'
                       }`}
                     >
@@ -239,7 +252,7 @@ export default function Dashboard() {
                       onClick={() => setSelectedPeriod('month')}
                       className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
                         selectedPeriod === 'month'
-                          ? 'bg-white text-indigo-600 shadow-sm'
+                          ? 'bg-indigo-600 text-white shadow-sm'
                           : 'text-gray-700 hover:text-gray-900'
                       }`}
                     >
@@ -250,33 +263,37 @@ export default function Dashboard() {
 
                 <ResponsiveContainer width="100%" height={280}>
                   <LineChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <CartesianGrid 
+                      strokeDasharray="3 3" 
+                      stroke={'#d1d5db'} 
+                    />
                     <XAxis 
                       dataKey="name" 
-                      stroke="#6b7280"
+                      stroke={'#4b5563'}
                       style={{ fontSize: '12px', fontWeight: '500' }}
                     />
                     <YAxis 
-                      stroke="#6b7280"
+                      stroke={'#4b5563'}
                       style={{ fontSize: '12px', fontWeight: '500' }}
                     />
                     <Tooltip 
                       contentStyle={{
                         backgroundColor: '#ffffff',
-                        border: '1px solid #e5e7eb',
+                        border: `1px solid ${'#e5e7eb'}`,
                         borderRadius: '8px',
-                        padding: '12px'
+                        padding: '12px',
+                        color: '#1f2937'
                       }}
                       cursor={{ stroke: '#d1d5db', strokeWidth: 1 }}
                     />
                     <Legend 
-                      wrapperStyle={{ paddingTop: '20px' }}
+                      wrapperStyle={{ paddingTop: '20px', color: '#1f2937' }}
                       iconType="line"
                     />
                     <Line
                       type="monotone"
                       dataKey={selectedPeriod === 'week' ? 'lastWeek' : 'lastMonth'}
-                      stroke="#94a3b8"
+                      stroke={'#94a3b8'}
                       strokeWidth={3}
                       name={selectedPeriod === 'week' ? 'Last Week' : 'Last Month'}
                       dot={{ fill: '#94a3b8', r: 5 }}
@@ -298,8 +315,8 @@ export default function Dashboard() {
 
             {/* Metrics Overview */}
             <div className="col-span-5">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-full flex flex-col">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Metrics Overview</h2>
+              <div className="rounded-xl border border-gray-200 p-6 h-full flex flex-col">
+                <h2 className={`text-lg font-semibold mb-4 ${'text-gray-900'}`}>Metrics Overview</h2>
                 <div className="grid grid-cols-2 gap-3 flex-1">
                   {[
                     {
@@ -308,8 +325,8 @@ export default function Dashboard() {
                       change: '+12.5%',
                       isPositive: true,
                       icon: <MessageSquare size={18} />,
-                      color: 'text-blue-600',
-                      bgColor: 'bg-blue-50',
+                      color: 'text-blue-700',
+                      bgColor: 'bg-blue-100',
                       subtitle: 'vs last period'
                     },
                     {
@@ -318,8 +335,8 @@ export default function Dashboard() {
                       change: '+0.3',
                       isPositive: true,
                       icon: <TrendingUp size={18} />,
-                      color: 'text-green-600',
-                      bgColor: 'bg-green-50',
+                      color: 'text-red-700',
+                      bgColor: 'bg-red-100',
                       subtitle: 'out of 5'
                     },
                     {
@@ -328,8 +345,8 @@ export default function Dashboard() {
                       change: '+5.2%',
                       isPositive: true,
                       icon: <TrendingUp size={18} />,
-                      color: 'text-pink-600',
-                      bgColor: 'bg-pink-50',
+                      color: 'text-yellow-700',
+                      bgColor: 'bg-yellow-100',
                       subtitle: 'average response'
                     },
                     {
@@ -338,12 +355,12 @@ export default function Dashboard() {
                       change: '+8.3%',
                       isPositive: true,
                       icon: <CheckCircle size={18} />,
-                      color: 'text-purple-600',
-                      bgColor: 'bg-purple-50',
+                      color: 'text-green-700',
+                      bgColor: 'bg-green-100',
                       subtitle: 'of total reviews'
                     }
                   ].map((stat, index) => (
-                    <div key={index} className={`${stat.bgColor} rounded-lg border border-gray-200 p-3 hover:shadow-md transition-all`}>
+                    <div key={index} className={`${stat.bgColor} rounded-lg p-3 hover:shadow-md transition-all`}>
                       <div className="flex items-start justify-between mb-1">
                         <div className={`w-8 h-8 rounded flex items-center justify-center ${stat.color}`}>
                           {stat.icon}
@@ -353,7 +370,7 @@ export default function Dashboard() {
                           {stat.change}
                         </div>
                       </div>
-                      <h3 className="text-xs font-medium text-gray-600 mb-0.5 uppercase tracking-wide">{stat.title}</h3>
+                      <h3 className="text-sm font-medium text-gray-600 mb-0.5 uppercase tracking-wide">{stat.title}</h3>
                       <p className="text-lg font-bold text-gray-900 mb-0">{stat.value}</p>
                     </div>
                   ))}
@@ -363,28 +380,28 @@ export default function Dashboard() {
 
             {/* Top Keywords - aligned with Alerts */}
             <div className="col-span-3">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 h-full flex flex-col">
-                <h2 className="text-base font-semibold text-gray-900 mb-3">Top Keywords</h2>
+              <div className="rounded-xl border border-gray-200 p-4 h-full flex flex-col">
+                <h2 className={`text-base font-semibold mb-3 ${'text-gray-900'}`}>Top Keywords</h2>
                 <div className="flex-1 overflow-y-auto">
                   <div className="space-y-2">
                     <div>
-                      <h3 className="text-sm font-semibold text-green-700 mb-2">Positive</h3>
+                      <h3 className="text-base font-semibold text-green-800 mb-2">Positive</h3>
                       <div className="space-y-1.5 mb-4">
                         {positiveKeywords.slice(0, 3).map((keyword, index) => (
-                          <div key={index} className="flex items-center justify-between py-1.5 px-2 hover:bg-green-50 rounded-lg transition-all cursor-pointer border-l-2 border-green-500">
-                            <span className="text-xs text-gray-700 font-medium">{keyword.name}</span>
-                            <span className="text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">{keyword.count}</span>
+                          <div key={index} className="flex items-center justify-between py-1.5 px-2 hover:bg-green-100 rounded-lg transition-all cursor-pointer border-l-2 border-green-700">
+                            <span className="text-sm text-gray-700 font-medium">{keyword.name}</span>
+                            <span className="text-sm font-semibold text-green-800 bg-green-200 px-2 py-0.5 rounded-full">{keyword.count}</span>
                           </div>
                         ))}
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-red-700 mb-2">Negative</h3>
+                      <h3 className="text-base font-semibold text-red-800 mb-2">Negative</h3>
                       <div className="space-y-1.5">
                         {negativeKeywords.slice(0, 3).map((keyword, index) => (
-                          <div key={index} className="flex items-center justify-between py-1.5 px-2 hover:bg-red-50 rounded-lg transition-all cursor-pointer border-l-2 border-red-500">
-                            <span className="text-xs text-gray-700 font-medium">{keyword.name}</span>
-                            <span className="text-xs font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded-full">{keyword.count}</span>
+                          <div key={index} className="flex items-center justify-between py-1.5 px-2 hover:bg-red-100 rounded-lg transition-all cursor-pointer border-l-2 border-red-700">
+                            <span className="text-sm text-gray-700 font-medium">{keyword.name}</span>
+                            <span className="text-sm font-semibold text-red-800 bg-red-200 px-2 py-0.5 rounded-full">{keyword.count}</span>
                           </div>
                         ))}
                       </div>
@@ -394,6 +411,7 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+      </div>
     </div>
   );
 }

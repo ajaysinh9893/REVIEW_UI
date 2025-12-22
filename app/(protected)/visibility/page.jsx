@@ -1,10 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TrendingUp } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function VisibilityPage() {
+  const [scrollY, setScrollY] = useState(0);
+  const fadeDistance = 80; // Smaller fade distance
+  const fadeOpacity = Math.max(0, 1 - scrollY / fadeDistance);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   const [visibilityPeriod, setVisibilityPeriod] = useState('weekly');
 
   // Daily data for the past week
@@ -86,10 +98,11 @@ export default function VisibilityPage() {
   const visibilityMetrics = calculateVisibilityMetrics();
 
   return (
-    <div className="p-10">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen">
+      <div className="p-10 pr-24">
+        <div className="max-w-7xl mx-auto">
             {/* Visibility Trends Line Chart */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="rounded-xl border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                   <TrendingUp size={20} className="text-indigo-600" />
@@ -100,7 +113,7 @@ export default function VisibilityPage() {
                     onClick={() => setVisibilityPeriod('daily')}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                       visibilityPeriod === 'daily'
-                        ? 'bg-white text-indigo-600 shadow-sm'
+                        ? 'bg-indigo-600 text-white'
                         : 'text-gray-700 hover:text-gray-900'
                     }`}
                   >
@@ -110,7 +123,7 @@ export default function VisibilityPage() {
                     onClick={() => setVisibilityPeriod('weekly')}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                       visibilityPeriod === 'weekly'
-                        ? 'bg-white text-indigo-600 shadow-sm'
+                        ? 'bg-indigo-600 text-white'
                         : 'text-gray-700 hover:text-gray-900'
                     }`}
                   >
@@ -120,7 +133,7 @@ export default function VisibilityPage() {
                     onClick={() => setVisibilityPeriod('monthly')}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                       visibilityPeriod === 'monthly'
-                        ? 'bg-white text-indigo-600 shadow-sm'
+                        ? 'bg-indigo-600 text-white'
                         : 'text-gray-700 hover:text-gray-900'
                     }`}
                   >
@@ -132,8 +145,8 @@ export default function VisibilityPage() {
               {/* Visibility Metrics Summary Cards */}
               <div className="grid grid-cols-4 gap-4 mb-6">
                 {/* Impressions Card */}
-                <div className="bg-blue-50 rounded-lg p-4">
-                  <p className="text-xs font-medium text-blue-600 uppercase tracking-wide mb-1">Impressions</p>
+                <div className="bg-blue-100 rounded-lg p-4">
+                  <p className="text-xs font-medium text-blue-700 uppercase tracking-wide mb-1">Impressions</p>
                   <p className="text-2xl font-bold text-gray-900">
                     {visibilityMetrics.totals.totalImpressions.toString()}
                   </p>
@@ -152,8 +165,8 @@ export default function VisibilityPage() {
                 </div>
 
                 {/* Clicks Card */}
-                <div className="bg-indigo-50 rounded-lg p-4">
-                  <p className="text-xs font-medium text-indigo-600 uppercase tracking-wide mb-1">Clicks</p>
+                <div className="bg-red-100 rounded-lg p-4">
+                  <p className="text-xs font-medium text-red-700 uppercase tracking-wide mb-1">Clicks</p>
                   <p className="text-2xl font-bold text-gray-900">
                     {visibilityMetrics.totals.totalClicks.toString()}
                   </p>
@@ -172,8 +185,8 @@ export default function VisibilityPage() {
                 </div>
 
                 {/* Calls Card */}
-                <div className="bg-emerald-50 rounded-lg p-4">
-                  <p className="text-xs font-medium text-emerald-600 uppercase tracking-wide mb-1">Calls</p>
+                <div className="bg-yellow-100 rounded-lg p-4">
+                  <p className="text-xs font-medium text-yellow-700 uppercase tracking-wide mb-1">Calls</p>
                   <p className="text-2xl font-bold text-gray-900">
                     {visibilityMetrics.totals.totalCalls.toString()}
                   </p>
@@ -192,8 +205,8 @@ export default function VisibilityPage() {
                 </div>
 
                 {/* Direction Requests Card */}
-                <div className="bg-amber-50 rounded-lg p-4">
-                  <p className="text-xs font-medium text-amber-600 uppercase tracking-wide mb-1">Directions</p>
+                <div className="bg-green-100 rounded-lg p-4">
+                  <p className="text-xs font-medium text-green-700 uppercase tracking-wide mb-1">Directions</p>
                   <p className="text-2xl font-bold text-gray-900">
                     {visibilityMetrics.totals.totalDirections.toString()}
                   </p>
@@ -240,38 +253,38 @@ export default function VisibilityPage() {
                   <Line
                     type="monotone"
                     dataKey="impressions"
-                    stroke="#3b82f6"
+                    stroke="#2563eb"
                     strokeWidth={2}
                     name="Impressions"
-                    dot={{ fill: '#3b82f6', r: 4 }}
-                    activeDot={{ r: 6, fill: '#3b82f6' }}
+                    dot={{ fill: '#2563eb', r: 4 }}
+                    activeDot={{ r: 6, fill: '#2563eb' }}
                   />
                   <Line
                     type="monotone"
                     dataKey="clicks"
-                    stroke="#6366f1"
+                    stroke="#dc2626"
                     strokeWidth={2}
                     name="Clicks"
-                    dot={{ fill: '#6366f1', r: 4 }}
-                    activeDot={{ r: 6, fill: '#6366f1' }}
+                    dot={{ fill: '#dc2626', r: 4 }}
+                    activeDot={{ r: 6, fill: '#dc2626' }}
                   />
                   <Line
                     type="monotone"
                     dataKey="calls"
-                    stroke="#10b981"
+                    stroke="#d97706"
                     strokeWidth={2}
                     name="Calls"
-                    dot={{ fill: '#10b981', r: 4 }}
-                    activeDot={{ r: 6, fill: '#10b981' }}
+                    dot={{ fill: '#d97706', r: 4 }}
+                    activeDot={{ r: 6, fill: '#d97706' }}
                   />
                   <Line
                     type="monotone"
                     dataKey="directions"
-                    stroke="#f59e0b"
+                    stroke="#16a34a"
                     strokeWidth={2}
                     name="Directions"
-                    dot={{ fill: '#f59e0b', r: 4 }}
-                    activeDot={{ r: 6, fill: '#f59e0b' }}
+                    dot={{ fill: '#16a34a', r: 4 }}
+                    activeDot={{ r: 6, fill: '#16a34a' }}
                   />
                 </LineChart>
               </ResponsiveContainer>

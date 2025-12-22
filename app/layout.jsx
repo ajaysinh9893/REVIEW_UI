@@ -1,6 +1,4 @@
 import '../src/styles/globals.css';
-import Sidebar from '@/src/components/Sidebar';
-import Header from '@/src/components/Header';
 
 export const metadata = {
   title: 'Review UI - Reputation Management',
@@ -10,7 +8,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body style={{ backgroundColor: '#FAF9F5' }}>
         {children}
       </body>
     </html>

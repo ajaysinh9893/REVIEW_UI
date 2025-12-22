@@ -1,0 +1,541 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Mail, Lock, Shield, Smartphone, Globe, Trash2, Check, X, Eye, EyeOff, AlertCircle, CheckCircle, LogOut, Calendar, MapPin, Chrome, Monitor, Apple, RefreshCw, Link as LinkIcon, Unlink } from 'lucide-react';
+
+export default function AccountSettings() {
+  const [currentEmail, setCurrentEmail] = useState('john.doe@example.com');
+  const [newEmail, setNewEmail] = useState('');
+  const [isEmailVerified, setIsEmailVerified] = useState(true);
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+
+  // Prevent body scroll when delete modal is open
+  useEffect(() => {
+    if (showDeleteModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showDeleteModal]);
+
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+
+  const connectedMethods = [
+    {
+      id: 1,
+      provider: 'Google',
+      email: 'john.doe@gmail.com',
+      connected: true,
+      icon: <Globe size={24} />,
+      color: 'red',
+      connectedDate: 'Jan 15, 2024'
+    },
+    {
+      id: 2,
+      provider: 'Apple',
+      email: 'john.doe@icloud.com',
+      connected: false,
+      icon: <Apple size={24} />,
+      color: 'gray',
+      connectedDate: null
+    },
+    {
+      id: 3,
+      provider: 'Microsoft',
+      email: null,
+      connected: false,
+      icon: <Monitor size={24} />,
+      color: 'blue',
+      connectedDate: null
+    }
+  ];
+
+  const activeSessions = [
+    {
+      id: 1,
+      device: 'Chrome on MacBook Pro',
+      icon: <Chrome size={20} />,
+      location: 'New York, USA',
+      ip: '192.168.1.1',
+      lastActive: '2 minutes ago',
+      current: true
+    },
+    {
+      id: 2,
+      device: 'Safari on iPhone 14',
+      icon: <Smartphone size={20} />,
+      location: 'New York, USA',
+      ip: '192.168.1.45',
+      lastActive: '1 hour ago',
+      current: false
+    },
+    {
+      id: 3,
+      device: 'Chrome on Windows PC',
+      icon: <Monitor size={20} />,
+      location: 'Los Angeles, USA',
+      ip: '192.168.2.10',
+      lastActive: '3 days ago',
+      current: false
+    }
+  ];
+
+  const handleChangePassword = () => {
+    // Password change logic here
+    console.log('Password changed');
+    setShowChangePassword(false);
+    setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  };
+
+  const handleLogoutAll = () => {
+    if (confirm('Are you sure you want to logout from all devices?')) {
+      console.log('Logging out from all sessions');
+    }
+  };
+
+  const handleLogoutSession = (sessionId) => {
+    if (confirm('Are you sure you want to logout from this device?')) {
+      console.log('Logging out session:', sessionId);
+    }
+  };
+
+  const handleDeleteAccount = () => {
+    if (deleteConfirmText === 'DELETE') {
+      console.log('Account deleted');
+      setShowDeleteModal(false);
+    }
+  };
+
+  const handleVerifyEmail = () => {
+    console.log('Verification email sent');
+  };
+
+  const handleChangeEmail = () => {
+    console.log('Email change requested:', newEmail);
+    setNewEmail('');
+  };
+
+  return (
+    <div style={{ backgroundColor: '#FAF9F5' }}>
+      <div className="p-10 max-w-5xl mx-auto">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Account Settings</h1>
+            <p className="text-gray-600">Manage your account security and preferences</p>
+          </div>
+
+          <div className="space-y-6">
+            {/* Login Email Section */}
+            <div className="rounded-xl border border-gray-200 p-6">
+              <div className="flex items-start justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+                    <Mail className="text-indigo-600" size={24} />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-900">Login Email</h2>
+                    <p className="text-sm text-gray-600">Manage your primary email address</p>
+                  </div>
+                </div>
+                {isEmailVerified ? (
+                  <span className="flex items-center gap-2 px-3 py-1.5 bg-green-100 text-green-700 text-sm font-medium rounded-lg">
+                    <CheckCircle size={16} />
+                    Verified
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2 px-3 py-1.5 bg-amber-100 text-amber-700 text-sm font-medium rounded-lg">
+                    <AlertCircle size={16} />
+                    Not Verified
+                  </span>
+                )}
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Current Email</label>
+                  <input
+                    type="email"
+                    value={currentEmail}
+                    disabled
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-600"
+                  />
+                </div>
+
+                {!isEmailVerified && (
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <AlertCircle className="text-amber-600 flex-shrink-0 mt-0.5" size={20} />
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-amber-900 mb-2">Email verification required</p>
+                        <p className="text-sm text-amber-700 mb-3">Please verify your email address to secure your account</p>
+                        <button
+                          onClick={handleVerifyEmail}
+                          className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-all text-sm font-medium"
+                        >
+                          Send Verification Email
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">New Email Address</label>
+                  <div className="flex gap-3">
+                    <input
+                      type="email"
+                      value={newEmail}
+                      onChange={(e) => setNewEmail(e.target.value)}
+                      placeholder="Enter new email address"
+                      className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                    <button
+                      onClick={handleChangeEmail}
+                      disabled={!newEmail}
+                      className="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Change Email
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Change Password Section */}
+            <div className="rounded-xl border border-gray-200 p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <Lock className="text-purple-600" size={24} />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">Change Password</h2>
+                  <p className="text-sm text-gray-600">Update your password regularly for security</p>
+                </div>
+              </div>
+
+              {!showChangePassword ? (
+                <button
+                  onClick={() => setShowChangePassword(true)}
+                  className="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all font-medium"
+                >
+                  Change Password
+                </button>
+              ) : (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                    <div className="relative">
+                      <input
+                        type={showCurrentPassword ? 'text' : 'password'}
+                        value={passwordForm.currentPassword}
+                        onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
+                        className="w-full px-4 py-2.5 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        placeholder="Enter current password"
+                      />
+                      <button
+                        onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        {showCurrentPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                    <div className="relative">
+                      <input
+                        type={showNewPassword ? 'text' : 'password'}
+                        value={passwordForm.newPassword}
+                        onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                        className="w-full px-4 py-2.5 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        placeholder="Enter new password"
+                      />
+                      <button
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                    <div className="relative">
+                      <input
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        value={passwordForm.confirmPassword}
+                        onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+                        className="w-full px-4 py-2.5 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        placeholder="Confirm new password"
+                      />
+                      <button
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 pt-2">
+                    <button
+                      onClick={handleChangePassword}
+                      className="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all font-medium"
+                    >
+                      Update Password
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowChangePassword(false);
+                        setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                      }}
+                      className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all font-medium"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Connected Login Methods */}
+            <div className="rounded-xl border border-gray-200 p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                  <LinkIcon className="text-green-600" size={24} />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">Connected Login Methods</h2>
+                  <p className="text-sm text-gray-600">Link your account with third-party services</p>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                {connectedMethods.map((method) => (
+                  <div
+                    key={method.id}
+                    className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className={`w-12 h-12 bg-${method.color}-100 rounded-lg flex items-center justify-center text-${method.color}-600`}>
+                        {method.icon}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">{method.provider}</h3>
+                        {method.connected ? (
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm text-gray-600">{method.email}</p>
+                            <span className="text-xs text-gray-500">• Connected {method.connectedDate}</span>
+                          </div>
+                        ) : (
+                          <p className="text-sm text-gray-500">Not connected</p>
+                        )}
+                      </div>
+                    </div>
+
+                    {method.connected ? (
+                      <button className="flex items-center gap-2 px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-all font-medium">
+                        <Unlink size={16} />
+                        Disconnect
+                      </button>
+                    ) : (
+                      <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all font-medium">
+                        <LinkIcon size={16} />
+                        Connect
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Active Sessions */}
+            <div className="rounded-xl border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Shield className="text-blue-600" size={24} />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-900">Active Sessions</h2>
+                    <p className="text-sm text-gray-600">Manage where you're signed in</p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleLogoutAll}
+                  className="flex items-center gap-2 px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-all font-medium"
+                >
+                  <LogOut size={16} />
+                  Logout All Sessions
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                {activeSessions.map((session) => (
+                  <div
+                    key={session.id}
+                    className={`p-4 border rounded-lg ${
+                      session.current
+                        ? 'border-indigo-300 bg-indigo-50'
+                        : 'border-gray-200 hover:bg-gray-50'
+                    } transition-all`}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-600">
+                          {session.icon}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-semibold text-gray-900">{session.device}</h3>
+                            {session.current && (
+                              <span className="px-2 py-0.5 bg-indigo-600 text-white text-xs font-medium rounded">
+                                Current
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-4 text-sm text-gray-600">
+                            <span className="flex items-center gap-1">
+                              <MapPin size={14} />
+                              {session.location}
+                            </span>
+                            <span>IP: {session.ip}</span>
+                          </div>
+                          <p className="text-xs text-gray-500 mt-1">Last active: {session.lastActive}</p>
+                        </div>
+                      </div>
+
+                      {!session.current && (
+                        <button
+                          onClick={() => handleLogoutSession(session.id)}
+                          className="px-3 py-1.5 text-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-all font-medium"
+                        >
+                          Logout
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Delete Account */}
+            <div className="rounded-xl border border-red-200 p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                  <Trash2 className="text-red-600" size={24} />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">Delete Account</h2>
+                  <p className="text-sm text-gray-600">Permanently delete your account and all data</p>
+                </div>
+              </div>
+
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
+                  <div>
+                    <p className="text-sm font-medium text-red-900 mb-1">Warning: This action cannot be undone</p>
+                    <p className="text-sm text-red-700">
+                      Deleting your account will permanently remove all your data, including contacts, reviews, and settings. This action is irreversible.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowDeleteModal(true)}
+                className="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all font-medium"
+              >
+                Delete Account
+              </button>
+            </div>
+          </div>
+
+          {/* Delete Account Modal */}
+          {showDeleteModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="rounded-xl shadow-2xl max-w-md w-full border border-gray-200 overflow-hidden" style={{ backgroundColor: '#FAF9F5' }}>
+              {/* Modal Header */}
+              <div className="border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-xl" style={{ backgroundColor: '#FAF9F5' }}>
+                <h2 className="text-xl font-bold text-gray-900">Confirm Account Deletion</h2>
+                <button
+                  onClick={() => {
+                    setShowDeleteModal(false);
+                    setDeleteConfirmText('');
+                  }}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <X size={24} />
+                </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
+                  <div>
+                    <p className="text-sm font-medium text-red-900 mb-2">This will permanently delete:</p>
+                    <ul className="text-sm text-red-700 space-y-1 list-disc list-inside">
+                      <li>Your account and profile information</li>
+                      <li>All contacts and business data</li>
+                      <li>Review history and responses</li>
+                      <li>All connected integrations</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-900 mb-2">
+                  Type <span className="font-bold text-red-600">DELETE</span> to confirm:
+                </label>
+                <input
+                  type="text"
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="Type DELETE"
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setShowDeleteModal(false);
+                    setDeleteConfirmText('');
+                  }}
+                  className="flex-1 px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteAccount}
+                  disabled={deleteConfirmText !== 'DELETE'}
+                  className="flex-1 px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Delete Account
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

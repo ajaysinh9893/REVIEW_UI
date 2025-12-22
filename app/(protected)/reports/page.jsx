@@ -1,9 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Sparkles, Calendar, Filter, Download, RefreshCw, ChevronDown, X, Plus } from 'lucide-react';
 
 export default function ReportsPage() {
+  const [scrollY, setScrollY] = useState(0);
+  const fadeDistance = 80; // Smaller fade distance
+  const fadeOpacity = Math.max(0, 1 - scrollY / fadeDistance);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   const [searchQuery, setSearchQuery] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -66,9 +78,10 @@ export default function ReportsPage() {
   };
 
   return (
-    <div className="p-10 max-w-7xl mx-auto">
+    <div className="min-h-screen">
+      <div className="p-10 max-w-7xl mx-auto pr-24">
           {/* AI-Powered Search Bar */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+          <div className="rounded-xl border border-gray-200 p-6 mb-8">
             <div className="flex items-center gap-3 mb-4">
               <Sparkles size={24} className="text-indigo-600" />
               <h2 className="text-lg font-semibold text-gray-900">AI-Powered Report Builder</h2>
@@ -195,7 +208,7 @@ export default function ReportsPage() {
 
           {/* Results Table */}
           {reportData && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="rounded-xl border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">Report Results</h3>
@@ -256,24 +269,25 @@ export default function ReportsPage() {
               {/* Summary Stats */}
               <div className="mt-6 pt-6 border-t border-gray-200 grid grid-cols-4 gap-4">
                 <div className="text-center">
-                  <p className="text-xs text-gray-600 mb-1">Total Calls</p>
+                  <p className="text-sm text-blue-700 font-semibold mb-2">Total Calls</p>
                   <p className="text-2xl font-bold text-gray-900">85</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-xs text-gray-600 mb-1">Avg. Duration</p>
+                  <p className="text-sm text-red-700 font-semibold mb-2">Avg. Duration</p>
                   <p className="text-2xl font-bold text-gray-900">2h 19m</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-xs text-gray-600 mb-1">Peak Day</p>
+                  <p className="text-sm text-yellow-700 font-semibold mb-2">Peak Day</p>
                   <p className="text-2xl font-bold text-gray-900">Mon, Dec 9</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-xs text-gray-600 mb-1">Growth</p>
-                  <p className="text-2xl font-bold text-green-600">+12.5%</p>
+                  <p className="text-sm text-green-700 font-semibold mb-2">Growth</p>
+                  <p className="text-2xl font-bold text-green-700">+12.5%</p>
                 </div>
               </div>
             </div>
           )}
         </div>
+    </div>
   );
 }
