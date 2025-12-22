@@ -596,7 +596,7 @@ export default function Settings() {
                             </div>
                             <div>
                               <h2 className="text-lg font-semibold text-gray-900">Active Sessions</h2>
-                              <p className="text-sm text-gray-600">Manage where you're signed in</p>
+                              <p className="text-sm text-gray-600">Manage where you&apos;re signed in</p>
                             </div>
                           </div>
                           <button

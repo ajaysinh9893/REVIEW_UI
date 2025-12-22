@@ -252,7 +252,7 @@ export default function SubscriptionMinimal() {
               <div className="pb-4 border-b border-gray-100">
                 <h3 className="font-semibold text-gray-900 mb-1 text-sm">Can I upgrade later?</h3>
                 <p className="text-gray-600 text-xs">
-                  Yes! Upgrade anytime and we'll prorate the difference.
+                  Yes! Upgrade anytime and we&apos;ll prorate the difference.
                 </p>
               </div>
               

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { User, Settings, Lock } from 'lucide-react';
+import { User, Settings, Lock, Star } from 'lucide-react';
 
 export default function ReviewProfile() {
     const [formData, setFormData] = useState({

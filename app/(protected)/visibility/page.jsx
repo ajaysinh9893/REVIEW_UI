@@ -290,6 +290,7 @@ export default function VisibilityPage() {
               </ResponsiveContainer>
             </div>
             {/* ============ VISIBILITY TRENDS UI SECTION END ============ */}
+        </div>
       </div>
     </div>
   );
