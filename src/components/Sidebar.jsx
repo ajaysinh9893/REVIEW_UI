@@ -1,18 +1,27 @@
 'use client';
 
+import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { BarChart3, User, FileText, TrendingUp, Clock, HelpCircle, Users, Settings, LogOut, Lock, CreditCard } from 'lucide-react';
+import { BarChart3, User, FileText, TrendingUp, Clock, HelpCircle, Users, Settings, LogOut, Lock, CreditCard, AlertCircle } from 'lucide-react';
 
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  const handleLogout = () => {
-    if (confirm('Are you sure you want to logout?')) {
-      // Clear any auth data (cookies, localStorage, etc.)
-      router.push('/login');
-    }
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true);
+  };
+
+  const handleConfirmLogout = () => {
+    setShowLogoutModal(false);
+    // Clear any auth data (cookies, localStorage, etc.)
+    router.push('/login');
+  };
+
+  const handleCancelLogout = () => {
+    setShowLogoutModal(false);
   };
 
   return (
@@ -119,11 +128,44 @@ export default function Sidebar() {
           </button>
         </Link>
         <div className="border-t border-gray-200 my-2"></div>
-        <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all text-red-600 hover:bg-red-50">
+        <button onClick={handleLogoutClick} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all text-red-600 hover:bg-red-50">
           <LogOut size={19} />
           <span>Logout</span>
         </button>
       </nav>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-sm mx-4 animate-in fade-in zoom-in duration-300">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                <AlertCircle className="text-red-600" size={24} />
+              </div>
+              <h2 className="text-xl font-bold text-gray-900">Logout?</h2>
+            </div>
+            
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to logout? You&apos;ll need to sign in again to access your account.
+            </p>
+
+            <div className="flex gap-3">
+              <button
+                onClick={handleCancelLogout}
+                className="flex-1 px-4 py-2.5 bg-gray-100 text-gray-900 text-sm font-semibold rounded-lg hover:bg-gray-200 transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmLogout}
+                className="flex-1 px-4 py-2.5 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition-all"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
