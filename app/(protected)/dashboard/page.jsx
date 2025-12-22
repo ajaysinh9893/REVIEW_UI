@@ -6,8 +6,10 @@ import { LayoutGrid, Star, Tag, MessageSquare, Settings, Search, ChevronDown, He
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import KPIOverviewCard from '@/src/components/KPIOverviewCard';
 import AlertSection from '@/src/components/AlertSection';
+import { usePrompt } from '@/src/components/usePrompt';
 
 export default function Dashboard() {
+  const prompt = usePrompt();
   const [scrollY, setScrollY] = useState(0);
   const fadeDistance = 80; // Smaller fade distance
   const fadeOpacity = Math.max(0, 1 - scrollY / fadeDistance);
@@ -412,6 +414,9 @@ export default function Dashboard() {
             </div>
           </div>
       </div>
+
+      {/* Prompt Renderer */}
+      <prompt.PromptRenderer />
     </div>
   );
 }

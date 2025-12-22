@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { Search, Star, X, ChevronDown, Filter, Calendar, MessageSquare, TrendingUp, MapPin, Tag, CheckCircle, Clock, SlidersHorizontal } from 'lucide-react';
+import { usePrompt } from '@/src/components/usePrompt';
 
 export default function ReviewsPage() {
+    const prompt = usePrompt();
     const [scrollY, setScrollY] = useState(0);
     const fadeDistance = 80; // Smaller fade distance
     const fadeOpacity = Math.max(0, 1 - scrollY / fadeDistance);
@@ -249,6 +251,37 @@ export default function ReviewsPage() {
   const closeReplyModal = () => {
     setReplyModal({ open: false, review: null });
     setSelectedReply('');
+  };
+
+  const handleReplySubmit = () => {
+    if (!selectedReply.trim()) {
+      prompt.showError('Empty Reply', 'Please write a reply before submitting.');
+      return;
+    }
+
+    prompt.showLoading('Sending your reply...');
+    setTimeout(() => {
+      prompt.closePrompt();
+      prompt.showSuccess('Reply Sent', 'Your reply has been published successfully.');
+      console.log('Reply sent:', selectedReply);
+      closeReplyModal();
+    }, 1500);
+  };
+
+  const handleMarkResolved = (review) => {
+    prompt.showConfirm(
+      'Mark as Resolved?',
+      `Mark "${review.name}&apos;s" review as resolved. This indicates you&apos;ve addressed their concern.`,
+      () => {
+        prompt.showLoading('Marking as resolved...');
+        setTimeout(() => {
+          prompt.closePrompt();
+          prompt.showSuccess('Marked Resolved', 'This review has been marked as resolved.');
+          console.log('Review marked as resolved:', review.id);
+        }, 1200);
+      },
+      { confirmText: 'Mark Resolved', cancelText: 'Cancel', type: 'warning' }
+    );
   };
 
   const FilterDropdown = ({ label, filterKey, options, icon: Icon }) => (
@@ -587,7 +620,9 @@ export default function ReviewsPage() {
                                   </button>
                                 )}
                                 {review.sentiment === 'Negative' && !review.resolved && (
-                                  <button className="px-4 py-2 text-sm font-medium bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all">
+                                  <button 
+                                    onClick={() => handleMarkResolved(review)}
+                                    className="px-4 py-2 text-sm font-medium bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all">
                                     Mark Resolved
                                   </button>
                                 )}
@@ -646,7 +681,9 @@ export default function ReviewsPage() {
                   className={`px-6 py-2.5 text-sm font-medium rounded-lg border transition-all ${'text-gray-700 bg-white border-gray-300 hover:bg-gray-50'}`}>
                   Cancel
                 </button>
-                <button className="px-6 py-2.5 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md">
+                <button 
+                  onClick={handleReplySubmit}
+                  className="px-6 py-2.5 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md">
                   Send Reply
                 </button>
               </div>
@@ -654,6 +691,9 @@ export default function ReviewsPage() {
           </div>
         </div>
       )}
+
+      {/* Prompt Renderer */}
+      <prompt.PromptRenderer />
     </div>
   );
 }

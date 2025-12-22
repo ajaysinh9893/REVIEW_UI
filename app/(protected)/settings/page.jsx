@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react';
 import { User, Lock, Globe, Bell, SettingsIcon, Camera, Eye, EyeOff, Building2, Clock, Copy, Plus, X, Calendar, AlertCircle, Mail, Shield, Smartphone, Trash2, Check, CheckCircle, LogOut, MapPin, Chrome, Monitor, Apple, RefreshCw, Link as LinkIcon, Unlink, MessageSquare } from 'lucide-react';
 import Sidebar from '@/src/components/Sidebar';
+import { usePrompt } from '@/src/components/usePrompt';
 
 export default function Settings() {
+  const prompt = usePrompt();
   const [scrollY, setScrollY] = useState(0);
   const fadeDistance = 80; // Smaller fade distance
   const fadeOpacity = Math.max(0, 1 - scrollY / fadeDistance);
@@ -108,38 +110,101 @@ export default function Settings() {
   ];
 
   const handleChangePassword = () => {
-    // Password change logic here
-    console.log('Password changed');
-    setShowChangePassword(false);
-    setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      prompt.showError('Password Mismatch', 'New passwords do not match. Please try again.');
+      return;
+    }
+    
+    if (passwordForm.newPassword.length < 8) {
+      prompt.showError('Weak Password', 'Password must be at least 8 characters long.');
+      return;
+    }
+    
+    prompt.showLoading('Updating password...');
+    setTimeout(() => {
+      prompt.closePrompt();
+      prompt.showSuccess('Password Changed', 'Your password has been successfully updated.');
+      console.log('Password changed');
+      setShowChangePassword(false);
+      setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    }, 1500);
   };
 
   const handleLogoutAll = () => {
-    if (confirm('Are you sure you want to logout from all devices?')) {
-      console.log('Logging out from all sessions');
-    }
+    prompt.showConfirm(
+      'Logout from All Devices?',
+      'You will be logged out from all your active sessions. You&apos;ll need to login again.',
+      () => {
+        prompt.showLoading('Logging out from all devices...');
+        setTimeout(() => {
+          prompt.closePrompt();
+          prompt.showSuccess('Success', 'You have been logged out from all devices.');
+          console.log('Logging out from all sessions');
+        }, 1500);
+      },
+      { confirmText: 'Yes, Logout All', cancelText: 'Cancel', type: 'danger' }
+    );
   };
 
   const handleLogoutSession = (sessionId) => {
-    if (confirm('Are you sure you want to logout from this device?')) {
-      console.log('Logging out session:', sessionId);
-    }
+    prompt.showConfirm(
+      'Logout from This Device?',
+      'You will be logged out from this session.',
+      () => {
+        prompt.showLoading('Logging out...');
+        setTimeout(() => {
+          prompt.closePrompt();
+          prompt.showSuccess('Success', 'You have been logged out from this device.');
+          console.log('Logging out session:', sessionId);
+        }, 1000);
+      },
+      { confirmText: 'Yes, Logout', cancelText: 'Cancel' }
+    );
   };
 
   const handleDeleteAccount = () => {
     if (deleteConfirmText === 'DELETE') {
-      console.log('Account deleted');
-      setShowDeleteModal(false);
+      prompt.showDelete('Account', () => {
+        prompt.showLoading('Deleting your account...');
+        setTimeout(() => {
+          prompt.closePrompt();
+          prompt.showSuccess('Account Deleted', 'Your account has been permanently deleted.');
+          console.log('Account deleted');
+          setShowDeleteModal(false);
+        }, 2000);
+      });
     }
   };
 
   const handleVerifyEmail = () => {
-    console.log('Verification email sent');
+    prompt.showLoading('Sending verification email...');
+    setTimeout(() => {
+      prompt.closePrompt();
+      prompt.showSuccess('Email Sent', 'A verification email has been sent to your inbox. Please check your email.');
+      console.log('Verification email sent');
+    }, 1200);
   };
 
   const handleChangeEmail = () => {
-    console.log('Email change requested:', newEmail);
-    setNewEmail('');
+    if (!newEmail.includes('@')) {
+      prompt.showError('Invalid Email', 'Please enter a valid email address.');
+      return;
+    }
+    
+    prompt.showConfirm(
+      'Change Email Address?',
+      `We&apos;ll send a verification link to ${newEmail}. You&apos;ll need to confirm it to complete the change.`,
+      () => {
+        prompt.showLoading('Sending verification email...');
+        setTimeout(() => {
+          prompt.closePrompt();
+          prompt.showSuccess('Verification Sent', 'A verification email has been sent. Please confirm to update your email.');
+          console.log('Email change requested:', newEmail);
+          setNewEmail('');
+        }, 1500);
+      },
+      { confirmText: 'Send Verification', cancelText: 'Cancel' }
+    );
   };
   
   const [settings, setSettings] = useState({
@@ -1277,6 +1342,9 @@ export default function Settings() {
           </div>
         </div>
       </div>
+      
+      {/* Prompt Renderer */}
+      <prompt.PromptRenderer />
     </div>
   );
 }
