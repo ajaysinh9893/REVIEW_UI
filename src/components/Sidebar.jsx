@@ -14,10 +14,9 @@ export default function Sidebar() {
     setShowLogoutModal(true);
   };
 
-  const handleConfirmLogout = () => {
-    setShowLogoutModal(false);
+  const handleConfirmLogout = async () => {
     // Clear any auth data (cookies, localStorage, etc.)
-    router.push('/login');
+    await router.push('/login');
   };
 
   const handleCancelLogout = () => {

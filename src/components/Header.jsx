@@ -16,10 +16,9 @@ export default function Header() {
     setShowUserMenu(false);
   };
 
-  const handleConfirmLogout = () => {
-    setShowLogoutModal(false);
+  const handleConfirmLogout = async () => {
     // Clear any auth data (cookies, localStorage, etc.)
-    router.push('/login');
+    await router.push('/login');
   };
 
   const handleCancelLogout = () => {
