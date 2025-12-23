@@ -46,11 +46,11 @@ export default function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       console.log('Login attempt:', { ...formData, rememberMe });
-      handleLoginSuccess();
+      await handleLoginSuccess();
     }
   };
 
