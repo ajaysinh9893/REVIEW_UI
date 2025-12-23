@@ -33,18 +33,18 @@ export function LogoutProvider({ children }) {
     const handleLoad = () => {
       setLogoutStep('idle');
       window.removeEventListener('load', handleLoad);
+      clearTimeout(fallbackTimeout);
     };
     
     // If page loads quickly, dismiss after max 5 seconds as fallback
     const fallbackTimeout = setTimeout(() => {
-      setLogoutStep('idle');
-      window.removeEventListener('load', handleLoad);
+      if (logoutStep !== 'idle') {
+        setLogoutStep('idle');
+        window.removeEventListener('load', handleLoad);
+      }
     }, 5000);
     
-    window.addEventListener('load', () => {
-      clearTimeout(fallbackTimeout);
-      handleLoad();
-    });
+    window.addEventListener('load', handleLoad);
   };
 
   const handleCancel = () => {
