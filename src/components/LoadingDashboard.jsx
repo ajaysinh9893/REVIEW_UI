@@ -66,14 +66,15 @@ export default function LoadingDashboard({ isOpen, message }) {
 
         {/* Progress Bar */}
         <div className="max-w-md mx-auto">
-          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div 
-              className="h-full rounded-full transition-all duration-500 ease-out"
-              style={{ 
-                width: `${Math.min(progress, 100)}%`,
-                background: 'linear-gradient(to right, #4285F4, #EA4335, #FBBC04, #34A853)'
-              }}
-            ></div>
+          <div className="h-2 bg-gray-200 rounded-full overflow-hidden flex">
+            {/* Blue section */}
+            <div className="flex-1 bg-[#4285F4]" style={{ display: progress >= 0 ? 'block' : 'none' }}></div>
+            {/* Red section */}
+            <div className="flex-1 bg-[#EA4335]" style={{ display: progress >= 25 ? 'block' : 'none' }}></div>
+            {/* Yellow section */}
+            <div className="flex-1 bg-[#FBBC04]" style={{ display: progress >= 50 ? 'block' : 'none' }}></div>
+            {/* Green section */}
+            <div className="flex-1 bg-[#34A853]" style={{ display: progress >= 75 ? 'block' : 'none' }}></div>
           </div>
         </div>
       </div>
