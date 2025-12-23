@@ -84,20 +84,6 @@ export function LoginProvider({ children }) {
       {loginStep === 'success' && (
         <LoadingDashboard isOpen={true} message="Welcome Back! Loading your dashboard..." />
       )}
-
-      {/* CSS Animations */}
-      <style jsx>{`
-        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes zoom-in { from { transform: scale(0.8); } to { transform: scale(1); } }
-        @keyframes slide-in-from-bottom { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .animate-in { animation-fill-mode: both; }
-        .fade-in { animation-name: fade-in; }
-        .zoom-in { animation-name: zoom-in; }
-        .slide-in-from-bottom { animation-name: slide-in-from-bottom; }
-        .duration-300 { animation-duration: 300ms; }
-        .duration-500 { animation-duration: 500ms; }
-        .duration-700 { animation-duration: 700ms; }
-      `}</style>
     </LoginContext.Provider>
   );
 }
@@ -107,5 +93,7 @@ export function useLogin() {
   if (!context) {
     throw new Error('useLogin must be used within LoginProvider');
   }
+  return context;
+}
   return context;
 }
