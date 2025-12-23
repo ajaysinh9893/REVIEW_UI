@@ -40,14 +40,14 @@ export default function LoadingDashboard({ isOpen, message }) {
       <div className="text-center">
         {/* Dashboard Icon Animation */}
         <div className="relative w-32 h-32 mx-auto mb-8">
-          {/* Outer spinning circle */}
-          <div className="absolute inset-0 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+          {/* Outer spinning circle - Google Blue */}
+          <div className="absolute inset-0 border-4 border-blue-100 border-t-[#4285F4] rounded-full animate-spin"></div>
           
-          {/* Middle spinning circle (opposite direction) */}
-          <div className="absolute inset-4 border-4 border-purple-200 border-b-purple-600 rounded-full animate-spin-reverse"></div>
+          {/* Middle spinning circle - Google Red (opposite direction) */}
+          <div className="absolute inset-4 border-4 border-red-100 border-b-[#EA4335] rounded-full animate-spin-reverse"></div>
           
-          {/* Inner pulsing circle */}
-          <div className="absolute inset-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full animate-pulse flex items-center justify-center">
+          {/* Inner pulsing circle - Rapid Google color gradient changes */}
+          <div className="absolute inset-8 rounded-full animate-google-gradient flex items-center justify-center">
             <BarChart3 className="text-white" size={32} />
           </div>
         </div>
@@ -86,8 +86,19 @@ export default function LoadingDashboard({ isOpen, message }) {
           to { transform: rotate(0deg); }
         }
 
+        @keyframes google-gradient {
+          0% { background: linear-gradient(135deg, #4285F4, #EA4335); }
+          33% { background: linear-gradient(135deg, #EA4335, #FBBC04); }
+          66% { background: linear-gradient(135deg, #FBBC04, #34A853); }
+          100% { background: linear-gradient(135deg, #4285F4, #EA4335); }
+        }
+
         .animate-spin-reverse {
           animation: spin-reverse 1.5s linear infinite;
+        }
+
+        .animate-google-gradient {
+          animation: google-gradient 2s ease-in-out infinite;
         }
       `}</style>
     </div>
