@@ -37,35 +37,35 @@ export default function LoadingDashboard({ isOpen, message }) {
 
   return (
     <div className="fixed inset-0 bg-white/30 backdrop-blur-xl flex items-center justify-center z-[9999]">
-      <div className="text-center bg-white border border-gray-200 rounded-3xl px-12 py-16 shadow-2xl">
+      <div className="text-center bg-white border border-gray-200 rounded-2xl px-8 py-10 shadow-2xl">
         {/* Dashboard Icon Animation */}
-        <div className="relative w-32 h-32 mx-auto mb-8">
+        <div className="relative w-24 h-24 mx-auto mb-6">
           {/* Outer spinning circle - Google Blue */}
-          <div className="absolute inset-0 border-4 border-blue-100 border-t-[#4285F4] rounded-full animate-spin"></div>
+          <div className="absolute inset-0 border-3 border-blue-100 border-t-[#4285F4] rounded-full animate-spin"></div>
           
           {/* Middle spinning circle - Google Red (opposite direction) */}
-          <div className="absolute inset-4 border-4 border-red-100 border-b-[#EA4335] rounded-full animate-spin-reverse"></div>
+          <div className="absolute inset-3 border-3 border-red-100 border-b-[#EA4335] rounded-full animate-spin-reverse"></div>
           
           {/* Inner pulsing circle - Static Google Blue */}
           <div className="absolute inset-8 bg-[#4285F4] rounded-full animate-pulse flex items-center justify-center">
-            <BarChart3 className="text-white" size={32} />
+            <BarChart3 className="text-white" size={24} />
           </div>
         </div>
 
         {/* Loading Text */}
-        <h2 className="text-3xl font-bold text-gray-900 mb-3">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
           {message || 'Loading Dashboard'}
         </h2>
         
         {/* Bouncing Dots */}
-        <div className="flex justify-center gap-2 mb-8">
-          <div className="w-3 h-3 bg-[#4285F4] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-          <div className="w-3 h-3 bg-[#4285F4] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-          <div className="w-3 h-3 bg-[#4285F4] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+        <div className="flex justify-center gap-1.5 mb-5">
+          <div className="w-2 h-2 bg-[#4285F4] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+          <div className="w-2 h-2 bg-[#4285F4] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+          <div className="w-2 h-2 bg-[#4285F4] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
         </div>
 
         {/* Progress Bar */}
-        <div className="max-w-md mx-auto">
+        <div className="max-w-xs mx-auto">
           <div className="h-2 bg-gray-200 rounded-full overflow-hidden flex">
             {/* Blue section */}
             <div className="flex-1 bg-[#4285F4]" style={{ display: progress >= 0 ? 'block' : 'none' }}></div>
