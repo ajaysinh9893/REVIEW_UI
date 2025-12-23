@@ -41,10 +41,10 @@ export default function LoadingDashboard({ isOpen, message }) {
         {/* Dashboard Icon Animation */}
         <div className="relative w-24 h-24 mx-auto mb-6">
           {/* Outer spinning circle - Google Blue */}
-          <div className="absolute inset-0 border-3 border-blue-300 border-t-[#1e40af] rounded-full animate-spin"></div>
+          <div className="absolute inset-0 border-4 border-blue-500 border-t-blue-900 rounded-full animate-spin"></div>
           
           {/* Middle spinning circle - Google Red (opposite direction) */}
-          <div className="absolute inset-3 border-3 border-red-300 border-b-[#991b1b] rounded-full animate-spin-reverse"></div>
+          <div className="absolute inset-3 border-4 border-red-500 border-b-red-900 rounded-full animate-spin-reverse"></div>
           
           {/* Inner pulsing circle - Static Google Blue */}
           <div className="absolute inset-8 bg-[#4285F4] rounded-full animate-pulse flex items-center justify-center">
