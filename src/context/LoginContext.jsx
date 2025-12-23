@@ -95,5 +95,3 @@ export function useLogin() {
   }
   return context;
 }
-  return context;
-}
