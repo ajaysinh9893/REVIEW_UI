@@ -33,18 +33,18 @@ export function LoginProvider({ children }) {
     const handleLoad = () => {
       setLoginStep('idle');
       window.removeEventListener('load', handleLoad);
+      clearTimeout(fallbackTimeout);
     };
     
     // If page loads quickly, dismiss after max 5 seconds as fallback
     const fallbackTimeout = setTimeout(() => {
-      setLoginStep('idle');
-      window.removeEventListener('load', handleLoad);
+      if (loginStep !== 'idle') {
+        setLoginStep('idle');
+        window.removeEventListener('load', handleLoad);
+      }
     }, 5000);
     
-    window.addEventListener('load', () => {
-      clearTimeout(fallbackTimeout);
-      handleLoad();
-    });
+    window.addEventListener('load', handleLoad);
   };
 
   const openLoginPrompt = () => {
