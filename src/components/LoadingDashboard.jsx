@@ -59,9 +59,9 @@ export default function LoadingDashboard({ isOpen, message }) {
         
         {/* Bouncing Dots */}
         <div className="flex justify-center gap-2 mb-8">
-          <div className="w-3 h-3 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-          <div className="w-3 h-3 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-          <div className="w-3 h-3 bg-pink-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+          <div className="w-3 h-3 bg-[#4285F4] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+          <div className="w-3 h-3 bg-[#EA4335] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+          <div className="w-3 h-3 bg-[#34A853] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
         </div>
 
         {/* Progress Bar */}
