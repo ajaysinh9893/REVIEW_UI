@@ -36,8 +36,8 @@ export default function LoadingDashboard({ isOpen, message }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-[9999] backdrop-blur-sm">
-      <div className="text-center bg-white/40 backdrop-blur-xl border border-white/50 rounded-3xl px-12 py-16 shadow-xl">
+    <div className="fixed inset-0 bg-white/30 backdrop-blur-xl flex items-center justify-center z-[9999]">
+      <div className="text-center bg-white border border-gray-200 rounded-3xl px-12 py-16 shadow-2xl">
         {/* Dashboard Icon Animation */}
         <div className="relative w-32 h-32 mx-auto mb-8">
           {/* Outer spinning circle - Google Blue */}
