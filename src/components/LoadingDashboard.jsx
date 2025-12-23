@@ -68,8 +68,11 @@ export default function LoadingDashboard({ isOpen, message }) {
         <div className="max-w-md mx-auto">
           <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${Math.min(progress, 100)}%` }}
+              className="h-full rounded-full transition-all duration-500 ease-out"
+              style={{ 
+                width: `${Math.min(progress, 100)}%`,
+                background: 'linear-gradient(to right, #4285F4, #EA4335, #FBBC04, #34A853)'
+              }}
             ></div>
           </div>
         </div>
