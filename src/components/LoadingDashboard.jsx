@@ -46,8 +46,8 @@ export default function LoadingDashboard({ isOpen, message }) {
           {/* Middle spinning circle - Google Red (opposite direction) */}
           <div className="absolute inset-4 border-4 border-red-100 border-b-[#EA4335] rounded-full animate-spin-reverse"></div>
           
-          {/* Inner pulsing circle - Rapid Google color gradient changes */}
-          <div className="absolute inset-8 rounded-full animate-google-gradient flex items-center justify-center">
+          {/* Inner pulsing circle - Static Google Blue */}
+          <div className="absolute inset-8 bg-[#4285F4] rounded-full animate-pulse flex items-center justify-center">
             <BarChart3 className="text-white" size={32} />
           </div>
         </div>
@@ -60,8 +60,8 @@ export default function LoadingDashboard({ isOpen, message }) {
         {/* Bouncing Dots */}
         <div className="flex justify-center gap-2 mb-8">
           <div className="w-3 h-3 bg-[#4285F4] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-          <div className="w-3 h-3 bg-[#EA4335] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-          <div className="w-3 h-3 bg-[#34A853] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+          <div className="w-3 h-3 bg-[#4285F4] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+          <div className="w-3 h-3 bg-[#4285F4] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
         </div>
 
         {/* Progress Bar */}
@@ -86,20 +86,8 @@ export default function LoadingDashboard({ isOpen, message }) {
           to { transform: rotate(0deg); }
         }
 
-        @keyframes google-colors {
-          0% { background: #4285F4; }
-          25% { background: #EA4335; }
-          50% { background: #FBBC04; }
-          75% { background: #34A853; }
-          100% { background: #4285F4; }
-        }
-
         .animate-spin-reverse {
           animation: spin-reverse 1.5s linear infinite;
-        }
-
-        .animate-google-gradient {
-          animation: google-colors 2s ease-in-out infinite;
         }
       `}</style>
     </div>
