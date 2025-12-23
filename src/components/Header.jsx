@@ -89,7 +89,7 @@ export default function Header() {
 
       {/* Logout Confirmation Modal */}
       {logoutStep === 'confirm' && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-300">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[9999] animate-in fade-in duration-300">
           <div className="backdrop-blur-xl bg-white/90 rounded-2xl p-8 max-w-md w-full shadow-2xl border border-white/30 animate-in zoom-in duration-300" style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }} onClick={(e) => e.stopPropagation()}>
             <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
               <LogOut className="text-white" size={32} />
@@ -108,7 +108,7 @@ export default function Header() {
 
       {/* Loading Animation */}
       {logoutStep === 'loading' && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-300">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[9999] animate-in fade-in duration-300">
           <div className="backdrop-blur-xl bg-white/90 rounded-2xl p-12 shadow-2xl border border-white/30 animate-in zoom-in duration-300" style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
             <div className="flex flex-col items-center gap-6">
               <div className="relative">
@@ -130,7 +130,7 @@ export default function Header() {
 
       {/* Success Animation */}
       {logoutStep === 'success' && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-300">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[9999] animate-in fade-in duration-300">
           <div className="backdrop-blur-xl bg-white/90 rounded-2xl p-12 shadow-2xl border border-white/30 animate-in zoom-in duration-500" style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
             <div className="flex flex-col items-center gap-6">
               <div className="relative">
