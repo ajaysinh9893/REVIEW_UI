@@ -36,7 +36,7 @@ export default function LoadingDashboard({ isOpen, message }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-white/50 backdrop-blur-xl flex items-center justify-center z-[9999]">
+    <div className="fixed inset-0 bg-white/20 backdrop-blur-xl flex items-center justify-center z-[9999]">
       <div className="text-center bg-white border border-gray-200 rounded-2xl px-8 py-10 shadow-2xl">
         {/* Dashboard Icon Animation */}
         <div className="relative w-24 h-24 mx-auto mb-6">
