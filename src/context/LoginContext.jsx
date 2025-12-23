@@ -14,16 +14,18 @@ export function LoginProvider({ children }) {
     // Step 1: Show loading animation (1 second)
     setLoginStep('loading');
 
-    // Step 2: After 1 second, show success checkmark animation
-    setTimeout(() => {
-      setLoginStep('success');
-    }, 1000);
+    // Wait 1 second
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Step 3: After success animation completes (700ms), redirect to dashboard
-    setTimeout(async () => {
-      await router.push('/dashboard');
-      setLoginStep('idle');
-    }, 1700); // 1000ms loading + 700ms success animation
+    // Step 2: Show success checkmark animation
+    setLoginStep('success');
+
+    // Wait for success animation (300ms)
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    // Step 3: Redirect to dashboard and reset
+    await router.push('/dashboard');
+    setLoginStep('idle');
   };
 
   const openLoginPrompt = () => {

@@ -11,14 +11,21 @@ export function LogoutProvider({ children }) {
   const [logoutStep, setLogoutStep] = useState('idle'); // 'idle', 'confirm', 'loading', 'success'
 
   const handleConfirmLogout = async () => {
-    // Step 1: Show loading
+    // Step 1: Show loading animation (1 second)
     setLogoutStep('loading');
 
-    // Step 2: After 1.5 seconds, redirect to login
-    setTimeout(async () => {
-      await router.push('/login');
-      setLogoutStep('idle');
-    }, 1500);
+    // Wait 1 second
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Step 2: Show success checkmark animation
+    setLogoutStep('success');
+
+    // Wait for success animation (300ms)
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    // Step 3: Redirect to login and reset
+    await router.push('/login');
+    setLogoutStep('idle');
   };
 
   const handleCancel = () => {
@@ -77,15 +84,15 @@ export function LogoutProvider({ children }) {
       {/* Success Animation */}
       {logoutStep === 'success' && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[9999] animate-in fade-in duration-300">
-          <div className="backdrop-blur-xl bg-white/90 rounded-xl p-6 shadow-lg border border-white/30 animate-in zoom-in duration-500" style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
+          <div className="backdrop-blur-xl bg-white/90 rounded-xl p-6 shadow-lg border border-white/30 animate-in zoom-in duration-300" style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
             <div className="flex flex-col items-center gap-4">
               <div className="relative">
                 <div className="absolute inset-0 bg-blue-500 rounded-full animate-ping opacity-75"></div>
-                <div className="relative w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-lg animate-in zoom-in duration-500">
-                  <CheckCircle className="text-white animate-in zoom-in duration-700" size={32} strokeWidth={3} />
+                <div className="relative w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-lg animate-in zoom-in duration-300">
+                  <CheckCircle className="text-white animate-in zoom-in duration-300" size={32} strokeWidth={3} />
                 </div>
               </div>
-              <div className="text-center animate-in fade-in slide-in-from-bottom duration-700">
+              <div className="text-center animate-in fade-in slide-in-from-bottom duration-300">
                 <h2 className="text-base font-bold text-gray-900 mb-1">Logged Out</h2>
                 <p className="text-gray-600 text-xs">See you again soon!</p>
               </div>
