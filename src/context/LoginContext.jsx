@@ -57,8 +57,8 @@ export function LoginProvider({ children }) {
 
       {/* Loading Animation Modal */}
       {loginStep === 'loading' && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[9999] animate-in fade-in duration-300">
-          <div className="backdrop-blur-xl bg-white/90 rounded-xl p-6 shadow-lg border border-white/30 animate-in zoom-in duration-300" style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
+        <div className="fixed inset-0 bg-white/5 backdrop-blur-xl flex items-center justify-center z-[9999] animate-in fade-in duration-300">
+          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 animate-in zoom-in duration-300">
             <div className="flex flex-col items-center gap-4">
               <div className="relative">
                 <div className="w-14 h-14 border-3 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
