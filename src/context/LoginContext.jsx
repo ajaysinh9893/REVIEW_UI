@@ -11,14 +11,19 @@ export function LoginProvider({ children }) {
   const [loginStep, setLoginStep] = useState('idle'); // 'idle', 'loading', 'success'
 
   const handleLoginSuccess = async () => {
-    // Step 1: Show loading
+    // Step 1: Show loading animation (1.5 seconds)
     setLoginStep('loading');
 
-    // Step 2: After 1.5 seconds, redirect to dashboard
+    // Step 2: After 1.5 seconds, show success checkmark animation
+    setTimeout(() => {
+      setLoginStep('success');
+    }, 1500);
+
+    // Step 3: After success animation (1.2 seconds), redirect to dashboard
     setTimeout(async () => {
       await router.push('/dashboard');
       setLoginStep('idle');
-    }, 1500);
+    }, 2700); // 1500ms loading + 1200ms success
   };
 
   const openLoginPrompt = () => {
