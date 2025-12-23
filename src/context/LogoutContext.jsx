@@ -72,11 +72,11 @@ export function LogoutProvider({ children }) {
               <LogOut className="text-white" size={24} />
             </div>
             <div className="text-center mb-5">
-              <h2 className="text-lg font-bold text-white mb-2 drop-shadow-lg">Confirm Logout</h2>
-              <p className="text-sm text-gray-200 drop-shadow-md">Are you sure you want to log out?</p>
+              <h2 className="text-lg font-bold text-gray-900 mb-2">Confirm Logout</h2>
+              <p className="text-sm text-gray-600">Are you sure you want to log out?</p>
             </div>
             <div className="flex gap-2">
-              <button onClick={handleCancel} className="flex-1 py-2 px-3 bg-white/20 text-white rounded-lg text-sm font-semibold hover:bg-white/30 transition-all backdrop-blur-sm border border-white/30" type="button">Cancel</button>
+              <button onClick={handleCancel} className="flex-1 py-2 px-3 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition-all border border-gray-300" type="button">Cancel</button>
               <button onClick={handleConfirmLogout} className="flex-1 py-2 px-3 bg-gradient-to-r from-red-600 to-orange-600 text-white rounded-lg text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:from-red-700 hover:to-orange-700" type="button">Logout</button>
             </div>
           </div>
@@ -92,11 +92,11 @@ export function LogoutProvider({ children }) {
               <Loader className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-red-600" size={24} />
             </div>
             <div className="text-center mt-4">
-              <h3 className="text-base font-bold text-white mb-2 drop-shadow-lg">Logging you out...</h3>
+              <h3 className="text-base font-bold text-gray-900 mb-2">Logging you out...</h3>
               <div className="flex justify-center gap-1.5">
-                <div className="w-1.5 h-1.5 bg-red-400 rounded-full animate-bounce drop-shadow-md" style={{ animationDelay: '0ms' }}></div>
-                <div className="w-1.5 h-1.5 bg-red-400 rounded-full animate-bounce drop-shadow-md" style={{ animationDelay: '150ms' }}></div>
-                <div className="w-1.5 h-1.5 bg-red-400 rounded-full animate-bounce drop-shadow-md" style={{ animationDelay: '300ms' }}></div>
+                <div className="w-1.5 h-1.5 bg-red-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-1.5 h-1.5 bg-red-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                <div className="w-1.5 h-1.5 bg-red-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
               </div>
             </div>
           </div>

@@ -53,20 +53,20 @@ export default function LoadingDashboard({ isOpen, message }) {
         </div>
 
         {/* Loading Text */}
-        <h2 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
           {message || 'Loading Dashboard'}
         </h2>
         
         {/* Bouncing Dots */}
         <div className="flex justify-center gap-1.5 mb-5">
-          <div className="w-2 h-2 bg-blue-300 rounded-full animate-bounce drop-shadow-md" style={{ animationDelay: '0ms' }}></div>
-          <div className="w-2 h-2 bg-blue-300 rounded-full animate-bounce drop-shadow-md" style={{ animationDelay: '150ms' }}></div>
-          <div className="w-2 h-2 bg-blue-300 rounded-full animate-bounce drop-shadow-md" style={{ animationDelay: '300ms' }}></div>
+          <div className="w-2 h-2 bg-[#4285F4] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+          <div className="w-2 h-2 bg-[#4285F4] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+          <div className="w-2 h-2 bg-[#4285F4] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
         </div>
 
         {/* Progress Bar */}
         <div className="max-w-xs mx-auto">
-          <div className="h-2 bg-gray-200/40 rounded-full overflow-hidden flex backdrop-blur-sm">
+          <div className="h-2 bg-gray-200 rounded-full overflow-hidden flex">
             {/* Blue section */}
             <div className="flex-1 bg-[#4285F4]" style={{ display: progress >= 0 ? 'block' : 'none' }}></div>
             {/* Red section */}

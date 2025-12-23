@@ -69,11 +69,11 @@ export function LoginProvider({ children }) {
               <Loader className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-indigo-600" size={24} />
             </div>
             <div className="text-center mt-4">
-              <h3 className="text-base font-bold text-white mb-2 drop-shadow-lg">Signing you in...</h3>
+              <h3 className="text-base font-bold text-gray-900 mb-2">Signing you in...</h3>
               <div className="flex justify-center gap-1.5">
-                <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce drop-shadow-md" style={{ animationDelay: '0ms' }}></div>
-                <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce drop-shadow-md" style={{ animationDelay: '150ms' }}></div>
-                <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce drop-shadow-md" style={{ animationDelay: '300ms' }}></div>
+                <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
               </div>
             </div>
           </div>
