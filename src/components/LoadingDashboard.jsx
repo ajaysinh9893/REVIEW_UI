@@ -59,7 +59,7 @@ export default function LoadingDashboard({ isOpen, message }) {
         }
 
         .animate-progress {
-          animation: progress 2s ease-in-out infinite;
+          animation: progress 3s ease-in-out forwards;
         }
       `}</style>
     </div>
