@@ -25,9 +25,12 @@ export function LogoutProvider({ children }) {
 
     // Step 3: Redirect to login
     // Keep success prompt visible while login page loads
-    // Prompt will automatically disappear when new page loads and provider resets
     await router.push('/login');
-    // Don't reset logoutStep - let the navigation close the prompt naturally
+    
+    // Auto-dismiss prompt after 2 seconds (gives time for login page to appear)
+    setTimeout(() => {
+      setLogoutStep('idle');
+    }, 2000);
   };
 
   const handleCancel = () => {

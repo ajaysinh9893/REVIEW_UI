@@ -25,9 +25,12 @@ export function LoginProvider({ children }) {
 
     // Step 3: Redirect to dashboard
     // Keep success prompt visible while dashboard loads
-    // Prompt will automatically disappear when new page loads and provider resets
     await router.push('/dashboard');
-    // Don't reset loginStep - let the navigation close the prompt naturally
+    
+    // Auto-dismiss prompt after 2 seconds (gives time for dashboard to appear)
+    setTimeout(() => {
+      setLoginStep('idle');
+    }, 2000);
   };
 
   const openLoginPrompt = () => {
