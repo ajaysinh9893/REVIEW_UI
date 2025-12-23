@@ -1,0 +1,97 @@
+'use client';
+
+import { createContext, useContext, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { CheckCircle, Loader } from 'lucide-react';
+
+const LoginContext = createContext();
+
+export function LoginProvider({ children }) {
+  const router = useRouter();
+  const [loginStep, setLoginStep] = useState('idle'); // 'idle', 'loading', 'success'
+
+  const handleLoginSuccess = async () => {
+    // Step 1: Show loading
+    setLoginStep('loading');
+
+    // Step 2: After 1.5 seconds, redirect to dashboard
+    setTimeout(async () => {
+      await router.push('/dashboard');
+      setLoginStep('idle');
+    }, 1500);
+  };
+
+  const openLoginPrompt = () => {
+    setLoginStep('loading');
+  };
+
+  return (
+    <LoginContext.Provider value={{ loginStep, setLoginStep, handleLoginSuccess, openLoginPrompt }}>
+      {children}
+
+      {/* Loading Animation Modal */}
+      {loginStep === 'loading' && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[9999] animate-in fade-in duration-300">
+          <div className="backdrop-blur-xl bg-white/90 rounded-xl p-6 shadow-lg border border-white/30 animate-in zoom-in duration-300" style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
+            <div className="flex flex-col items-center gap-4">
+              <div className="relative">
+                <div className="w-14 h-14 border-3 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+                <Loader className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-indigo-600" size={24} />
+              </div>
+              <div className="text-center">
+                <h3 className="text-base font-bold text-gray-900 mb-2">Signing you in...</h3>
+                <div className="flex justify-center gap-1.5">
+                  <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                  <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                  <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success Animation */}
+      {loginStep === 'success' && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[9999] animate-in fade-in duration-300">
+          <div className="backdrop-blur-xl bg-white/90 rounded-xl p-6 shadow-lg border border-white/30 animate-in zoom-in duration-500" style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
+            <div className="flex flex-col items-center gap-4">
+              <div className="relative">
+                <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-75"></div>
+                <div className="relative w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg animate-in zoom-in duration-500">
+                  <CheckCircle className="text-white animate-in zoom-in duration-700" size={32} strokeWidth={3} />
+                </div>
+              </div>
+              <div className="text-center animate-in fade-in slide-in-from-bottom duration-700">
+                <h2 className="text-base font-bold text-gray-900 mb-1">Welcome Back!</h2>
+                <p className="text-gray-600 text-xs">Login successful</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CSS Animations */}
+      <style jsx>{`
+        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes zoom-in { from { transform: scale(0.8); } to { transform: scale(1); } }
+        @keyframes slide-in-from-bottom { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .animate-in { animation-fill-mode: both; }
+        .fade-in { animation-name: fade-in; }
+        .zoom-in { animation-name: zoom-in; }
+        .slide-in-from-bottom { animation-name: slide-in-from-bottom; }
+        .duration-300 { animation-duration: 300ms; }
+        .duration-500 { animation-duration: 500ms; }
+        .duration-700 { animation-duration: 700ms; }
+      `}</style>
+    </LoginContext.Provider>
+  );
+}
+
+export function useLogin() {
+  const context = useContext(LoginContext);
+  if (!context) {
+    throw new Error('useLogin must be used within LoginProvider');
+  }
+  return context;
+}
