@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { LogOut, Check, Loader } from 'lucide-react';
+import { LogOut, Loader } from 'lucide-react';
 import LoadingDashboard from '@/src/components/LoadingDashboard';
 
 const LogoutContext = createContext();
