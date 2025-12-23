@@ -65,16 +65,15 @@ export function LoginProvider({ children }) {
         <div className="fixed inset-0 bg-white/2 backdrop-blur-xl flex items-center justify-center z-[9999] animate-in fade-in duration-300">
           <div className="rounded-xl p-6 animate-in zoom-in duration-300 flex flex-col items-center">
             <div className="relative">
-                <div className="w-14 h-14 border-3 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-                <Loader className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-indigo-600" size={24} />
-              </div>
-              <div className="text-center mt-4">
-                <h3 className="text-base font-bold text-white mb-2 drop-shadow-lg">Signing you in...</h3>
-                <div className="flex justify-center gap-1.5">
-                  <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce drop-shadow-md" style={{ animationDelay: '0ms' }}></div>
-                  <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce drop-shadow-md" style={{ animationDelay: '150ms' }}></div>
-                  <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce drop-shadow-md" style={{ animationDelay: '300ms' }}></div>
-                </div>
+              <div className="w-14 h-14 border-3 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+              <Loader className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-indigo-600" size={24} />
+            </div>
+            <div className="text-center mt-4">
+              <h3 className="text-base font-bold text-white mb-2 drop-shadow-lg">Signing you in...</h3>
+              <div className="flex justify-center gap-1.5">
+                <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce drop-shadow-md" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce drop-shadow-md" style={{ animationDelay: '150ms' }}></div>
+                <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce drop-shadow-md" style={{ animationDelay: '300ms' }}></div>
               </div>
             </div>
           </div>
