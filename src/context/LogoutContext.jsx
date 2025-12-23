@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { LogOut, Check, Loader } from 'lucide-react';
+import LoadingDashboard from '@/src/components/LoadingDashboard';
 
 const LogoutContext = createContext();
 
@@ -101,19 +102,7 @@ export function LogoutProvider({ children }) {
 
       {/* Success Animation */}
       {logoutStep === 'success' && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[9999] animate-in fade-in duration-300">
-          <div className="backdrop-blur-xl bg-white/90 rounded-xl p-6 shadow-lg border border-white/30 animate-in zoom-in duration-300" style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
-            <div className="flex flex-col items-center gap-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg animate-in zoom-in duration-500">
-                <Check className="text-white" size={36} strokeWidth={3} />
-              </div>
-              <div className="text-center animate-in fade-in slide-in-from-bottom duration-300">
-                <h2 className="text-base font-bold text-gray-900 mb-1">Logged Out</h2>
-                <p className="text-gray-600 text-xs">See you again soon!</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <LoadingDashboard isOpen={true} message="Logging out... Redirecting to login" />
       )}
 
       {/* CSS Animations */}

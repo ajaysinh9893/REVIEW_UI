@@ -1,0 +1,67 @@
+'use client';
+
+import { BarChart3 } from 'lucide-react';
+
+export default function LoadingDashboard({ isOpen, message }) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 flex items-center justify-center z-[9999]">
+      <div className="text-center">
+        {/* Dashboard Icon Animation */}
+        <div className="relative w-32 h-32 mx-auto mb-8">
+          {/* Outer spinning circle */}
+          <div className="absolute inset-0 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+          
+          {/* Middle spinning circle (opposite direction) */}
+          <div className="absolute inset-4 border-4 border-purple-200 border-b-purple-600 rounded-full animate-spin-reverse"></div>
+          
+          {/* Inner pulsing circle */}
+          <div className="absolute inset-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full animate-pulse flex items-center justify-center">
+            <BarChart3 className="text-white" size={32} />
+          </div>
+        </div>
+
+        {/* Loading Text */}
+        <h2 className="text-3xl font-bold text-gray-900 mb-3">
+          {message || 'Loading Dashboard'}
+        </h2>
+        
+        {/* Bouncing Dots */}
+        <div className="flex justify-center gap-2 mb-8">
+          <div className="w-3 h-3 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+          <div className="w-3 h-3 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+          <div className="w-3 h-3 bg-pink-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="max-w-md mx-auto">
+          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-full animate-progress"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* CSS Animations */}
+      <style jsx>{`
+        @keyframes spin-reverse {
+          from { transform: rotate(360deg); }
+          to { transform: rotate(0deg); }
+        }
+
+        @keyframes progress {
+          from { width: 0%; }
+          to { width: 100%; }
+        }
+
+        .animate-spin-reverse {
+          animation: spin-reverse 1.5s linear infinite;
+        }
+
+        .animate-progress {
+          animation: progress 2s ease-in-out infinite;
+        }
+      `}</style>
+    </div>
+  );
+}
