@@ -86,11 +86,12 @@ export default function LoadingDashboard({ isOpen, message }) {
           to { transform: rotate(0deg); }
         }
 
-        @keyframes google-gradient {
-          0% { background: linear-gradient(135deg, #4285F4, #EA4335); }
-          33% { background: linear-gradient(135deg, #EA4335, #FBBC04); }
-          66% { background: linear-gradient(135deg, #FBBC04, #34A853); }
-          100% { background: linear-gradient(135deg, #4285F4, #EA4335); }
+        @keyframes google-colors {
+          0% { background: #4285F4; }
+          25% { background: #EA4335; }
+          50% { background: #FBBC04; }
+          75% { background: #34A853; }
+          100% { background: #4285F4; }
         }
 
         .animate-spin-reverse {
@@ -98,7 +99,7 @@ export default function LoadingDashboard({ isOpen, message }) {
         }
 
         .animate-google-gradient {
-          animation: google-gradient 2s ease-in-out infinite;
+          animation: google-colors 2s ease-in-out infinite;
         }
       `}</style>
     </div>
