@@ -62,7 +62,7 @@ export function LoginProvider({ children }) {
 
       {/* Loading Animation Modal */}
       {loginStep === 'loading' && (
-        <div className="fixed inset-0 bg-white/20 backdrop-blur-xl flex items-center justify-center z-[9999] animate-in fade-in duration-300">
+        <div className="fixed inset-0 bg-white/5 backdrop-blur-xl flex items-center justify-center z-[9999] animate-in fade-in duration-300">
           <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 animate-in zoom-in duration-300">
             <div className="flex flex-col items-center gap-4">
               <div className="relative">
