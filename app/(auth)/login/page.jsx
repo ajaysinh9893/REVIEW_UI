@@ -210,23 +210,23 @@ export default function Login() {
 
           {/* Loading State */}
           {loginStep === 'loading' && (
-            <div className="backdrop-blur-xl bg-white/90 rounded-xl p-6 shadow-lg border border-white/30 animate-in fade-in zoom-in duration-300">
-              <div className="flex flex-col items-center gap-4">
+            <div className="backdrop-blur-xl bg-white/90 rounded-xl p-4 shadow-lg border border-white/30 animate-in fade-in zoom-in duration-300">
+              <div className="flex flex-col items-center gap-3">
                 {/* Spinning Loader */}
                 <div className="relative">
-                  <div className="w-14 h-14 border-3 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-                  <Loader className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-indigo-600" size={24} />
+                  <div className="w-12 h-12 border-3 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+                  <Loader className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-indigo-600" size={20} />
                 </div>
 
                 {/* Loading Text */}
                 <div className="text-center">
-                  <h3 className="text-base font-bold text-gray-900 mb-2">
+                  <h3 className="text-sm font-bold text-gray-900 mb-1">
                     Signing you in...
                   </h3>
-                  <div className="flex justify-center gap-1.5">
-                    <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                    <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                    <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                  <div className="flex justify-center gap-1">
+                    <div className="w-1 h-1 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-1 h-1 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-1 h-1 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                   </div>
                 </div>
               </div>
@@ -235,33 +235,27 @@ export default function Login() {
 
           {/* Success State */}
           {loginStep === 'success' && (
-            <div className="backdrop-blur-xl bg-white/90 rounded-xl p-6 shadow-lg border border-white/30 animate-in fade-in zoom-in duration-500">
-              <div className="flex flex-col items-center gap-4">
+            <div className="backdrop-blur-xl bg-white/90 rounded-xl p-4 shadow-lg border border-white/30 animate-in fade-in zoom-in duration-500">
+              <div className="flex flex-col items-center gap-2">
                 {/* Success Checkmark with Animation */}
                 <div className="relative">
                   {/* Pulsing Ring */}
                   <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-75"></div>
                   
                   {/* Main Circle */}
-                  <div className="relative w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg animate-in zoom-in duration-500">
-                    <CheckCircle className="text-white animate-in zoom-in duration-700" size={32} strokeWidth={3} />
+                  <div className="relative w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg animate-in zoom-in duration-500">
+                    <CheckCircle className="text-white animate-in zoom-in duration-700" size={28} strokeWidth={3} />
                   </div>
                 </div>
 
                 {/* Success Text */}
                 <div className="text-center animate-in fade-in slide-in-from-bottom duration-700">
-                  <h2 className="text-lg font-bold text-gray-900 mb-1">
+                  <h2 className="text-sm font-bold text-gray-900 mb-0.5">
                     Welcome Back!
                   </h2>
                   <p className="text-gray-600 text-xs">
                     Login successful
                   </p>
-                </div>
-
-                {/* Success Indicator */}
-                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-green-100 rounded-full animate-in fade-in duration-1000">
-                  <div className="w-1.5 h-1.5 bg-green-600 rounded-full animate-pulse"></div>
-                  <span className="text-green-800 text-xs font-semibold">Redirecting...</span>
                 </div>
               </div>
             </div>
