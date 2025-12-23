@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { LogOut, CheckCircle, Loader } from 'lucide-react';
 
@@ -27,10 +27,23 @@ export function LogoutProvider({ children }) {
     // Keep success prompt visible while login page loads
     await router.push('/login');
     
-    // Auto-dismiss prompt after 2 seconds (gives time for login page to appear)
-    setTimeout(() => {
+    // Wait for page to fully load before dismissing prompt
+    // Listen for page load completion
+    const handleLoad = () => {
       setLogoutStep('idle');
-    }, 2000);
+      window.removeEventListener('load', handleLoad);
+    };
+    
+    // If page loads quickly, dismiss after max 5 seconds as fallback
+    const fallbackTimeout = setTimeout(() => {
+      setLogoutStep('idle');
+      window.removeEventListener('load', handleLoad);
+    }, 5000);
+    
+    window.addEventListener('load', () => {
+      clearTimeout(fallbackTimeout);
+      handleLoad();
+    });
   };
 
   const handleCancel = () => {
