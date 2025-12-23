@@ -23,9 +23,11 @@ export function LogoutProvider({ children }) {
     // Wait for success animation (300ms)
     await new Promise(resolve => setTimeout(resolve, 300));
 
-    // Step 3: Redirect to login and reset
+    // Step 3: Redirect to login
+    // Keep success prompt visible while login page loads
+    // Prompt will automatically disappear when new page loads and provider resets
     await router.push('/login');
-    setLogoutStep('idle');
+    // Don't reset logoutStep - let the navigation close the prompt naturally
   };
 
   const handleCancel = () => {
