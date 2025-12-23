@@ -7,6 +7,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import KPIOverviewCard from '@/src/components/KPIOverviewCard';
 import AlertSection from '@/src/components/AlertSection';
 import { usePrompt } from '@/src/components/usePrompt';
+import { weekChartData, monthChartData, visibilityData, positiveReviews, negativeReviews, positiveKeywords, negativeKeywords, alerts, kpiData } from './dashboardData';
 
 export default function Dashboard() {
   const prompt = usePrompt();
@@ -38,119 +39,9 @@ export default function Dashboard() {
   const [openDropdown, setOpenDropdown] = useState(null);
 
   // Visibility data for KPI snapshot
-  const visibilityData = [
-    { name: 'Mon', impressions: 1250, clicks: 85, calls: 12, directions: 28 },
-    { name: 'Tue', impressions: 1380, clicks: 92, calls: 15, directions: 32 },
-    { name: 'Wed', impressions: 1420, clicks: 88, calls: 11, directions: 25 },
-    { name: 'Thu', impressions: 1560, clicks: 105, calls: 18, directions: 38 },
-    { name: 'Fri', impressions: 1890, clicks: 128, calls: 22, directions: 45 },
-    { name: 'Sat', impressions: 2100, clicks: 145, calls: 28, directions: 52 },
-    { name: 'Sun', impressions: 1750, clicks: 112, calls: 19, directions: 41 }
-  ];
 
-  // Chart data
-  const weekChartData = [
-    { name: 'Mon', lastWeek: 12, thisWeek: 18 },
-    { name: 'Tue', lastWeek: 15, thisWeek: 22 },
-    { name: 'Wed', lastWeek: 10, thisWeek: 16 },
-    { name: 'Thu', lastWeek: 18, thisWeek: 25 },
-    { name: 'Fri', lastWeek: 22, thisWeek: 30 },
-    { name: 'Sat', lastWeek: 20, thisWeek: 28 },
-    { name: 'Sun', lastWeek: 14, thisWeek: 20 }
-  ];
-
-  const monthChartData = [
-    { name: 'Week 1', lastMonth: 85, thisMonth: 95 },
-    { name: 'Week 2', lastMonth: 92, thisMonth: 110 },
-    { name: 'Week 3', lastMonth: 78, thisMonth: 105 },
-    { name: 'Week 4', lastMonth: 88, thisMonth: 120 }
-  ];
-
+  // Chart data - imported from dashboardData
   const chartData = selectedPeriod === 'week' ? weekChartData : monthChartData;
-
-  const normalReviews = [
-    {
-      id: 1,
-      name: 'Alice Johnson',
-      rating: 5,
-      date: '2 days ago',
-      comment: 'RepuScope AI has transformed how we manage our online presence. The sentiment analysis is spot on and the actionable insights are truly invaluable.',
-      sentiment: 'Positive',
-      replied: true,
-      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400'
-    },
-    {
-      id: 2,
-      name: 'Bob Williams',
-      rating: 4,
-      date: '3 days ago',
-      comment: 'Great tool, though the keyword suggestions could be more granular. Still, a massive time-saver for filtering and responding to reviews efficiently.',
-      sentiment: 'Neutral',
-      replied: false,
-      image: null
-    }
-  ];
-
-  const negativeReviews = [
-    {
-      id: 6,
-      name: 'Charlie Brown',
-      rating: 2,
-      date: '5 days ago',
-      comment: 'Had some issues with integration initially. Customer support was quick, but it cost me a day of work to get everything up and running smoothly.',
-      sentiment: 'Negative',
-      replied: false,
-      resolved: false,
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400'
-    }
-  ];
-
-  const positiveKeywords = [
-    { name: 'Service', count: 120 },
-    { name: 'Quality', count: 95 },
-    { name: 'Support', count: 88 },
-    { name: 'Value', count: 70 },
-    { name: 'Friendly', count: 65 }
-  ];
-
-  const negativeKeywords = [
-    { name: 'Slow', count: 45 },
-    { name: 'Expensive', count: 38 },
-    { name: 'Confusing', count: 32 },
-    { name: 'Bugs', count: 28 },
-    { name: 'Support', count: 22 }
-  ];
-
-  // Alerts data
-  const alerts = [
-    {
-      id: '1',
-      type: 'review',
-      severity: 'critical',
-      title: 'Negative reviews spike',
-      description: '5 negative reviews in the last 2 days',
-      changePercent: -25,
-      period: 'last week'
-    },
-    {
-      id: '2',
-      type: 'calls',
-      severity: 'warning',
-      title: 'Call volume dropping',
-      description: 'Phone calls down this week',
-      changePercent: -15,
-      period: 'last week'
-    },
-    {
-      id: '3',
-      type: 'visibility',
-      severity: 'warning',
-      title: 'Visibility decreased',
-      description: 'Impressions lower than usual',
-      changePercent: -10,
-      period: 'last month'
-    }
-  ];
 
   // Alert icon mapping (needed by AlertSection)
   const alertIconMap = {
