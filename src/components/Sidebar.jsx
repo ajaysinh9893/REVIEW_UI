@@ -22,10 +22,10 @@ export default function Sidebar() {
     setTimeout(() => {
       setLogoutStep('success');
 
-      // Step 3: After 3 seconds, redirect to login
+      // Step 3: After 2 seconds, redirect to login
       setTimeout(async () => {
         await router.push('/login');
-      }, 3000);
+      }, 2000);
     }, 1000);
   };
 
