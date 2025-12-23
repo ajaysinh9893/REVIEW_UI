@@ -1,8 +1,38 @@
 'use client';
 
 import { BarChart3 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 export default function LoadingDashboard({ isOpen, message }) {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // Start slow progress immediately
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        // Progress slowly up to 90%, then wait for actual load
+        if (prev < 90) {
+          return prev + Math.random() * 15; // Random increments
+        }
+        return prev;
+      });
+    }, 200);
+
+    // When page fully loads, jump to 100%
+    const handleLoad = () => {
+      setProgress(100);
+    };
+
+    window.addEventListener('load', handleLoad);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('load', handleLoad);
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
@@ -37,7 +67,10 @@ export default function LoadingDashboard({ isOpen, message }) {
         {/* Progress Bar */}
         <div className="max-w-md mx-auto">
           <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-full animate-progress"></div>
+            <div 
+              className="h-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-full transition-all duration-500 ease-out"
+              style={{ width: `${Math.min(progress, 100)}%` }}
+            ></div>
           </div>
         </div>
       </div>
@@ -49,17 +82,8 @@ export default function LoadingDashboard({ isOpen, message }) {
           to { transform: rotate(0deg); }
         }
 
-        @keyframes progress {
-          from { width: 0%; }
-          to { width: 100%; }
-        }
-
         .animate-spin-reverse {
           animation: spin-reverse 1.5s linear infinite;
-        }
-
-        .animate-progress {
-          animation: progress 3s ease-in-out forwards;
         }
       `}</style>
     </div>
