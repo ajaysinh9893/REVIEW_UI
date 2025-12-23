@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { LogOut, Check, Loader } from 'lucide-react';
 import LoadingDashboard from '@/src/components/LoadingDashboard';
@@ -10,8 +10,11 @@ const LogoutContext = createContext();
 export function LogoutProvider({ children }) {
   const router = useRouter();
   const [logoutStep, setLogoutStep] = useState('idle'); // 'idle', 'confirm', 'loading', 'success'
+  const redirectCompleted = useRef(false);
 
   const handleConfirmLogout = async () => {
+    redirectCompleted.current = false;
+    
     // Step 1: Show loading animation (1 second)
     setLogoutStep('loading');
 
@@ -28,17 +31,19 @@ export function LogoutProvider({ children }) {
     // Keep success prompt visible while login page loads
     await router.push('/login');
     
-    // Wait for page to fully load before dismissing prompt
-    // Listen for page load completion
+    // Setup cleanup function that marks redirect as complete
     const handleLoad = () => {
-      setLogoutStep('idle');
-      window.removeEventListener('load', handleLoad);
-      clearTimeout(fallbackTimeout);
+      if (!redirectCompleted.current) {
+        redirectCompleted.current = true;
+        setLogoutStep('idle');
+        window.removeEventListener('load', handleLoad);
+      }
     };
     
     // If page loads quickly, dismiss after max 5 seconds as fallback
     const fallbackTimeout = setTimeout(() => {
-      if (logoutStep !== 'idle') {
+      if (!redirectCompleted.current) {
+        redirectCompleted.current = true;
         setLogoutStep('idle');
         window.removeEventListener('load', handleLoad);
       }
