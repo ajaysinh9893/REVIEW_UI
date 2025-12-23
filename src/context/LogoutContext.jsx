@@ -67,7 +67,7 @@ export function LogoutProvider({ children }) {
       {/* Logout Confirmation Modal - Rendered at root level */}
       {logoutStep === 'confirm' && (
         <div className="fixed inset-0 bg-white/2 backdrop-blur-xl flex items-center justify-center z-[9999] animate-in fade-in duration-300" onClick={handleCancel}>
-          <div className="bg-white rounded-xl p-5 max-w-xs w-full shadow-lg border border-gray-200 animate-in zoom-in duration-300" onClick={(e) => e.stopPropagation()}>
+          <div className="rounded-xl p-5 max-w-xs w-full animate-in zoom-in duration-300" onClick={(e) => e.stopPropagation()}>
             <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
               <LogOut className="text-white" size={24} />
             </div>
@@ -86,7 +86,7 @@ export function LogoutProvider({ children }) {
       {/* Loading Animation Modal */}
       {logoutStep === 'loading' && (
         <div className="fixed inset-0 bg-white/2 backdrop-blur-xl flex items-center justify-center z-[9999] animate-in fade-in duration-300">
-          <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 animate-in zoom-in duration-300">
+          <div className="rounded-xl p-6 animate-in zoom-in duration-300">
             <div className="flex flex-col items-center gap-4">
               <div className="relative">
                 <div className="w-14 h-14 border-3 border-red-200 border-t-red-600 rounded-full animate-spin"></div>
