@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Search, Star, X, ChevronDown, Filter, Calendar, MessageSquare, TrendingUp, MapPin, Tag, CheckCircle, Clock, SlidersHorizontal } from 'lucide-react';
 import { usePrompt } from '@/src/components/usePrompt';
+import QuickAnalyticsPanel from '@/src/components/QuickAnalyticsPanel';
 
 export default function ReviewsPage() {
     const prompt = usePrompt();
@@ -22,18 +23,6 @@ export default function ReviewsPage() {
   const [replyModal, setReplyModal] = useState({ open: false, review: null });
   const [selectedReply, setSelectedReply] = useState('');
   const [openDropdown, setOpenDropdown] = useState(null);
-
-  // Prevent body scroll when reply modal is open
-  useEffect(() => {
-    if (replyModal.open) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [replyModal.open]);
   
   const [filters, setFilters] = useState({
     status: 'All Status',
@@ -343,6 +332,11 @@ export default function ReviewsPage() {
     <div className="min-h-screen font-sans" style={{ backgroundColor: '#FAF9F5' }}>
       <div className="p-10 pr-24">
         <div className="max-w-7xl mx-auto">
+          {/* Quick Analytics Panel - Top */}
+          <div className="mb-8 w-full">
+            <QuickAnalyticsPanel filteredReviews={filteredReviews} allReviews={reviews} />
+          </div>
+
           {/* Main content */}
           <div className="grid grid-cols-12 gap-6">
               {/* Filter Panel - Left Side */}
