@@ -133,168 +133,182 @@ export default function VisibilityActivityPageRecharts() {
     <div className="min-h-screen font-sans" style={{ backgroundColor: '#FAF9F5' }}>
       <div className="p-10 max-w-7xl mx-auto">
         
-        {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Visibility & Activity
-            </h1>
-            <p className="text-gray-600">
-              Track how customers find and interact with your business
-            </p>
+        {/* KPI Overview Card and Activity Trends - Combined Section */}
+        <div className="w-full rounded-xl border border-gray-200 p-6 shadow-sm mb-8">
+          <div className="mb-8 flex items-center justify-between">
+            <div>
+              <h1 className="text-lg font-semibold text-gray-900 mb-2">
+                Visibility & Activity
+              </h1>
+              <p className="text-sm text-gray-500 mt-0.5">
+                Track how customers find and interact with your business
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setSelectedMetric(null)}
+                  className="px-3 py-1.5 text-sm font-bold text-green-700 hover:text-green-900 transition-all"
+                >
+                  Overall
+                </button>
+                {['daily', 'weekly', 'monthly', 'yearly'].map((timeframe) => (
+                  <button
+                    key={timeframe}
+                    onClick={() => setSelectedTimeframe(timeframe)}
+                    className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+                      selectedTimeframe === timeframe
+                        ? 'bg-indigo-100 text-indigo-700'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    {timeframe.charAt(0).toUpperCase() + timeframe.slice(1)}
+                  </button>
+                ))}
+              </div>
+              <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all shadow-md">
+                <Download size={18} />
+                <span>Export Report</span>
+              </button>
+            </div>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all shadow-md">
-            <Download size={18} />
-            <span>Export Report</span>
-          </button>
-        </div>
+          <div className="flex gap-6">
+            {/* KPI Overview Card - 40% */}
+            <div className="w-[40%] border-r border-gray-200 pr-6">
+              <KPIOverviewCard 
+                visibilityData={dashboardVisibilityData} 
+                period="daily" 
+                selectedTimeframe={selectedTimeframe}
+                onTimeframeChange={setSelectedTimeframe}
+                onCardClick={setSelectedMetric}
+                selectedMetric={selectedMetric}
+                showTimeframeButtons={true}
+              />
+            </div>
 
-        {/* KPI Overview Card from Dashboard */}
-        <div className="rounded-xl border border-gray-200 p-6 shadow-sm mb-8">
-          <div className="mb-8">
-            <KPIOverviewCard 
-              visibilityData={dashboardVisibilityData} 
-              period="daily" 
-              selectedTimeframe={selectedTimeframe}
-              onTimeframeChange={setSelectedTimeframe}
-              onCardClick={setSelectedMetric}
-              selectedMetric={selectedMetric}
-              showTimeframeButtons={true}
-            />
-          </div>
+            {/* Activity Trends Chart - 60% */}
+            <div className="flex-1">
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={getChartData()} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis 
+                      dataKey="label" 
+                      stroke="#9ca3af" 
+                      style={{ fontSize: '14px', fontWeight: 500 }}
+                    />
+                    <YAxis 
+                      stroke="#9ca3af" 
+                      style={{ fontSize: '12px' }}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#ffffff', 
+                        border: 'none', 
+                        borderRadius: '8px',
+                        color: '#1f2937',
+                        padding: '8px 12px'
+                      }}
+                      formatter={(value) => value.toLocaleString()}
+                      cursor={{ stroke: '#e5e7eb', strokeWidth: 1 }}
+                    />
+                    
+                    {!selectedMetric ? (
+                      <>
+                        {/* Show all metrics when no metric is selected - excluding impressions */}
+                        {
+                          <Line 
+                            type="monotone" 
+                            dataKey="calls" 
+                            stroke="#d97706" 
+                            strokeWidth={3}
+                            dot={{ fill: '#fff', stroke: '#d97706', strokeWidth: 1, r: 4 }}
+                            activeDot={{ r: 5 }}
+                            name="Calls"
+                          />
+                        }
+                        {
+                          <Line 
+                            type="monotone" 
+                            dataKey="directions" 
+                            stroke="#16a34a" 
+                            strokeWidth={3}
+                            dot={{ fill: '#fff', stroke: '#16a34a', strokeWidth: 1, r: 4 }}
+                            activeDot={{ r: 5 }}
+                            name="Directions"
+                          />
+                        }
+                        {
+                          <Line 
+                            type="monotone" 
+                            dataKey="clicks" 
+                            stroke="#dc2626" 
+                            strokeWidth={3}
+                            dot={{ fill: '#fff', stroke: '#dc2626', strokeWidth: 1, r: 4 }}
+                            activeDot={{ r: 5 }}
+                            name="Clicks"
+                          />
+                        }
+                      </>
+                    ) : (
+                      <>
+                        {/* Show comparison lines when a metric is selected */}
+                        {/* Current period - darkest and thickest */}
+                        <Line 
+                          type="monotone" 
+                          dataKey={`${selectedMetric}_current`} 
+                          stroke={selectedMetric === 'calls' ? '#d97706' : selectedMetric === 'directions' ? '#16a34a' : selectedMetric === 'clicks' ? '#dc2626' : '#2563eb'} 
+                          strokeWidth={3}
+                          dot={{ fill: '#fff', stroke: selectedMetric === 'calls' ? '#d97706' : selectedMetric === 'directions' ? '#16a34a' : selectedMetric === 'clicks' ? '#dc2626' : '#2563eb', strokeWidth: 1, r: 4 }}
+                          activeDot={{ r: 5 }}
+                          name={`${selectedMetric.charAt(0).toUpperCase() + selectedMetric.slice(1)} - Current`}
+                        />
+                        {/* Previous period 1 - medium grey */}
+                        <Line 
+                          type="monotone" 
+                          dataKey={`${selectedMetric}_prev1`} 
+                          stroke="#cbd5e1"
+                          strokeWidth={3}
+                          dot={{ fill: '#fff', stroke: '#cbd5e1', strokeWidth: 1, r: 4 }}
+                          activeDot={{ r: 5 }}
+                          name={`${selectedMetric.charAt(0).toUpperCase() + selectedMetric.slice(1)} - Last Period`}
+                        />
+                      </>
+                    )}
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
 
-          {/* Multi-Line Chart - Activity Trends */}          <h3 className="text-lg font-bold text-gray-900 mb-6\">Activity Trends</h3>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={getChartData()} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis 
-                  dataKey="label" 
-                  stroke="#9ca3af" 
-                  style={{ fontSize: '14px', fontWeight: 500 }}
-                />
-                <YAxis 
-                  stroke="#9ca3af" 
-                  style={{ fontSize: '12px' }}
-                />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px',
-                    color: '#1f2937',
-                    padding: '8px 12px'
-                  }}
-                  formatter={(value) => value.toLocaleString()}
-                  cursor={{ stroke: '#e5e7eb', strokeWidth: 1 }}
-                />
-                
+              <div className="flex items-center justify-center gap-6 mt-6 pt-4 border-t border-gray-200 flex-wrap">
                 {!selectedMetric ? (
                   <>
-                    {/* Show all metrics when no metric is selected - excluding impressions */}
-                    {
-                      <Line 
-                        type="monotone" 
-                        dataKey="calls" 
-                        stroke="#d97706" 
-                        strokeWidth={3}
-                        dot={{ fill: '#fff', stroke: '#d97706', strokeWidth: 1, r: 4 }}
-                        activeDot={{ r: 5 }}
-                        name="Calls"
-                      />
-                    }
-                    {
-                      <Line 
-                        type="monotone" 
-                        dataKey="directions" 
-                        stroke="#16a34a" 
-                        strokeWidth={3}
-                        dot={{ fill: '#fff', stroke: '#16a34a', strokeWidth: 1, r: 4 }}
-                        activeDot={{ r: 5 }}
-                        name="Directions"
-                      />
-                    }
-                    {
-                      <Line 
-                        type="monotone" 
-                        dataKey="clicks" 
-                        stroke="#dc2626" 
-                        strokeWidth={3}
-                        dot={{ fill: '#fff', stroke: '#dc2626', strokeWidth: 1, r: 4 }}
-                        activeDot={{ r: 5 }}
-                        name="Clicks"
-                      />
-                    }
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#d97706' }}></div>
+                      <span className="text-sm font-medium text-gray-700">Calls</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#16a34a' }}></div>
+                      <span className="text-sm font-medium text-gray-700">Directions</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#dc2626' }}></div>
+                      <span className="text-sm font-medium text-gray-700">Clicks</span>
+                    </div>
                   </>
                 ) : (
                   <>
-                    {/* Show comparison lines when a metric is selected */}
-                    {/* Current period - darkest and thickest */}
-                    <Line 
-                      type="monotone" 
-                      dataKey={`${selectedMetric}_current`} 
-                      stroke={selectedMetric === 'calls' ? '#d97706' : selectedMetric === 'directions' ? '#16a34a' : selectedMetric === 'clicks' ? '#dc2626' : '#2563eb'} 
-                      strokeWidth={3}
-                      dot={{ fill: '#fff', stroke: selectedMetric === 'calls' ? '#d97706' : selectedMetric === 'directions' ? '#16a34a' : selectedMetric === 'clicks' ? '#dc2626' : '#2563eb', strokeWidth: 1, r: 4 }}
-                      activeDot={{ r: 5 }}
-                      name={`${selectedMetric.charAt(0).toUpperCase() + selectedMetric.slice(1)} - Current`}
-                    />
-                    {/* Previous period 1 - medium grey */}
-                    <Line 
-                      type="monotone" 
-                      dataKey={`${selectedMetric}_prev1`} 
-                      stroke="#cbd5e1"
-                      strokeWidth={3}
-                      dot={{ fill: '#fff', stroke: '#cbd5e1', strokeWidth: 1, r: 4 }}
-                      activeDot={{ r: 5 }}
-                      name={`${selectedMetric.charAt(0).toUpperCase() + selectedMetric.slice(1)} - Last Period`}
-                    />
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: selectedMetric === 'calls' ? '#d97706' : selectedMetric === 'directions' ? '#16a34a' : selectedMetric === 'clicks' ? '#dc2626' : '#2563eb' }}></div>
+                      <span className="text-sm font-medium text-gray-700">Current</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-slate-300 rounded-full"></div>
+                      <span className="text-sm font-medium text-gray-700">Last Period</span>
+                    </div>
                   </>
                 )}
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="flex items-center justify-center gap-6 mt-6 pt-4 border-t border-gray-200 flex-wrap">
-            {!selectedMetric ? (
-              <>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#d97706' }}></div>
-                  <span className="text-sm font-medium text-gray-700">Calls</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#16a34a' }}></div>
-                  <span className="text-sm font-medium text-gray-700">Directions</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#dc2626' }}></div>
-                  <span className="text-sm font-medium text-gray-700">Clicks</span>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: selectedMetric === 'calls' ? '#d97706' : selectedMetric === 'directions' ? '#16a34a' : selectedMetric === 'clicks' ? '#dc2626' : '#2563eb' }}></div>
-                  <span className="text-sm font-medium text-gray-700">Current</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-slate-300 rounded-full"></div>
-                  <span className="text-sm font-medium text-gray-700">Last Period</span>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Section Divider */}
-        <div className="relative my-12">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t-2 border-gray-200"></div>
-          </div>
-          <div className="relative flex justify-center">
-            <span className="px-6 py-2 bg-gray-50 text-lg font-bold text-gray-900">
-              Activity Details
-            </span>
+              </div>
+            </div>
           </div>
         </div>
 

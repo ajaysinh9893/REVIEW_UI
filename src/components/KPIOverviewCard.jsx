@@ -122,19 +122,6 @@ export default function KPIOverviewCard({ visibilityData, period = 'daily', sele
       chartColor: '#16a34a',
       data: kpiData.directions.data,
       subtitle: `${kpiData.directions.current} latest`
-    },
-    {
-      metric: 'avgPerDay',
-      title: 'Avg per Day',
-      value: kpiData.avgPerDay.toString(),
-      change: 'Baseline',
-      isPositive: true,
-      icon: <Calendar size={20} />,
-      color: 'text-teal-600',
-      bgColor: 'bg-teal-50',
-      chartColor: '#14b8a6',
-      data: kpiData.impressions.data,
-      subtitle: 'Daily Average',
     }
   ];
 
@@ -142,69 +129,8 @@ export default function KPIOverviewCard({ visibilityData, period = 'daily', sele
   const periodLabel = period === 'daily' ? 'This Week' : period === 'weekly' ? 'This Month' : 'Last 6 Months';
 
   return (
-    <div className="rounded-xl border border-gray-200 p-6 h-full flex flex-col">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900">Visibility Snapshot</h2>
-          <p className="text-sm text-gray-500 mt-1">Key performance indicators from your visibility data</p>
-        </div>
-        {showTimeframeButtons && (
-          <div className="flex gap-2">
-            <button 
-              onClick={() => {
-                if (onCardClick) {
-                  onCardClick(null);
-                }
-              }}
-              className="px-3 py-1.5 text-sm font-bold text-green-700 hover:text-green-900 transition-all"
-            >
-              Overall
-            </button>
-            <button 
-              onClick={() => onTimeframeChange && onTimeframeChange('daily')}
-              className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
-                selectedTimeframe === 'daily' 
-                  ? 'bg-indigo-100 text-indigo-700' 
-                  : 'text-gray-700 hover:text-gray-900'
-              }`}
-            >
-              Daily
-            </button>
-            <button 
-              onClick={() => onTimeframeChange && onTimeframeChange('weekly')}
-              className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
-                selectedTimeframe === 'weekly' 
-                  ? 'bg-indigo-100 text-indigo-700' 
-                  : 'text-gray-700 hover:text-gray-900'
-              }`}
-            >
-              Weekly
-            </button>
-            <button 
-              onClick={() => onTimeframeChange && onTimeframeChange('monthly')}
-              className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
-                selectedTimeframe === 'monthly' 
-                  ? 'bg-indigo-100 text-indigo-700' 
-                  : 'text-gray-700 hover:text-gray-900'
-              }`}
-            >
-              Monthly
-            </button>
-            <button 
-              onClick={() => onTimeframeChange && onTimeframeChange('yearly')}
-              className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
-                selectedTimeframe === 'yearly' 
-                  ? 'bg-indigo-100 text-indigo-700' 
-                  : 'text-gray-700 hover:text-gray-900'
-              }`}
-            >
-              Yearly
-            </button>
-          </div>
-        )}
-      </div>
-
-      <div className="grid grid-cols-5 gap-2 flex-1">
+    <div className="rounded-xl p-6 h-full flex flex-col">
+      <div className="grid grid-cols-2 gap-4 flex-1">
         {kpis.map((kpi, index) => (
           <div 
             key={index} 
