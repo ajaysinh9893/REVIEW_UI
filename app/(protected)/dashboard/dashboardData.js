@@ -1,20 +1,22 @@
 // Dashboard static data - extracted to reduce component bundle size
 
+// Weekly data - current week + 3 previous weeks
 export const weekChartData = [
-  { name: 'Mon', lastWeek: 12, thisWeek: 18 },
-  { name: 'Tue', lastWeek: 15, thisWeek: 22 },
-  { name: 'Wed', lastWeek: 10, thisWeek: 16 },
-  { name: 'Thu', lastWeek: 18, thisWeek: 25 },
-  { name: 'Fri', lastWeek: 22, thisWeek: 30 },
-  { name: 'Sat', lastWeek: 20, thisWeek: 28 },
-  { name: 'Sun', lastWeek: 14, thisWeek: 20 }
+  { name: 'Mon', week4Ago: 10, week3Ago: 11, week2Ago: 12, lastWeek: 15, thisWeek: 18 },
+  { name: 'Tue', week4Ago: 13, week3Ago: 14, week2Ago: 15, lastWeek: 18, thisWeek: 22 },
+  { name: 'Wed', week4Ago: 9, week3Ago: 9, week2Ago: 10, lastWeek: 12, thisWeek: 16 },
+  { name: 'Thu', week4Ago: 16, week3Ago: 17, week2Ago: 18, lastWeek: 20, thisWeek: 25 },
+  { name: 'Fri', week4Ago: 19, week3Ago: 20, week2Ago: 22, lastWeek: 26, thisWeek: 30 },
+  { name: 'Sat', week4Ago: 18, week3Ago: 19, week2Ago: 20, lastWeek: 24, thisWeek: 28 },
+  { name: 'Sun', week4Ago: 12, week3Ago: 13, week2Ago: 14, lastWeek: 17, thisWeek: 20 }
 ];
 
+// Monthly data - current month + 3 previous months
 export const monthChartData = [
-  { name: 'Week 1', lastMonth: 85, thisMonth: 95 },
-  { name: 'Week 2', lastMonth: 92, thisMonth: 110 },
-  { name: 'Week 3', lastMonth: 78, thisMonth: 105 },
-  { name: 'Week 4', lastMonth: 88, thisMonth: 120 }
+  { name: 'Week 1', month4Ago: 72, month3Ago: 78, month2Ago: 82, lastMonth: 88, thisMonth: 95 },
+  { name: 'Week 2', month4Ago: 78, month3Ago: 85, month2Ago: 90, lastMonth: 98, thisMonth: 110 },
+  { name: 'Week 3', month4Ago: 68, month3Ago: 72, month2Ago: 76, lastMonth: 82, thisMonth: 105 },
+  { name: 'Week 4', month4Ago: 75, month3Ago: 82, month2Ago: 86, lastMonth: 105, thisMonth: 120 }
 ];
 
 export const visibilityData = [

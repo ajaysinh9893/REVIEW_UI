@@ -1,46 +1,94 @@
 'use client';
 
-import { TrendingUp, TrendingDown, MessageSquare, ThumbsUp, ThumbsDown, Clock, BarChart3, AlertCircle, Eye, Target, Zap, X } from 'lucide-react';
+import { TrendingUp, TrendingDown, MessageSquare, ThumbsUp, ThumbsDown, Clock, BarChart3, AlertCircle, Eye, Target, Zap, X, Send, Globe, Building2, Lock, Star, Flag } from 'lucide-react';
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
 import { useState, useEffect, useMemo } from 'react';
 
 export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
-  const [period, setPeriod] = useState('weekly'); // weekly, monthly, yearly
+  const [period, setPeriod] = useState('weekly'); // weekly, monthly, yearly, all
   const [activeTab, setActiveTab] = useState('metrics'); // 'metrics' or 'advanced'
   const metrics = useMemo(() => {
-    // Base numbers for each period
+    // Base numbers for current and previous periods
     const baseTotals = {
       weekly: 12,
       monthly: 80,
-      yearly: 640
+      yearly: 640,
+      all: 2400
+    };
+
+    const previousBaseTotals = {
+      weekly: 11,      // Last week had 11 reviews
+      monthly: 71,     // Last month had 71 reviews
+      yearly: 580,     // Last year had 580 reviews
+      all: 2100        // Previous lifetime was 2100
     };
 
     const totalReviews = baseTotals[period];
+    const previousTotalReviews = previousBaseTotals[period];
+    
+    // Helper function to calculate percentage change
+    const calculateTrend = (current, previous) => {
+      if (previous === 0) return 0;
+      return Math.round(((current - previous) / previous) * 100);
+    };
     
     // Calculate metrics based on realistic distributions
-    const positiveReviews = Math.ceil(totalReviews * 0.65); // 65% positive
-    const negativeReviews = Math.ceil(totalReviews * 0.20); // 20% negative
-    const neutralReviews = totalReviews - positiveReviews - negativeReviews; // remaining
-    const internalNegatives = Math.floor(negativeReviews * 0.25); // 25% of negatives are internal
-    const repliedReviews = Math.ceil(totalReviews * 0.75); // 75% replied
+    const positiveReviews = Math.ceil(totalReviews * 0.65);
+    const previousPositiveReviews = Math.ceil(previousTotalReviews * 0.63); // Slightly lower before
+    
+    const negativeReviews = Math.ceil(totalReviews * 0.20);
+    const previousNegativeReviews = Math.ceil(previousTotalReviews * 0.22); // Higher before
+    
+    const neutralReviews = totalReviews - positiveReviews - negativeReviews;
+    
+    const internalNegatives = Math.floor(negativeReviews * 0.25);
+    const previousInternalNegatives = Math.floor(previousNegativeReviews * 0.28);
+    
+    const repliedReviews = Math.ceil(totalReviews * 0.75);
+    const previousRepliedReviews = Math.ceil(previousTotalReviews * 0.70); // Lower response before
+    
     const unrepliedReviews = totalReviews - repliedReviews;
-    const resolvedReviews = Math.ceil(totalReviews * 0.85); // 85% resolved
+    const previousUnrepliedReviews = previousTotalReviews - previousRepliedReviews;
+    
+    const resolvedReviews = Math.ceil(totalReviews * 0.85);
+    const previousResolvedReviews = Math.ceil(previousTotalReviews * 0.80);
+    
     const unresolvedReviews = totalReviews - resolvedReviews;
-    const googleReviews = Math.ceil(totalReviews * 0.60); // 60% from Google
+    const previousUnresolvedReviews = previousTotalReviews - previousResolvedReviews;
+    
+    const googleReviews = Math.ceil(totalReviews * 0.60);
+    const previousGoogleReviews = Math.ceil(previousTotalReviews * 0.58);
+    
     const internalReviews = totalReviews - googleReviews;
+    const previousInternalReviews = previousTotalReviews - previousGoogleReviews;
     
     // Calculate averages
-    const averageRating = (4.2).toFixed(1); // Average 4.2 out of 5
+    const averageRating = (4.2).toFixed(1);
+    const previousAverageRating = (4.0).toFixed(1); // Was lower before
+    
     const responseRate = Math.round((repliedReviews / totalReviews) * 100);
+    const previousResponseRate = Math.round((previousRepliedReviews / previousTotalReviews) * 100);
     
     // Calculate per week based on period
-    const avgReviewsPerWeek = period === 'weekly' ? totalReviews : period === 'monthly' ? Math.round(totalReviews / 4) : Math.round(totalReviews / 52);
+    const avgReviewsPerWeek = period === 'weekly' ? totalReviews : period === 'monthly' ? Math.round(totalReviews / 4) : period === 'yearly' ? Math.round(totalReviews / 52) : Math.round(totalReviews / 52);
+    const previousAvgReviewsPerWeek = period === 'weekly' ? previousTotalReviews : period === 'monthly' ? Math.round(previousTotalReviews / 4) : period === 'yearly' ? Math.round(previousTotalReviews / 52) : Math.round(previousTotalReviews / 52);
     
     // Average reply time in hours
-    const avgReplyTime = period === 'weekly' ? 12 : period === 'monthly' ? 18 : 24;
+    const avgReplyTime = period === 'weekly' ? 12 : period === 'monthly' ? 18 : period === 'yearly' ? 24 : 20;
+    const previousAvgReplyTime = period === 'weekly' ? 14 : period === 'monthly' ? 20 : period === 'yearly' ? 26 : 22; // Was slower before
     
-    // Trend - positive growth trend
-    const trend = period === 'weekly' ? 8 : period === 'monthly' ? 12 : 25;
+    // Calculate trends based on actual comparison
+    const trend = calculateTrend(totalReviews, previousTotalReviews);
+    const positiveTrend = calculateTrend(positiveReviews, previousPositiveReviews);
+    const negativeTrend = calculateTrend(negativeReviews, previousNegativeReviews);
+    const responseRateTrend = calculateTrend(responseRate, previousResponseRate);
+    const replyTimeTrend = calculateTrend(avgReplyTime, previousAvgReplyTime); // Note: negative is good here
+    const resolvedTrend = calculateTrend(resolvedReviews, previousResolvedReviews);
+    const unrepliedTrend = calculateTrend(unrepliedReviews, previousUnrepliedReviews);
+    const ratingTrend = calculateTrend(Math.round(averageRating * 10), Math.round(previousAverageRating * 10));
+    const googleTrend = calculateTrend(googleReviews, previousGoogleReviews);
+    const internalTrend = calculateTrend(internalReviews, previousInternalReviews);
+    const internalNegativesTrend = calculateTrend(internalNegatives, previousInternalNegatives);
     
     return {
       totalReviews,
@@ -58,6 +106,16 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
       avgReviewsPerWeek,
       avgReplyTime,
       trend,
+      positiveTrend,
+      negativeTrend,
+      responseRateTrend,
+      replyTimeTrend,
+      resolvedTrend,
+      unrepliedTrend,
+      ratingTrend,
+      googleTrend,
+      internalTrend,
+      internalNegativesTrend,
       repliedReviews
     };
   }, [period]);
@@ -99,15 +157,25 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
 
   const MetricCard = ({ icon: Icon, label, value, subtext, trend, color = 'blue', chartData }) => {
     const colorMap = {
-      blue: { bg: 'bg-blue-50', text: 'text-blue-600', icon: 'text-blue-600' },
-      green: { bg: 'bg-green-50', text: 'text-green-600', icon: 'text-green-600' },
-      red: { bg: 'bg-red-50', text: 'text-red-600', icon: 'text-red-600' },
-      amber: { bg: 'bg-amber-50', text: 'text-amber-600', icon: 'text-amber-600' },
-      purple: { bg: 'bg-purple-50', text: 'text-purple-600', icon: 'text-purple-600' }
+      blue: { bg: 'bg-blue-50', text: 'text-blue-600', icon: 'text-blue-600', hex: '#2563eb' },
+      green: { bg: 'bg-green-50', text: 'text-green-600', icon: 'text-green-600', hex: '#16a34a' },
+      red: { bg: 'bg-red-50', text: 'text-red-600', icon: 'text-red-600', hex: '#dc2626' },
+      amber: { bg: 'bg-amber-50', text: 'text-amber-600', icon: 'text-amber-600', hex: '#d97706' },
+      purple: { bg: 'bg-purple-50', text: 'text-purple-600', icon: 'text-purple-600', hex: '#9333ea' }
+    };
+
+    // Get comparison period label
+    const getComparisonLabel = () => {
+      if (period === 'weekly') return 'vs Last Week';
+      if (period === 'monthly') return 'vs Last Month';
+      if (period === 'yearly') return 'vs Last Year';
+      if (period === 'all') return 'vs Previous Period';
+      return 'vs Previous Period';
     };
 
     const colors = colorMap[color];
     const displayValue = formatValue(value);
+    const comparisonLabel = getComparisonLabel();
 
     return (
       <div className="relative overflow-hidden rounded-lg border border-gray-200 p-2.5 hover:shadow-md transition-all group flex flex-col justify-between h-full w-full">
@@ -139,7 +207,7 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
                     <Line
                       type="monotone"
                       dataKey="value"
-                      stroke={colors.text.replace('text-', '#')}
+                      stroke={colors.hex}
                       strokeWidth={1.5}
                       dot={false}
                       isAnimationActive={false}
@@ -149,17 +217,24 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
               </div>
             )}
 
-            {/* Trend */}
+            {/* Trend with Comparison Label Tooltip */}
             {trend !== undefined && (
-              <div className={`flex items-center gap-0.5 text-xs font-semibold ${
-                trend >= 0 ? 'text-green-600' : 'text-red-600'
-              }`}>
+              <div 
+                className={`flex items-center gap-0.5 text-xs font-semibold group/trend cursor-help relative ${
+                  trend >= 0 ? 'text-green-600' : 'text-red-600'
+                }`}
+                title={comparisonLabel}
+              >
                 {trend >= 0 ? (
                   <TrendingUp size={10} />
                 ) : (
                   <TrendingDown size={10} />
                 )}
                 {Math.abs(trend)}%
+                {/* Tooltip on hover */}
+                <div className="absolute bottom-full right-0 mb-1 px-2 py-1 text-xs bg-gray-900 text-white rounded whitespace-nowrap opacity-0 group-hover/trend:opacity-100 transition-opacity pointer-events-none z-10">
+                  {comparisonLabel}
+                </div>
               </div>
             )}
           </div>
@@ -170,72 +245,68 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
 
   return (
     <div className="rounded-xl border border-gray-200 p-5 w-full overflow-x-hidden overflow-y-visible">
-      {/* Header with Tabs */}
+      {/* Header */}
       <div className="flex items-center justify-between mb-6 w-full flex-wrap gap-4">
         <div className="flex-1 min-w-0">
           <h2 className="text-lg font-semibold text-gray-900">Review Analytics</h2>
           <p className="text-sm text-gray-500 mt-0.5">Key metrics at a glance</p>
         </div>
         
-        {/* Tab Navigation */}
-        <div className="flex gap-2 bg-gray-100 p-1 rounded-lg flex-shrink-0 relative z-10">
+        {/* Period Selector */}
+        <div className="flex gap-2 bg-gray-100 p-1 rounded-lg flex-shrink-0">
           <button
-            onClick={() => setActiveTab('metrics')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap cursor-pointer ${
-              activeTab === 'metrics'
-                ? 'bg-white text-gray-900 shadow-sm'
+            onClick={() => setPeriod('weekly')}
+            className={`px-4 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap ${
+              period === 'weekly'
+                ? 'bg-indigo-600 text-white'
                 : 'text-gray-700 hover:text-gray-900'
             }`}
           >
-            Metrics
+            Weekly
           </button>
           <button
-            onClick={() => setActiveTab(activeTab === 'advanced' ? 'metrics' : 'advanced')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap cursor-pointer ${
-              activeTab === 'advanced'
-                ? 'bg-white text-gray-900 shadow-sm'
+            onClick={() => setPeriod('monthly')}
+            className={`px-4 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap ${
+              period === 'monthly'
+                ? 'bg-indigo-600 text-white'
                 : 'text-gray-700 hover:text-gray-900'
             }`}
           >
-            Advanced
+            Monthly
+          </button>
+          <button
+            onClick={() => setPeriod('yearly')}
+            className={`px-4 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap ${
+              period === 'yearly'
+                ? 'bg-indigo-600 text-white'
+                : 'text-gray-700 hover:text-gray-900'
+            }`}
+          >
+            Yearly
+          </button>
+          <button
+            onClick={() => setPeriod('all')}
+            className={`px-4 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap ${
+              period === 'all'
+                ? 'bg-indigo-600 text-white'
+                : 'text-gray-700 hover:text-gray-900'
+            }`}
+          >
+            Lifetime
           </button>
         </div>
 
-        {/* Period Selector - Only show on Metrics tab */}
-        {activeTab === 'metrics' && (
-          <div className="flex gap-2 bg-gray-100 p-1 rounded-lg flex-shrink-0">
-            <button
-              onClick={() => setPeriod('weekly')}
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap ${
-                period === 'weekly'
-                  ? 'bg-indigo-600 text-white'
-                  : 'text-gray-700 hover:text-gray-900'
-              }`}
-            >
-              Weekly
-            </button>
-            <button
-              onClick={() => setPeriod('monthly')}
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap ${
-                period === 'monthly'
-                  ? 'bg-indigo-600 text-white'
-                  : 'text-gray-700 hover:text-gray-900'
-              }`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setPeriod('yearly')}
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap ${
-                period === 'yearly'
-                  ? 'bg-indigo-600 text-white'
-                  : 'text-gray-700 hover:text-gray-900'
-              }`}
-            >
-              Yearly
-            </button>
-          </div>
-        )}
+        {/* Advanced Toggle Button */}
+        <button
+          onClick={() => setActiveTab(activeTab === 'advanced' ? 'metrics' : 'advanced')}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap flex-shrink-0 ${
+            activeTab === 'advanced'
+              ? 'bg-indigo-600 text-white'
+              : 'bg-gray-100 text-gray-700 hover:text-gray-900'
+          }`}
+        >
+          Advanced
+        </button>
       </div>
 
       {/* METRICS SECTION - Always Visible */}
@@ -255,6 +326,7 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
           label="Positive" 
           value={metrics.positiveReviews}
           subtext={`${metrics.totalReviews > 0 ? Math.round((metrics.positiveReviews / metrics.totalReviews) * 100) : 0}%`}
+          trend={metrics.positiveTrend}
           color="green"
           chartData={generateChartData(metrics.positiveReviews)}
         />
@@ -263,14 +335,16 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
           label="Negative" 
           value={metrics.negativeReviews}
           subtext={`${metrics.totalReviews > 0 ? Math.round((metrics.negativeReviews / metrics.totalReviews) * 100) : 0}%`}
+          trend={metrics.negativeTrend}
           color="red"
           chartData={generateChartData(metrics.negativeReviews)}
         />
         <MetricCard 
-          icon={Target} 
+          icon={Send} 
           label="Response Rate" 
           value={`${metrics.responseRate}%`}
           subtext={`${metrics.repliedReviews} replied`}
+          trend={metrics.responseRateTrend}
           color="purple"
           chartData={generateChartData(metrics.responseRate)}
         />
@@ -279,6 +353,7 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
           label="Avg Reply Time" 
           value={`${metrics.avgReplyTime}h`}
           subtext="hours"
+          trend={metrics.replyTimeTrend}
           color="blue"
           chartData={generateChartData(metrics.avgReplyTime)}
         />
@@ -287,6 +362,7 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
           label="Reviews/Week" 
           value={metrics.avgReviewsPerWeek}
           subtext="average"
+          trend={metrics.trend}
           color="green"
           chartData={generateChartData(metrics.avgReviewsPerWeek)}
         />
@@ -295,15 +371,17 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
           icon={AlertCircle} 
           label="Unreplied" 
           value={metrics.unrepliedReviews}
-          subtext="need reply"
+          subtext={`${metrics.totalReviews > 0 ? Math.round((metrics.unrepliedReviews / metrics.totalReviews) * 100) : 0}%`}
+          trend={metrics.unrepliedTrend}
           color="amber"
           chartData={generateChartData(metrics.unrepliedReviews)}
         />
         <MetricCard 
-          icon={Eye} 
+          icon={Star} 
           label="Avg Rating" 
           value={metrics.averageRating}
           subtext="out of 5"
+          trend={metrics.ratingTrend}
           color="purple"
           chartData={generateChartData(metrics.averageRating * 10)}
         />
@@ -311,7 +389,8 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
           icon={Zap} 
           label="Resolved" 
           value={metrics.resolvedReviews}
-          subtext={`${metrics.unresolvedReviews} pending`}
+          subtext={`${metrics.totalReviews > 0 ? Math.round((metrics.resolvedReviews / metrics.totalReviews) * 100) : 0}%`}
+          trend={metrics.resolvedTrend}
           color="green"
           chartData={generateChartData(metrics.resolvedReviews)}
         />
@@ -320,22 +399,25 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
           label="Google Reviews" 
           value={metrics.googleReviews}
           subtext={`${metrics.totalReviews > 0 ? Math.round((metrics.googleReviews / metrics.totalReviews) * 100) : 0}%`}
+          trend={metrics.googleTrend}
           color="blue"
           chartData={generateChartData(metrics.googleReviews)}
         />
         <MetricCard 
-          icon={MessageSquare} 
+          icon={Lock} 
           label="Internal Reviews" 
           value={metrics.internalReviews}
           subtext={`${metrics.totalReviews > 0 ? Math.round((metrics.internalReviews / metrics.totalReviews) * 100) : 0}%`}
+          trend={metrics.internalTrend}
           color="purple"
           chartData={generateChartData(metrics.internalReviews)}
         />
         <MetricCard 
-          icon={ThumbsDown} 
+          icon={Flag} 
           label="Internal Negatives" 
           value={metrics.internalNegatives}
-          subtext="not posted"
+          subtext={`${metrics.totalReviews > 0 ? Math.round((metrics.internalNegatives / metrics.totalReviews) * 100) : 0}%`}
+          trend={metrics.internalNegativesTrend}
           color="red"
           chartData={generateChartData(metrics.internalNegatives)}
         />

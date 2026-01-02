@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { LayoutGrid, Star, Tag, MessageSquare, Settings, Search, ChevronDown, Heart, TrendingUp, Calendar, X, RefreshCw, Send, ArrowUp, ArrowDown, Users, AlertCircle, CheckCircle, Clock, Phone, Eye } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import KPIOverviewCard from '@/src/components/KPIOverviewCard';
+import DashboardVisibilitySnapshot from '@/src/components/DashboardVisibilitySnapshot';
 import AlertSection from '@/src/components/AlertSection';
 import { usePrompt } from '@/src/components/usePrompt';
 import { weekChartData, monthChartData, visibilityData, positiveReviews, negativeReviews, positiveKeywords, negativeKeywords, alerts, kpiData } from './dashboardData';
@@ -80,12 +80,11 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen font-sans" style={{ backgroundColor: '#FAF9F5' }}>
       <div className="p-10 max-w-7xl mx-auto pr-24">
-          {/* Top Row - Visibility Snapshot & Overall Rating */}
           {/* Top Row - Visibility Snapshot, Overall Rating & Alerts */}
           <div className="grid grid-cols-12 gap-4 mb-8">
             {/* Visibility Snapshot - 50% width */}
             <div className="col-span-6 h-full">
-              <KPIOverviewCard visibilityData={visibilityData} period="daily" />
+              <DashboardVisibilitySnapshot visibilityData={visibilityData} period="daily" />
             </div>
             
             {/* Overall Rating - 25% width */}
@@ -183,23 +182,25 @@ export default function Dashboard() {
                       wrapperStyle={{ paddingTop: '20px', color: '#1f2937' }}
                       iconType="line"
                     />
-                    <Line
-                      type="monotone"
-                      dataKey={selectedPeriod === 'week' ? 'lastWeek' : 'lastMonth'}
-                      stroke={'#94a3b8'}
-                      strokeWidth={3}
-                      name={selectedPeriod === 'week' ? 'Last Week' : 'Last Month'}
-                      dot={{ fill: '#94a3b8', r: 5 }}
-                      activeDot={{ r: 7, fill: '#94a3b8' }}
-                    />
+                    {/* Current period */}
                     <Line
                       type="monotone"
                       dataKey={selectedPeriod === 'week' ? 'thisWeek' : 'thisMonth'}
                       stroke="#6366f1"
                       strokeWidth={3}
                       name={selectedPeriod === 'week' ? 'This Week' : 'This Month'}
-                      dot={{ fill: '#6366f1', r: 5 }}
-                      activeDot={{ r: 7, fill: '#6366f1' }}
+                      dot={{ fill: '#fff', stroke: '#6366f1', strokeWidth: 1, r: 4 }}
+                      activeDot={{ r: 5, fill: '#6366f1' }}
+                    />
+                    {/* Last period */}
+                    <Line
+                      type="monotone"
+                      dataKey={selectedPeriod === 'week' ? 'lastWeek' : 'lastMonth'}
+                      stroke={'#cbd5e1'}
+                      strokeWidth={3}
+                      name={selectedPeriod === 'week' ? 'Last Week' : 'Last Month'}
+                      dot={{ fill: '#fff', stroke: '#cbd5e1', strokeWidth: 1, r: 4 }}
+                      activeDot={{ r: 5, fill: '#cbd5e1' }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
