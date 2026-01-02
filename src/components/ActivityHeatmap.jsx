@@ -68,99 +68,135 @@ export default function ActivityHeatmap() {
 
   const currentData = weeklyHeatmapData[selectedMetric];
 
-  // Get color based on intensity (0-100)
-  // Blue (less) → Green (mid) → Yellow (higher mid) → Red (high)
+  // Color palette - 3 variations for each color
+  const colorPalette = {
+    blue: ['#A8C7FA', '#4285F4', '#4285F4'], // Light 1, Original, Original
+    red: ['#F6AEA9', '#EA4335', '#EA4335'],   // Light 1, Original, Original
+    yellow: ['#FDE293', '#FBBC04', '#FBBC04'], // Light 1, Original, Original
+    green: ['#A8DAB5', '#34A853', '#34A853']   // Light 1, Original, Original
+  };
+
+  // Get color based on intensity (0-100) - limited 3-color palette
   const getColor = (intensity) => {
     if (intensity === 0) return 'bg-gray-100';
-    // Blue: 1-20 (light to dark)
-    if (intensity < 5) return 'bg-blue-100';
-    if (intensity < 10) return 'bg-blue-200';
-    if (intensity < 15) return 'bg-blue-300';
-    if (intensity < 20) return 'bg-blue-400';
-    // Green: 20-40 (light to dark)
-    if (intensity < 25) return 'bg-green-200';
-    if (intensity < 30) return 'bg-green-300';
-    if (intensity < 35) return 'bg-green-400';
-    if (intensity < 40) return 'bg-green-500';
-    // Yellow: 40-70 (light to dark)
-    if (intensity < 45) return 'bg-yellow-200';
-    if (intensity < 50) return 'bg-yellow-300';
-    if (intensity < 55) return 'bg-yellow-400';
-    if (intensity < 60) return 'bg-yellow-500';
-    if (intensity < 65) return 'bg-yellow-600';
-    if (intensity < 70) return 'bg-amber-600';
-    // Red: 70-100 (light to dark)
-    if (intensity < 75) return 'bg-red-300';
-    if (intensity < 80) return 'bg-red-400';
-    if (intensity < 85) return 'bg-red-500';
-    if (intensity < 90) return 'bg-red-600';
-    if (intensity < 95) return 'bg-red-700';
-    return 'bg-red-800';
+    
+    // Map intensity to one of 12 levels using 4 color groups with 3 variations each
+    if (intensity < 13) {
+      // Blue - Light variations
+      if (intensity < 5) return 'bg-opacity-30' + ' bg-blue-400';
+      if (intensity < 9) return 'bg-opacity-60' + ' bg-blue-400';
+      return 'bg-opacity-100 bg-blue-400';
+    } else if (intensity < 26) {
+      // Green - Light variations
+      if (intensity < 17) return 'bg-opacity-30 bg-green-500';
+      if (intensity < 22) return 'bg-opacity-60 bg-green-500';
+      return 'bg-opacity-100 bg-green-500';
+    } else if (intensity < 39) {
+      // Yellow - Light variations
+      if (intensity < 30) return 'bg-opacity-30 bg-yellow-400';
+      if (intensity < 35) return 'bg-opacity-60 bg-yellow-400';
+      return 'bg-opacity-100 bg-yellow-400';
+    } else {
+      // Red - Light variations
+      if (intensity < 60) return 'bg-opacity-30 bg-red-500';
+      if (intensity < 80) return 'bg-opacity-60 bg-red-500';
+      return 'bg-opacity-100 bg-red-500';
+    }
+  };
+
+  // Alternative simpler approach using inline styles for exact colors
+  const getColorStyle = (intensity) => {
+    if (intensity === 0) return { backgroundColor: '#f3f4f6' };
+    
+    if (intensity < 13) {
+      // Blue variations
+      if (intensity < 5) return { backgroundColor: '#A8C7FA' }; // Blue Light 1
+      if (intensity < 9) return { backgroundColor: '#A8C7FA' }; // Blue Light 1
+      return { backgroundColor: '#4285F4' }; // Blue Original
+    } else if (intensity < 26) {
+      // Green variations
+      if (intensity < 17) return { backgroundColor: '#A8DAB5' }; // Green Light 1
+      if (intensity < 22) return { backgroundColor: '#A8DAB5' }; // Green Light 1
+      return { backgroundColor: '#34A853' }; // Green Original
+    } else if (intensity < 39) {
+      // Yellow variations
+      if (intensity < 30) return { backgroundColor: '#FDE293' }; // Yellow Light 1
+      if (intensity < 35) return { backgroundColor: '#FDE293' }; // Yellow Light 1
+      return { backgroundColor: '#FBBC04' }; // Yellow Original
+    } else {
+      // Red variations
+      if (intensity < 60) return { backgroundColor: '#F6AEA9' }; // Red Light 1
+      if (intensity < 80) return { backgroundColor: '#F6AEA9' }; // Red Light 1
+      return { backgroundColor: '#EA4335' }; // Red Original
+    }
   };
 
   return (
-    <div className="rounded-xl border border-gray-200 p-6 shadow-sm">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h3 className="text-lg font-bold text-gray-900">Weekly Activity Heatmap</h3>
-          <p className="text-sm text-gray-600 mt-1">Darker colors indicate higher activity</p>
-        </div>
-        <div className="flex gap-2 flex-wrap justify-end">
-          <button
-            onClick={() => setSelectedMetric('all')}
-            className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
-              selectedMetric === 'all'
-                ? 'bg-indigo-100 text-indigo-700'
-                : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            <Eye size={14} />
-            All
-          </button>
-          <button
-            onClick={() => setSelectedMetric('calls')}
-            className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
-              selectedMetric === 'calls'
-                ? 'bg-blue-100 text-blue-700'
-                : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            <Phone size={14} />
-            Calls
-          </button>
-          <button
-            onClick={() => setSelectedMetric('directions')}
-            className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
-              selectedMetric === 'directions'
-                ? 'bg-purple-100 text-purple-700'
-                : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            <Navigation size={14} />
-            Directions
-          </button>
-          <button
-            onClick={() => setSelectedMetric('clicks')}
-            className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
-              selectedMetric === 'clicks'
-                ? 'bg-orange-100 text-orange-700'
-                : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            <MousePointer size={14} />
-            Clicks
-          </button>
-          <button
-            onClick={() => setSelectedMetric('views')}
-            className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
-              selectedMetric === 'views'
-                ? 'bg-green-100 text-green-700'
-                : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            <Calendar size={14} />
-            Views
-          </button>
+    <div className="w-full h-full">
+      <div className="rounded-xl border border-gray-200 p-6 shadow-sm">
+      <div className="mb-2">
+        <div className="flex items-start gap-6 mb-4">
+          <div className="flex-1">
+            <h3 className="text-lg font-bold text-gray-900">Weekly Activity Heatmap</h3>
+            <p className="text-sm text-gray-600 mt-1">Darker colors indicate higher activity</p>
+          </div>
+          <div className="flex gap-2 flex-wrap justify-end" style={{ width: 'calc(100% - 250px)', paddingLeft: '10px' }}>
+            <button
+              onClick={() => setSelectedMetric('all')}
+              className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                selectedMetric === 'all'
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              <Eye size={14} />
+              All
+            </button>
+            <button
+              onClick={() => setSelectedMetric('calls')}
+              className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                selectedMetric === 'calls'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              <Phone size={14} />
+              Calls
+            </button>
+            <button
+              onClick={() => setSelectedMetric('directions')}
+              className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                selectedMetric === 'directions'
+                  ? 'bg-purple-100 text-purple-700'
+                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              <Navigation size={14} />
+              Directions
+            </button>
+            <button
+              onClick={() => setSelectedMetric('clicks')}
+              className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                selectedMetric === 'clicks'
+                  ? 'bg-orange-100 text-orange-700'
+                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              <MousePointer size={14} />
+              Clicks
+            </button>
+            <button
+              onClick={() => setSelectedMetric('views')}
+              className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                selectedMetric === 'views'
+                  ? 'bg-green-100 text-green-700'
+                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              <Calendar size={14} />
+              Views
+            </button>
+          </div>
         </div>
       </div>
 
@@ -168,9 +204,9 @@ export default function ActivityHeatmap() {
       <div className="flex flex-col gap-px">
         {/* Hour labels (top) */}
         <div className="flex gap-px">
-          <div className="w-12 h-[20px] flex-shrink-0"></div>
+          <div className="w-10 h-[20px] flex-shrink-0"></div>
           {hours.map((hour, idx) => (
-            <div key={idx} className="w-[30px] h-[20px] flex-shrink-0 flex items-center justify-center">
+            <div key={idx} className="w-[29px] h-[20px] flex-shrink-0 flex items-center justify-center">
               <div className="text-xs text-gray-500">
                 {idx % 3 === 0 ? hour : ''}
               </div>
@@ -182,7 +218,7 @@ export default function ActivityHeatmap() {
         {days.map((day) => (
           <div key={day} className="flex items-center gap-px">
             {/* Day label */}
-            <div className="w-12 flex-shrink-0 h-[30px] flex items-center justify-end pr-2">
+            <div className="w-10 flex-shrink-0 h-[28px] flex items-center justify-end pr-2">
               <span className="text-xs font-semibold text-gray-700">{day}</span>
             </div>
             
@@ -190,14 +226,15 @@ export default function ActivityHeatmap() {
             {currentData[day].map((intensity, hourIdx) => (
               <div
                 key={hourIdx}
-                className="w-[30px] h-[30px] flex-shrink-0 group relative"
+                className="w-[29px] h-[28px] flex-shrink-0 group relative"
               >
                 <div
-                  className={`w-full h-full ${getColor(intensity)} transition-all hover:scale-110 hover:shadow-lg cursor-pointer`}
+                  style={getColorStyle(intensity)}
+                  className="w-full h-full transition-all hover:scale-110 hover:shadow-lg cursor-pointer rounded"
                   title={`${day} ${hours[hourIdx]}: ${intensity} interactions`}
                 >
                   {/* Tooltip on hover */}
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-white text-gray-900 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 border border-gray-200">
                     <div className="font-semibold">{day} {hours[hourIdx]}</div>
                     <div>{intensity} interactions</div>
                   </div>
@@ -210,71 +247,68 @@ export default function ActivityHeatmap() {
 
       {/* Legend */}
       <div className="mt-6 pt-4 border-t border-gray-200">
-        <div className="flex items-center justify-center gap-3 flex-wrap">
-          <span className="text-xs text-gray-600 font-semibold">Less Traffic</span>
-          <div className="flex gap-1">
-            <div className="w-4 h-4 bg-gray-100 rounded" title="None"></div>
-            <div className="w-4 h-4 bg-blue-100 rounded" title="Very Low (1-5)"></div>
-            <div className="w-4 h-4 bg-blue-200 rounded" title="Low (5-10)"></div>
-            <div className="w-4 h-4 bg-blue-300 rounded" title="Low (10-15)"></div>
-            <div className="w-4 h-4 bg-blue-400 rounded" title="Low (15-20)"></div>
+        <div className="flex items-center justify-center gap-4 flex-wrap">
+          <span className="text-xs text-gray-600 font-semibold">Low Activity</span>
+          <div className="flex gap-2">
+            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#A8C7FA' }} title="Blue Light 1"></div>
+            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#A8C7FA' }} title="Blue Light 1"></div>
+            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#4285F4' }} title="Blue Original"></div>
           </div>
-          <span className="text-xs text-gray-600 font-semibold">Mid Traffic</span>
-          <div className="flex gap-1">
-            <div className="w-4 h-4 bg-green-200 rounded" title="Mid (20-25)"></div>
-            <div className="w-4 h-4 bg-green-300 rounded" title="Mid (25-30)"></div>
-            <div className="w-4 h-4 bg-green-400 rounded" title="Mid (30-35)"></div>
-            <div className="w-4 h-4 bg-green-500 rounded" title="Mid (35-40)"></div>
+
+          <span className="text-xs text-gray-600 font-semibold">Medium Activity</span>
+          <div className="flex gap-2">
+            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#A8DAB5' }} title="Green Light 1"></div>
+            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#A8DAB5' }} title="Green Light 1"></div>
+            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#34A853' }} title="Green Original"></div>
           </div>
-          <span className="text-xs text-gray-600 font-semibold">Higher Mid Traffic</span>
-          <div className="flex gap-1">
-            <div className="w-4 h-4 bg-yellow-200 rounded" title="Higher Mid (40-45)"></div>
-            <div className="w-4 h-4 bg-yellow-300 rounded" title="Higher Mid (45-50)"></div>
-            <div className="w-4 h-4 bg-yellow-400 rounded" title="Higher Mid (50-55)"></div>
-            <div className="w-4 h-4 bg-yellow-500 rounded" title="Higher Mid (55-60)"></div>
-            <div className="w-4 h-4 bg-yellow-600 rounded" title="Higher Mid (60-65)"></div>
-            <div className="w-4 h-4 bg-amber-600 rounded" title="Higher Mid (65-70)"></div>
+
+          <span className="text-xs text-gray-600 font-semibold">Higher Activity</span>
+          <div className="flex gap-2">
+            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#FDE293' }} title="Yellow Light 1"></div>
+            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#FDE293' }} title="Yellow Light 1"></div>
+            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#FBBC04' }} title="Yellow Original"></div>
           </div>
-          <span className="text-xs text-gray-600 font-semibold">High Traffic</span>
-          <div className="flex gap-1">
-            <div className="w-4 h-4 bg-red-300 rounded" title="High (70-75)"></div>
-            <div className="w-4 h-4 bg-red-400 rounded" title="High (75-80)"></div>
-            <div className="w-4 h-4 bg-red-500 rounded" title="High (80-85)"></div>
-            <div className="w-4 h-4 bg-red-600 rounded" title="High (85-90)"></div>
-            <div className="w-4 h-4 bg-red-700 rounded" title="High (90-95)"></div>
-            <div className="w-4 h-4 bg-red-800 rounded" title="Very High (95-100)"></div>
+
+          <span className="text-xs text-gray-600 font-semibold">Peak Activity</span>
+          <div className="flex gap-2">
+            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#F6AEA9' }} title="Red Light 1"></div>
+            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#F6AEA9' }} title="Red Light 1"></div>
+            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#EA4335' }} title="Red Original"></div>
           </div>
         </div>
       </div>
 
       {/* Activity Insights */}
-      <div className="mt-6 grid grid-cols-3 gap-4">
-        <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-            <h4 className="text-sm font-semibold text-gray-900">Peak Hours</h4>
+      <div className="mt-6 flex justify-center">
+        <div className="grid grid-cols-3 gap-4">
+          <div className="rounded-lg p-4 border-2" style={{ borderColor: '#9ca3af' }}>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#6b7280' }}></div>
+              <h4 className="text-sm font-semibold text-gray-900">Peak Hours</h4>
+            </div>
+            <p className="text-2xl font-bold text-gray-900">4pm - 6pm</p>
+            <p className="text-xs text-gray-600 mt-1">Friday evenings are busiest</p>
           </div>
-          <p className="text-2xl font-bold text-gray-900">4pm - 6pm</p>
-          <p className="text-xs text-gray-600 mt-1">Friday evenings are busiest</p>
-        </div>
 
-        <div className="bg-green-50 rounded-lg p-4 border border-green-200">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-2 bg-green-600 rounded-full"></div>
-            <h4 className="text-sm font-semibold text-gray-900">Most Active Day</h4>
+          <div className="rounded-lg p-4 border-2" style={{ borderColor: '#9ca3af' }}>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#6b7280' }}></div>
+              <h4 className="text-sm font-semibold text-gray-900">Most Active Day</h4>
+            </div>
+            <p className="text-2xl font-bold text-gray-900">Friday</p>
+            <p className="text-xs text-gray-600 mt-1">28% more activity than average</p>
           </div>
-          <p className="text-2xl font-bold text-gray-900">Friday</p>
-          <p className="text-xs text-gray-600 mt-1">28% more activity than average</p>
-        </div>
 
-        <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-2 bg-orange-600 rounded-full"></div>
-            <h4 className="text-sm font-semibold text-gray-900">Quiet Hours</h4>
+          <div className="rounded-lg p-4 border-2" style={{ borderColor: '#9ca3af' }}>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#6b7280' }}></div>
+              <h4 className="text-sm font-semibold text-gray-900">Quiet Hours</h4>
+            </div>
+            <p className="text-2xl font-bold text-gray-900">1am - 5am</p>
+            <p className="text-xs text-gray-600 mt-1">Consider scheduling posts outside these hours</p>
           </div>
-          <p className="text-2xl font-bold text-gray-900">1am - 5am</p>
-          <p className="text-xs text-gray-600 mt-1">Consider scheduling posts outside these hours</p>
         </div>
+      </div>
       </div>
     </div>
   );

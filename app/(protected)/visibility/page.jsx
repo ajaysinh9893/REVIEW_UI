@@ -10,6 +10,7 @@ import { visibilityData as dashboardVisibilityData } from './dashboardData';
 export default function VisibilityActivityPageRecharts() {
   const [selectedTimeframe, setSelectedTimeframe] = useState('weekly');
   const [selectedMetric, setSelectedMetric] = useState(null); // null = all, 'calls', 'directions', 'clicks', 'impressions'
+  const [activeTab, setActiveTab] = useState('bookings'); // 'bookings', 'search', 'messages'
 
   // Generate comparison data with current and previous periods
   const getComparisonData = (timeframe, metric) => {
@@ -297,148 +298,34 @@ export default function VisibilityActivityPageRecharts() {
           </div>
         </div>
 
-        {/* Activity Details Section */}
-        <div className="grid grid-cols-2 gap-6 mb-6">
-          
-          {/* Search Queries Panel */}
-          <div className="rounded-xl border border-gray-200 p-6 shadow-sm flex flex-col h-full">
-            <div className="flex items-center gap-2 mb-5">
-              <Search className="text-indigo-600" size={20} />
-              <h3 className="text-lg font-bold text-gray-900">Top Search Queries</h3>
+        {/* Activity Heatmap and Top Locations Row */}
+        <div className="flex gap-3 mb-6">
+          {/* Activity Heatmap - flex-1 */}
+          <div className="flex-1">
+            <ActivityHeatmap />
+          </div>
+
+          {/* Top Locations - 30% */}
+          <div className="w-[30%] rounded-xl border border-gray-200 p-3 shadow-sm">
+            <div className="flex items-center gap-2 mb-4">
+              <MapPin className="text-red-600" size={18} />
+              <h3 className="text-base font-bold text-gray-900">Top Locations</h3>
             </div>
-            <div className="flex flex-wrap gap-2 mb-4 overflow-y-auto pr-2">
-              {searchQueries.map((query, idx) => (
-                <span 
-                  key={idx}
-                  className="px-4 py-2 bg-indigo-50 text-indigo-700 text-sm font-medium rounded-full hover:bg-indigo-100 transition-all cursor-pointer whitespace-nowrap"
-                >
-                  {query}
-                </span>
+            <div className="space-y-2">
+              {topLocations.map((location, index) => (
+                <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors">
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-semibold text-indigo-600 flex-shrink-0">
+                      {index + 1}
+                    </div>
+                    <span className="text-sm font-semibold text-gray-900 truncate">{location.city}</span>
+                  </div>
+                  <div className="text-right flex-shrink-0 ml-2">
+                    <p className="text-base font-bold text-gray-900">{location.count}</p>
+                    <p className="text-xs text-gray-600 font-medium">activity</p>
+                  </div>
+                </div>
               ))}
-            </div>
-            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg mt-auto">
-              <p className="text-sm text-blue-800">
-                <strong>Tip:</strong> These are the most common search terms customers use to find your business online.
-              </p>
-            </div>
-          </div>
-
-          {/* Top Locations */}
-          <div className="rounded-xl border border-gray-200 p-6 shadow-sm">
-            <div className="flex items-center gap-2 mb-5">
-              <MapPin className="text-red-600" size={20} />
-              <h3 className="text-lg font-bold text-gray-900">Top Locations</h3>
-            </div>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart 
-                  data={topLocations}
-                  layout="vertical"
-                  margin={{ top: 5, right: 20, bottom: 5, left: 80 }}
-                >
-                  <XAxis type="number" stroke="#9ca3af" />
-                  <YAxis 
-                    type="category" 
-                    dataKey="city" 
-                    stroke="#9ca3af"
-                    width={75}
-                    style={{ fontSize: '11px' }}
-                  />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#1f2937', 
-                      border: 'none', 
-                      borderRadius: '8px',
-                      color: '#fff',
-                      padding: '8px 12px'
-                    }}
-                  />
-                  <Bar dataKey="count" fill="#6366f1" radius={[0, 8, 8, 0]}>
-                    {topLocations.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={['#6366f1', '#818cf8', '#a5b4fc', '#c7d2fe', '#e0e7ff'][index]}
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </div>
-
-        {/* Activity Heatmap */}
-        <div className="rounded-xl border border-gray-200 p-6 shadow-sm mb-6">
-          <ActivityHeatmap />
-        </div>
-
-        {/* Bookings and Messages Row */}
-        <div className="grid grid-cols-2 gap-6 mb-6">
-          {/* Bookings Card */}
-          <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl border border-indigo-200 p-6 shadow-sm hover:shadow-md transition-all">
-            <div className="flex items-center gap-2 mb-3">
-              <Calendar className="text-indigo-600" size={20} />
-              <h3 className="text-lg font-bold text-gray-900">Bookings</h3>
-            </div>
-            <p className="text-4xl font-bold text-gray-900 mb-2">
-              {snapshotData.bookings.value}
-            </p>
-            <div className="flex items-center gap-1">
-              <span className="flex items-center gap-1 text-sm font-semibold text-green-600">
-                <TrendingUp size={14} />
-                {snapshotData.bookings.trend}%
-              </span>
-              <span className="text-sm text-gray-500">vs last period</span>
-            </div>
-          </div>
-
-          {/* Messages Card */}
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 p-6 shadow-sm hover:shadow-md transition-all">
-            <div className="flex items-center gap-2 mb-3">
-              <MessageSquare className="text-blue-600" size={20} />
-              <h3 className="text-lg font-bold text-gray-900">Messages</h3>
-            </div>
-            <p className="text-4xl font-bold text-gray-900 mb-2">
-              {snapshotData.messages.value}
-            </p>
-            <div className="flex items-center gap-1">
-              <span className="flex items-center gap-1 text-sm font-semibold text-green-600">
-                <TrendingUp size={14} />
-                {snapshotData.messages.trend}%
-              </span>
-              <span className="text-sm text-gray-500">vs last period</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Heatmap Section */}
-        <div className="rounded-xl border border-gray-200 p-6 shadow-sm mb-6">
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-2">
-              <MapPin className="text-indigo-600" size={20} />
-              <h3 className="text-lg font-bold text-gray-900">Interaction Heatmap</h3>
-            </div>
-            <button className="px-3 py-1.5 text-sm font-medium text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all">
-              View Full Map
-            </button>
-          </div>
-          
-          <div className="relative h-80 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg overflow-hidden border border-indigo-200">
-            <div className="absolute inset-0" style={{
-              backgroundImage: 'linear-gradient(rgba(79, 70, 229, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(79, 70, 229, 0.1) 1px, transparent 1px)',
-              backgroundSize: '50px 50px'
-            }}></div>
-            
-            <div className="absolute top-1/4 left-1/3 w-20 h-20 bg-red-500 rounded-full opacity-30 blur-xl"></div>
-            <div className="absolute top-1/2 right-1/3 w-24 h-24 bg-orange-500 rounded-full opacity-25 blur-xl"></div>
-            <div className="absolute bottom-1/3 left-1/2 w-16 h-16 bg-yellow-500 rounded-full opacity-20 blur-xl"></div>
-            
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <MapPin size={48} className="text-indigo-600 mx-auto mb-3 opacity-50" />
-                <p className="text-gray-600 font-medium">Geographic interaction data visualization</p>
-                <p className="text-sm text-gray-500 mt-2">Heat zones show customer density by location</p>
-              </div>
             </div>
           </div>
         </div>
