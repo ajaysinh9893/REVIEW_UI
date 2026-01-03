@@ -910,24 +910,24 @@ export default function VisibilityActivityPageRecharts() {
 
   return (
     <div className="min-h-screen font-sans" style={{ backgroundColor: '#FAF9F5' }}>
-      <div className="p-10 max-w-7xl mx-auto">
+      <div className="p-4 md:p-6 lg:p-10 pt-16 md:pt-6 lg:pt-10 max-w-7xl mx-auto">
         
         {/* KPI Overview Card and Activity Trends - Combined Section */}
-        <div className="w-full rounded-xl border border-gray-200 p-6 shadow-sm mb-8">
-          <div className="mb-8 flex items-center justify-between">
+        <div className="w-full rounded-xl border border-gray-200 p-4 md:p-6 shadow-sm mb-8">
+          <div className="mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6">
             <div>
-              <h1 className="text-lg font-semibold text-gray-900 mb-2">
+              <h1 className="text-base md:text-lg font-semibold text-gray-900 mb-2">
                 Visibility & Activity
               </h1>
-              <p className="text-sm text-gray-500 mt-0.5">
+              <p className="text-xs md:text-sm text-gray-500 mt-0.5">
                 Track how customers find and interact with your business
               </p>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="flex gap-2">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-3 w-full md:w-auto">
+              <div className="flex gap-2 flex-wrap">
                 <button
                   onClick={() => setSelectedMetric(null)}
-                  className="px-3 py-1.5 text-sm font-bold text-green-700 hover:text-green-900 transition-all"
+                  className="px-2 md:px-3 py-1 md:py-1.5 text-xs md:text-sm font-bold text-green-700 hover:text-green-900 transition-all"
                 >
                   Overall
                 </button>
@@ -935,7 +935,7 @@ export default function VisibilityActivityPageRecharts() {
                   <button
                     key={timeframe}
                     onClick={() => setSelectedTimeframe(timeframe)}
-                    className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+                    className={`px-2 md:px-4 py-1 md:py-2 text-xs md:text-sm font-semibold rounded-lg transition-all ${
                       selectedTimeframe === timeframe
                         ? 'bg-indigo-100 text-indigo-700'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -945,11 +945,11 @@ export default function VisibilityActivityPageRecharts() {
                   </button>
                 ))}
               </div>
-              <div className="relative">
+              <div className="relative w-full md:w-auto">
                 <button 
                   onClick={() => setShowExportMenu(!showExportMenu)}
-                  className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all shadow-md">
-                  <Download size={18} />
+                  className="flex items-center justify-center md:justify-start gap-2 w-full md:w-auto px-3 md:px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all shadow-md text-sm md:text-base">
+                  <Download size={16} className="md:w-[18px] md:h-[18px]" />
                   <span>Export Report</span>
                 </button>
                 {showExportMenu && (
@@ -986,9 +986,9 @@ export default function VisibilityActivityPageRecharts() {
               </div>
             </div>
           </div>
-          <div className="flex gap-6">
-            {/* KPI Overview Card - 40% */}
-            <div className="w-[40%] border-r border-gray-200 pr-6">
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* KPI Overview Card - 40% on desktop, full on mobile */}
+            <div className="w-full lg:w-[40%] border-b lg:border-b-0 lg:border-r border-gray-200 pb-6 lg:pr-6 lg:pb-0">
               <KPIOverviewCard 
                 visibilityData={getTimeframeKPIData()} 
                 period={selectedTimeframe}
@@ -1000,9 +1000,9 @@ export default function VisibilityActivityPageRecharts() {
               />
             </div>
 
-            {/* Activity Trends Chart - 60% */}
+            {/* Activity Trends Chart - 60% on desktop, full on mobile */}
             <div className="flex-1">
-              <div className="h-80">
+              <div className="h-64 md:h-72 lg:h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={getChartData()} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -1093,31 +1093,31 @@ export default function VisibilityActivityPageRecharts() {
                 </ResponsiveContainer>
               </div>
 
-              <div className="flex items-center justify-center gap-6 mt-6 pt-4 border-t border-gray-200 flex-wrap">
+              <div className="flex items-center justify-center gap-4 md:gap-6 mt-4 md:mt-6 pt-4 md:pt-4 border-t border-gray-200 flex-wrap text-xs md:text-sm">
                 {!selectedMetric ? (
                   <>
                     <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#d97706' }}></div>
-                      <span className="text-sm font-medium text-gray-700">Calls</span>
+                      <div className="w-2 md:w-3 h-2 md:h-3 rounded-full" style={{ backgroundColor: '#d97706' }}></div>
+                      <span className="font-medium text-gray-700">Calls</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#16a34a' }}></div>
-                      <span className="text-sm font-medium text-gray-700">Directions</span>
+                      <div className="w-2 md:w-3 h-2 md:h-3 rounded-full" style={{ backgroundColor: '#16a34a' }}></div>
+                      <span className="font-medium text-gray-700">Directions</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#dc2626' }}></div>
-                      <span className="text-sm font-medium text-gray-700">Clicks</span>
+                      <div className="w-2 md:w-3 h-2 md:h-3 rounded-full" style={{ backgroundColor: '#dc2626' }}></div>
+                      <span className="font-medium text-gray-700">Clicks</span>
                     </div>
                   </>
                 ) : (
                   <>
                     <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: selectedMetric === 'calls' ? '#d97706' : selectedMetric === 'directions' ? '#16a34a' : selectedMetric === 'clicks' ? '#dc2626' : '#2563eb' }}></div>
-                      <span className="text-sm font-medium text-gray-700">Current</span>
+                      <div className="w-2 md:w-3 h-2 md:h-3 rounded-full" style={{ backgroundColor: selectedMetric === 'calls' ? '#d97706' : selectedMetric === 'directions' ? '#16a34a' : selectedMetric === 'clicks' ? '#dc2626' : '#2563eb' }}></div>
+                      <span className="font-medium text-gray-700">Current</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-slate-300 rounded-full"></div>
-                      <span className="text-sm font-medium text-gray-700">Last Period</span>
+                      <div className="w-2 md:w-3 h-2 md:h-3 bg-slate-300 rounded-full"></div>
+                      <span className="font-medium text-gray-700">Last Period</span>
                     </div>
                   </>
                 )}
@@ -1127,19 +1127,19 @@ export default function VisibilityActivityPageRecharts() {
         </div>
 
         {/* Activity Heatmap and Top Locations Row */}
-        <div className="flex gap-3 mb-6">
+        <div className="flex flex-col lg:flex-row gap-3 mb-6">
           {/* Activity Heatmap - flex-1 */}
           <div className="flex-1">
             <ActivityHeatmap />
           </div>
 
-          {/* Top Locations - 30% */}
-          <div className="w-[30%] rounded-xl border border-gray-200 p-6 shadow-sm flex flex-col">
+          {/* Top Locations - 30% on desktop, full on mobile */}
+          <div className="w-full lg:w-[30%] rounded-xl border border-gray-200 p-4 md:p-6 shadow-sm flex flex-col">
             <div className="flex items-center gap-2 mb-4">
-              <MapPin className="text-red-600" size={18} />
-              <h3 className="text-lg font-bold text-gray-900">Top Locations</h3>
+              <MapPin className="text-red-600 w-4 md:w-[18px] md:h-[18px]" size={18} />
+              <h3 className="text-base md:text-lg font-bold text-gray-900">Top Locations</h3>
             </div>
-            <div className="flex-1 flex flex-col justify-between">
+            <div className="flex-1 flex flex-col justify-between gap-2">
               {topLocations.map((location, index) => (
                 <div key={index} className="flex items-center justify-between p-1 bg-gray-50 rounded hover:bg-gray-200 transition-colors">
                   <div className="flex items-center gap-1 flex-1 min-w-0">
@@ -1147,7 +1147,7 @@ export default function VisibilityActivityPageRecharts() {
                       {index + 1}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-xs text-gray-900 font-bold block truncate leading-tight">{location.area}, {location.postal}</span>
+                      <span className="text-xs md:text-sm text-gray-900 font-bold block truncate leading-tight">{location.area}, {location.postal}</span>
                       <p className="text-xs text-gray-500 leading-none">{location.city}</p>
                     </div>
                   </div>

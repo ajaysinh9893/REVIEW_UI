@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Phone, Navigation, MousePointer, Eye, Calendar } from 'lucide-react';
+import { Phone, Navigation, MousePointer, Eye, Calendar, ChevronDown } from 'lucide-react';
 
 export default function ActivityHeatmap() {
   const [selectedMetric, setSelectedMetric] = useState('all'); // 'all', 'calls', 'directions', 'clicks', 'views'
+  const [showMetricDropdown, setShowMetricDropdown] = useState(false);
 
   // Days of the week
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -133,75 +134,68 @@ export default function ActivityHeatmap() {
 
   return (
     <div className="w-full h-full">
-      <div className="rounded-xl border border-gray-200 p-6 shadow-sm">
+      <div className="rounded-xl border border-gray-200 p-4 md:p-6 shadow-sm">
       <div className="mb-2">
-        <div className="flex items-start gap-6 mb-4">
-          <div className="flex-1">
-            <h3 className="text-lg font-bold text-gray-900">Weekly Activity Heatmap</h3>
-            <p className="text-sm text-gray-600 mt-1">Darker colors indicate higher activity</p>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-4">
+          <div>
+            <h3 className="text-base md:text-lg font-bold text-gray-900">Weekly Activity Heatmap</h3>
+            <p className="text-xs md:text-sm text-gray-600 mt-1">Darker colors indicate higher activity</p>
           </div>
-          <div className="flex gap-2 flex-wrap justify-end" style={{ width: 'calc(100% - 250px)', paddingLeft: '10px' }}>
+          
+          {/* Dropdown Menu */}
+          <div className="relative">
             <button
-              onClick={() => setSelectedMetric('all')}
-              className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
-                selectedMetric === 'all'
-                  ? 'bg-indigo-100 text-indigo-700'
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-              }`}
+              onClick={() => setShowMetricDropdown(!showMetricDropdown)}
+              className="flex items-center gap-2 px-3 md:px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg transition-all text-sm md:text-base font-medium"
             >
-              <Eye size={14} />
-              All
+              <Eye size={16} className="md:w-[18px] md:h-[18px]" />
+              {selectedMetric.charAt(0).toUpperCase() + selectedMetric.slice(1)}
+              <ChevronDown size={16} className={`transition-transform ${showMetricDropdown ? 'rotate-180' : ''}`} />
             </button>
-            <button
-              onClick={() => setSelectedMetric('calls')}
-              className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
-                selectedMetric === 'calls'
-                  ? 'bg-blue-100 text-blue-700'
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <Phone size={14} />
-              Calls
-            </button>
-            <button
-              onClick={() => setSelectedMetric('directions')}
-              className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
-                selectedMetric === 'directions'
-                  ? 'bg-purple-100 text-purple-700'
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <Navigation size={14} />
-              Directions
-            </button>
-            <button
-              onClick={() => setSelectedMetric('clicks')}
-              className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
-                selectedMetric === 'clicks'
-                  ? 'bg-orange-100 text-orange-700'
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <MousePointer size={14} />
-              Clicks
-            </button>
-            <button
-              onClick={() => setSelectedMetric('views')}
-              className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
-                selectedMetric === 'views'
-                  ? 'bg-green-100 text-green-700'
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <Calendar size={14} />
-              Views
-            </button>
+
+            {showMetricDropdown && (
+              <>
+                {/* Backdrop */}
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowMetricDropdown(false)}
+                />
+                {/* Dropdown Menu */}
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                  {[
+                    { id: 'all', label: 'All Metrics', icon: Eye },
+                    { id: 'calls', label: 'Calls', icon: Phone },
+                    { id: 'directions', label: 'Directions', icon: Navigation },
+                    { id: 'clicks', label: 'Clicks', icon: MousePointer },
+                    { id: 'views', label: 'Views', icon: Eye }
+                  ].map((option) => {
+                    const OptionIcon = option.icon;
+                    return (
+                      <button
+                        key={option.id}
+                        onClick={() => {
+                          setSelectedMetric(option.id);
+                          setShowMetricDropdown(false);
+                        }}
+                        className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition-all ${
+                          selectedMetric === option.id
+                            ? 'bg-indigo-50 text-indigo-700 font-medium'
+                            : 'text-gray-700 hover:bg-gray-50'
+                        } ${option.id === 'all' ? 'border-b border-gray-200' : ''}`}
+                      >
+                        <OptionIcon size={16} />
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </div>
         </div>
-      </div>
 
-      {/* Heatmap Grid */}
-      <div className="flex flex-col gap-px">
+      {/* Heatmap Grid - Horizontally scrollable on mobile only */}
+      <div className="flex flex-col gap-px overflow-x-auto md:overflow-x-visible">
         {/* Hour labels (top) */}
         <div className="flex gap-px">
           <div className="w-10 h-[20px] flex-shrink-0"></div>
@@ -247,65 +241,65 @@ export default function ActivityHeatmap() {
 
       {/* Legend */}
       <div className="mt-6 pt-4 border-t border-gray-200">
-        <div className="flex items-center justify-center gap-4 flex-wrap">
+        <div className="flex items-center justify-center gap-2 md:gap-4 flex-wrap">
           <span className="text-xs text-gray-600 font-semibold">Low Activity</span>
-          <div className="flex gap-2">
-            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#A8C7FA' }} title="Blue Light 1"></div>
-            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#A8C7FA' }} title="Blue Light 1"></div>
-            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#4285F4' }} title="Blue Original"></div>
+          <div className="flex gap-1 md:gap-2">
+            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#A8C7FA' }} title="Blue Light 1"></div>
+            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#A8C7FA' }} title="Blue Light 1"></div>
+            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#4285F4' }} title="Blue Original"></div>
           </div>
 
           <span className="text-xs text-gray-600 font-semibold">Medium Activity</span>
-          <div className="flex gap-2">
-            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#A8DAB5' }} title="Green Light 1"></div>
-            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#A8DAB5' }} title="Green Light 1"></div>
-            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#34A853' }} title="Green Original"></div>
+          <div className="flex gap-1 md:gap-2">
+            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#A8DAB5' }} title="Green Light 1"></div>
+            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#A8DAB5' }} title="Green Light 1"></div>
+            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#34A853' }} title="Green Original"></div>
           </div>
 
           <span className="text-xs text-gray-600 font-semibold">Higher Activity</span>
-          <div className="flex gap-2">
-            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#FDE293' }} title="Yellow Light 1"></div>
-            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#FDE293' }} title="Yellow Light 1"></div>
-            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#FBBC04' }} title="Yellow Original"></div>
+          <div className="flex gap-1 md:gap-2">
+            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#FDE293' }} title="Yellow Light 1"></div>
+            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#FDE293' }} title="Yellow Light 1"></div>
+            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#FBBC04' }} title="Yellow Original"></div>
           </div>
 
           <span className="text-xs text-gray-600 font-semibold">Peak Activity</span>
-          <div className="flex gap-2">
-            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#F6AEA9' }} title="Red Light 1"></div>
-            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#F6AEA9' }} title="Red Light 1"></div>
-            <div className="w-5 h-5 rounded" style={{ backgroundColor: '#EA4335' }} title="Red Original"></div>
+          <div className="flex gap-1 md:gap-2">
+            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#F6AEA9' }} title="Red Light 1"></div>
+            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#F6AEA9' }} title="Red Light 1"></div>
+            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#EA4335' }} title="Red Original"></div>
           </div>
         </div>
       </div>
 
       {/* Activity Insights */}
       <div className="mt-6 flex justify-center">
-        <div className="grid grid-cols-3 gap-4">
-          <div className="rounded-lg p-4 border-2" style={{ borderColor: '#9ca3af' }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 w-full">
+          <div className="rounded-lg p-3 md:p-4 border-2" style={{ borderColor: '#9ca3af' }}>
             <div className="flex items-center gap-2 mb-2">
               <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#6b7280' }}></div>
-              <h4 className="text-sm font-semibold text-gray-900">Peak Hours</h4>
+              <h4 className="text-sm md:text-base font-semibold text-gray-900">Peak Hours</h4>
             </div>
-            <p className="text-2xl font-bold text-gray-900">4pm - 6pm</p>
-            <p className="text-xs text-gray-600 mt-1">Friday evenings are busiest</p>
+            <p className="text-xl md:text-2xl font-bold text-gray-900">4pm - 6pm</p>
+            <p className="text-xs md:text-xs text-gray-600 mt-1">Friday evenings are busiest</p>
           </div>
 
-          <div className="rounded-lg p-4 border-2" style={{ borderColor: '#9ca3af' }}>
+          <div className="rounded-lg p-3 md:p-4 border-2" style={{ borderColor: '#9ca3af' }}>
             <div className="flex items-center gap-2 mb-2">
               <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#6b7280' }}></div>
-              <h4 className="text-sm font-semibold text-gray-900">Most Active Day</h4>
+              <h4 className="text-sm md:text-base font-semibold text-gray-900">Most Active Day</h4>
             </div>
-            <p className="text-2xl font-bold text-gray-900">Friday</p>
-            <p className="text-xs text-gray-600 mt-1">28% more activity than average</p>
+            <p className="text-xl md:text-2xl font-bold text-gray-900">Friday</p>
+            <p className="text-xs md:text-xs text-gray-600 mt-1">28% more activity than average</p>
           </div>
 
-          <div className="rounded-lg p-4 border-2" style={{ borderColor: '#9ca3af' }}>
+          <div className="rounded-lg p-3 md:p-4 border-2" style={{ borderColor: '#9ca3af' }}>
             <div className="flex items-center gap-2 mb-2">
               <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#6b7280' }}></div>
-              <h4 className="text-sm font-semibold text-gray-900">Quiet Hours</h4>
+              <h4 className="text-sm md:text-base font-semibold text-gray-900">Quiet Hours</h4>
             </div>
-            <p className="text-2xl font-bold text-gray-900">1am - 5am</p>
-            <p className="text-xs text-gray-600 mt-1">Consider scheduling posts outside these hours</p>
+            <p className="text-xl md:text-2xl font-bold text-gray-900">1am - 5am</p>
+            <p className="text-xs md:text-xs text-gray-600 mt-1">Consider scheduling posts outside these hours</p>
           </div>
         </div>
       </div>
