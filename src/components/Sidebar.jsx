@@ -2,15 +2,51 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { BarChart3, User, FileText, TrendingUp, Clock, HelpCircle, Users, Settings, LogOut, Lock, CreditCard } from 'lucide-react';
+import { BarChart3, User, FileText, TrendingUp, Clock, HelpCircle, Users, Settings, LogOut, Lock, CreditCard, Menu, X } from 'lucide-react';
 import { useLogout } from '@/src/context/LogoutContext';
+import { useState, useEffect } from 'react';
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { openLogoutConfirm } = useLogout();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
 
   return (
-    <div className="fixed left-0 top-0 h-screen w-72 bg-white border-r border-gray-200 p-[12px] pb-[30px] flex flex-col">
+    <>
+      {/* Mobile Menu Toggle */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="fixed top-4 left-4 z-50 md:hidden p-2 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all"
+      >
+        {isOpen ? <X size={24} className="text-gray-900" /> : <Menu size={24} className="text-gray-900" />}
+      </button>
+
+      {/* Mobile Overlay */}
+      {isOpen && isMobile && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-40 z-40 md:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={`fixed left-0 top-0 h-screen w-72 bg-white border-r border-gray-200 p-[12px] pb-[30px] flex flex-col transition-all duration-300 z-40 ${
+        isMobile ? (isOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'
+      } md:translate-x-0`}>
       <div className="flex items-center gap-3 mb-3 pl-5 pt-0.5">
         <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center shadow-sm flex-shrink-0">
           <span className="text-white text-base font-bold">A</span>
@@ -109,5 +145,6 @@ export default function Sidebar() {
         </button>
       </nav>
     </div>
+    </>
   );
 }

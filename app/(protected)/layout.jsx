@@ -70,20 +70,20 @@ export default function ProtectedLayout({ children }) {
   };
 
   return (
-    <div className="min-h-screen font-sans flex" style={{ backgroundColor: '#FAF9F5' }}>
+    <div className="min-h-screen font-sans flex flex-col md:flex-row" style={{ backgroundColor: '#FAF9F5' }}>
       <Sidebar />
-      <div className="ml-72 flex-1 flex flex-col relative w-full">
+      <div className="flex-1 flex flex-col relative w-full md:ml-72">
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden w-full">
           {/* Notification Bell Icon */}
-          <div className={`fixed top-8 right-4 z-40 transition-opacity duration-300 ${
+          <div className={`fixed top-4 right-4 md:top-8 md:right-4 z-30 transition-opacity duration-300 ${
             showAllNotifications ? 'opacity-0 pointer-events-none' : 'opacity-100'
           }`}>
             <button 
               onClick={() => setShowAllNotifications(!showAllNotifications)}
-              className="relative p-2.5 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg hover:scale-105 transition-all"
+              className="relative p-2 md:p-2.5 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg hover:scale-105 transition-all"
             >
-              <Bell size={24} className="text-indigo-600" />
+              <Bell size={20} className="md:w-6 md:h-6 text-indigo-600" />
               {unreadCount > 0 && (
                 <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse"></span>
               )}
@@ -103,11 +103,10 @@ export default function ProtectedLayout({ children }) {
         )}
 
         {/* Notifications Sidebar - Fixed Overlay */}
-        <div className={`fixed top-0 right-0 h-screen w-72 bg-white border-l border-gray-200 flex flex-col overflow-hidden transition-all duration-500 ease-in-out z-50 ${
-          showAllNotifications ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none'
-        }`}
+        {showAllNotifications && (
+        <div className={`fixed top-0 right-0 h-screen w-72 bg-white border-l border-gray-200 flex flex-col overflow-hidden transition-all duration-500 ease-in-out z-50`}
         style={{
-          boxShadow: showAllNotifications ? '-4px 0 12px rgba(0, 0, 0, 0.1)' : 'none'
+          boxShadow: '-4px 0 12px rgba(0, 0, 0, 0.1)'
         }}>
             {/* Header */}
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4 flex justify-between items-center">
@@ -218,6 +217,7 @@ export default function ProtectedLayout({ children }) {
               </div>
             )}
         </div>
+        )}
       </div>
     </div>
   );

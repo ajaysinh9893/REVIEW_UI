@@ -79,24 +79,24 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen font-sans" style={{ backgroundColor: '#FAF9F5' }}>
-      <div className="p-10 max-w-7xl mx-auto pr-24">
+      <div className="p-4 md:p-6 lg:p-10 pt-16 md:pt-6 lg:pt-10 max-w-7xl mx-auto lg:pr-24">
           {/* Top Row - Visibility Snapshot, Overall Rating & Alerts */}
-          <div className="grid grid-cols-12 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 mb-8">
             {/* Visibility Snapshot - 50% width */}
-            <div className="col-span-6 h-full">
+            <div className="col-span-1 md:col-span-2 lg:col-span-6 h-full">
               <DashboardVisibilitySnapshot visibilityData={visibilityData} period="daily" />
             </div>
             
             {/* Overall Rating - 25% width */}
-            <div className="col-span-3">
-              <div className="rounded-xl border border-gray-200 p-5 h-full flex flex-col">
-                <h2 className={`text-lg font-semibold mb-4 ${'text-gray-900'}`}>Overall Rating</h2>
+            <div className="col-span-1 md:col-span-1 lg:col-span-3">
+              <div className="rounded-xl border border-gray-200 p-4 md:p-5 h-full flex flex-col">
+                <h2 className={`text-base md:text-lg font-semibold mb-4 ${'text-gray-900'}`}>Overall Rating</h2>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className={`text-5xl font-bold ${'text-gray-900'}`}>4.7</div>
-                  <Star size={32} className="fill-amber-400 text-amber-400" />
+                  <div className={`text-4xl md:text-5xl font-bold ${'text-gray-900'}`}>4.7</div>
+                  <Star size={24} className="md:w-8 md:h-8 fill-amber-400 text-amber-400" />
                 </div>
-                <p className={`text-base mb-4 ${'text-gray-500'}`}>based on 256 reviews</p>
-                <div className="space-y-3 flex-1">
+                <p className={`text-sm md:text-base mb-4 ${'text-gray-500'}`}>based on 256 reviews</p>
+                <div className="space-y-2 md:space-y-3 flex-1">
                   {[
                     { stars: 5, count: 180, percentage: 70 },
                     { stars: 4, count: 50, percentage: 20 },
@@ -105,11 +105,11 @@ export default function Dashboard() {
                     { stars: 1, count: 8, percentage: 3 }
                   ].map((item) => (
                     <div key={item.stars} className="flex items-center gap-3">
-                      <span className={`text-base font-medium w-12 ${'text-gray-700'}`}>{item.stars}<span className="text-amber-500">★</span></span>
-                      <div className={`flex-1 rounded-full h-2.5 overflow-hidden ${'bg-gray-200'}`}>
+                      <span className={`text-sm md:text-base font-medium w-12 ${'text-gray-700'}`}>{item.stars}<span className="text-amber-500">★</span></span>
+                      <div className={`flex-1 rounded-full h-2 md:h-2.5 overflow-hidden ${'bg-gray-200'}`}>
                         <div className="bg-indigo-600 h-full rounded-full transition-all" style={{ width: `${item.percentage}%` }}></div>
                       </div>
-                      <span className={`text-base w-12 text-right ${'text-gray-600'}`}>({item.count})</span>
+                      <span className={`text-sm md:text-base w-12 text-right ${'text-gray-600'}`}>({item.count})</span>
                     </div>
                   ))}
                 </div>
@@ -117,22 +117,22 @@ export default function Dashboard() {
             </div>
 
             {/* Alerts Section - 25% width - NEW! */}
-            <div className="col-span-3">
+            <div className="col-span-1 md:col-span-1 lg:col-span-3">
               <AlertSection alerts={alerts} />
             </div>
           </div>
 
           {/* Third Row - Review Trends, Metrics Overview & Top Keywords */}
-          <div className="grid grid-cols-12 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 mb-8">
             {/* Review Trends */}
-            <div className="col-span-4">
-              <div className="rounded-xl border border-gray-200 p-6 h-full flex flex-col">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className={`text-lg font-semibold ${'text-gray-900'}`}>Review Trends</h2>
-                  <div className={`flex gap-2 p-1 rounded-lg ${'bg-gray-100'}`}>
+            <div className="col-span-1 md:col-span-2 lg:col-span-4">
+              <div className="rounded-xl border border-gray-200 p-4 md:p-6 h-full flex flex-col">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mb-4">
+                  <h2 className={`text-base md:text-lg font-semibold ${'text-gray-900'}`}>Review Trends</h2>
+                  <div className={`flex gap-2 p-1 rounded-lg w-full md:w-auto ${'bg-gray-100'}`}>
                     <button
                       onClick={() => setSelectedPeriod('week')}
-                      className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                      className={`flex-1 md:flex-none px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
                         selectedPeriod === 'week'
                           ? 'bg-indigo-600 text-white shadow-sm'
                           : 'text-gray-700 hover:text-gray-900'
@@ -142,7 +142,7 @@ export default function Dashboard() {
                     </button>
                     <button
                       onClick={() => setSelectedPeriod('month')}
-                      className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                      className={`flex-1 md:flex-none px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
                         selectedPeriod === 'month'
                           ? 'bg-indigo-600 text-white shadow-sm'
                           : 'text-gray-700 hover:text-gray-900'
@@ -208,10 +208,10 @@ export default function Dashboard() {
             </div>
 
             {/* Metrics Overview */}
-            <div className="col-span-5">
-              <div className="rounded-xl border border-gray-200 p-6 h-full flex flex-col">
-                <h2 className={`text-lg font-semibold mb-4 ${'text-gray-900'}`}>Metrics Overview</h2>
-                <div className="grid grid-cols-2 gap-3 flex-1">
+            <div className="col-span-1 md:col-span-1 lg:col-span-5">
+              <div className="rounded-xl border border-gray-200 p-4 md:p-6 h-full flex flex-col">
+                <h2 className={`text-base md:text-lg font-semibold mb-4 ${'text-gray-900'}`}>Metrics Overview</h2>
+                <div className="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-3 flex-1">
                   {[
                     {
                       title: 'Total Reviews',
@@ -254,9 +254,9 @@ export default function Dashboard() {
                       subtitle: 'of total reviews'
                     }
                   ].map((stat, index) => (
-                    <div key={index} className={`${stat.bgColor} rounded-lg p-3 hover:shadow-md transition-all`}>
+                    <div key={index} className={`${stat.bgColor} rounded-lg p-2 md:p-3 hover:shadow-md transition-all`}>
                       <div className="flex items-start justify-between mb-1">
-                        <div className={`w-8 h-8 rounded flex items-center justify-center ${stat.color}`}>
+                        <div className={`w-7 md:w-8 h-7 md:h-8 rounded flex items-center justify-center text-sm md:text-base ${stat.color}`}>
                           {stat.icon}
                         </div>
                         <div className={`flex items-center gap-0.5 text-xs font-semibold ${stat.isPositive ? 'text-green-600' : 'text-red-600'}`}>
@@ -264,8 +264,8 @@ export default function Dashboard() {
                           {stat.change}
                         </div>
                       </div>
-                      <h3 className="text-sm font-medium text-gray-600 mb-0.5 uppercase tracking-wide">{stat.title}</h3>
-                      <p className="text-lg font-bold text-gray-900 mb-0">{stat.value}</p>
+                      <h3 className="text-xs md:text-sm font-medium text-gray-600 mb-0.5 uppercase tracking-wide">{stat.title}</h3>
+                      <p className="text-base md:text-lg font-bold text-gray-900 mb-0">{stat.value}</p>
                     </div>
                   ))}
                 </div>
@@ -273,9 +273,9 @@ export default function Dashboard() {
             </div>
 
             {/* Top Keywords - aligned with Alerts */}
-            <div className="col-span-3">
+            <div className="col-span-1 md:col-span-1 lg:col-span-3">
               <div className="rounded-xl border border-gray-200 p-4 h-full flex flex-col">
-                <h2 className={`text-base font-semibold mb-3 ${'text-gray-900'}`}>Top Keywords</h2>
+                <h2 className={`text-base md:text-lg font-semibold mb-3 ${'text-gray-900'}`}>Top Keywords</h2>
                 <div className="flex-1 overflow-y-auto">
                   <div className="space-y-2">
                     <div>
