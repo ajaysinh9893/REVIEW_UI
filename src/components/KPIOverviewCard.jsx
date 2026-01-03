@@ -8,30 +8,45 @@ export default function KPIOverviewCard({ visibilityData, period = 'daily', sele
   const calculateKPIs = () => {
     // If visibilityData is already an object with KPI values (not an array)
     if (!Array.isArray(visibilityData)) {
+      // Generate mock data points for sparkline visualization
+      const generateSparklineData = (value) => {
+        const baseValue = value * 0.8;
+        return [
+          baseValue * 0.7,
+          baseValue * 0.85,
+          baseValue * 0.9,
+          baseValue * 0.95,
+          value * 0.98,
+          value,
+          value * 1.02,
+          value * 0.99
+        ];
+      };
+
       return {
         impressions: {
           total: visibilityData.impressions?.value || 0,
           current: visibilityData.impressions?.value || 0,
           change: visibilityData.impressions?.trend || 0,
-          data: [visibilityData.impressions?.value || 0]
+          data: generateSparklineData(visibilityData.impressions?.value || 0)
         },
         clicks: {
           total: visibilityData.websiteClicks?.value || 0,
           current: visibilityData.websiteClicks?.value || 0,
           change: visibilityData.websiteClicks?.trend || 0,
-          data: [visibilityData.websiteClicks?.value || 0]
+          data: generateSparklineData(visibilityData.websiteClicks?.value || 0)
         },
         calls: {
           total: visibilityData.calls?.value || 0,
           current: visibilityData.calls?.value || 0,
           change: visibilityData.calls?.trend || 0,
-          data: [visibilityData.calls?.value || 0]
+          data: generateSparklineData(visibilityData.calls?.value || 0)
         },
         directions: {
           total: visibilityData.directions?.value || 0,
           current: visibilityData.directions?.value || 0,
           change: visibilityData.directions?.trend || 0,
-          data: [visibilityData.directions?.value || 0]
+          data: generateSparklineData(visibilityData.directions?.value || 0)
         }
       };
     }
@@ -204,9 +219,11 @@ export default function KPIOverviewCard({ visibilityData, period = 'daily', sele
                         type="monotone"
                         dataKey="value"
                         stroke={kpi.chartColor}
-                        strokeWidth={1.5}
+                        strokeWidth={2}
                         dot={false}
                         isAnimationActive={false}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                     </LineChart>
                   </ResponsiveContainer>

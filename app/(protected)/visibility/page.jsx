@@ -564,86 +564,48 @@ export default function VisibilityActivityPageRecharts() {
     
     // ===== SHEET 3: HEATMAP =====
     const heatmapSheet = [['ACTIVITY HEATMAP DATA']];
-    heatmapSheet.push(['']);
     
-    const hours = Array.from({length: 24}, (_, i) => {
-      if (i === 0) return '12am';
-      if (i < 12) return `${i}am`;
-      if (i === 12) return '12pm';
-      return `${i-12}pm`;
-    });
+    // Log to check if data exists
+    console.log('Heatmap data exists:', !!data.heatmapData);
+    console.log('Heatmap data:', data.heatmapData);
     
-    // Add ALL metric
-    if (data.heatmapData && data.heatmapData.all) {
-      heatmapSheet.push(['ALL METRIC']);
-      heatmapSheet.push(['Day', ...hours]);
-      heatmapSheet.push(['Mon', ...data.heatmapData.all.Mon]);
-      heatmapSheet.push(['Tue', ...data.heatmapData.all.Tue]);
-      heatmapSheet.push(['Wed', ...data.heatmapData.all.Wed]);
-      heatmapSheet.push(['Thu', ...data.heatmapData.all.Thu]);
-      heatmapSheet.push(['Fri', ...data.heatmapData.all.Fri]);
-      heatmapSheet.push(['Sat', ...data.heatmapData.all.Sat]);
-      heatmapSheet.push(['Sun', ...data.heatmapData.all.Sun]);
-      heatmapSheet.push(['']);
-    }
-    
-    // Add CALLS metric
-    if (data.heatmapData && data.heatmapData.calls) {
-      heatmapSheet.push(['CALLS METRIC']);
-      heatmapSheet.push(['Day', ...hours]);
-      heatmapSheet.push(['Mon', ...data.heatmapData.calls.Mon]);
-      heatmapSheet.push(['Tue', ...data.heatmapData.calls.Tue]);
-      heatmapSheet.push(['Wed', ...data.heatmapData.calls.Wed]);
-      heatmapSheet.push(['Thu', ...data.heatmapData.calls.Thu]);
-      heatmapSheet.push(['Fri', ...data.heatmapData.calls.Fri]);
-      heatmapSheet.push(['Sat', ...data.heatmapData.calls.Sat]);
-      heatmapSheet.push(['Sun', ...data.heatmapData.calls.Sun]);
-      heatmapSheet.push(['']);
-    }
-    
-    // Add DIRECTIONS metric
-    if (data.heatmapData && data.heatmapData.directions) {
-      heatmapSheet.push(['DIRECTIONS METRIC']);
-      heatmapSheet.push(['Day', ...hours]);
-      heatmapSheet.push(['Mon', ...data.heatmapData.directions.Mon]);
-      heatmapSheet.push(['Tue', ...data.heatmapData.directions.Tue]);
-      heatmapSheet.push(['Wed', ...data.heatmapData.directions.Wed]);
-      heatmapSheet.push(['Thu', ...data.heatmapData.directions.Thu]);
-      heatmapSheet.push(['Fri', ...data.heatmapData.directions.Fri]);
-      heatmapSheet.push(['Sat', ...data.heatmapData.directions.Sat]);
-      heatmapSheet.push(['Sun', ...data.heatmapData.directions.Sun]);
-      heatmapSheet.push(['']);
-    }
-    
-    // Add CLICKS metric
-    if (data.heatmapData && data.heatmapData.clicks) {
-      heatmapSheet.push(['CLICKS METRIC']);
-      heatmapSheet.push(['Day', ...hours]);
-      heatmapSheet.push(['Mon', ...data.heatmapData.clicks.Mon]);
-      heatmapSheet.push(['Tue', ...data.heatmapData.clicks.Tue]);
-      heatmapSheet.push(['Wed', ...data.heatmapData.clicks.Wed]);
-      heatmapSheet.push(['Thu', ...data.heatmapData.clicks.Thu]);
-      heatmapSheet.push(['Fri', ...data.heatmapData.clicks.Fri]);
-      heatmapSheet.push(['Sat', ...data.heatmapData.clicks.Sat]);
-      heatmapSheet.push(['Sun', ...data.heatmapData.clicks.Sun]);
-      heatmapSheet.push(['']);
-    }
-    
-    // Add VIEWS metric
-    if (data.heatmapData && data.heatmapData.views) {
-      heatmapSheet.push(['VIEWS METRIC']);
-      heatmapSheet.push(['Day', ...hours]);
-      heatmapSheet.push(['Mon', ...data.heatmapData.views.Mon]);
-      heatmapSheet.push(['Tue', ...data.heatmapData.views.Tue]);
-      heatmapSheet.push(['Wed', ...data.heatmapData.views.Wed]);
-      heatmapSheet.push(['Thu', ...data.heatmapData.views.Thu]);
-      heatmapSheet.push(['Fri', ...data.heatmapData.views.Fri]);
-      heatmapSheet.push(['Sat', ...data.heatmapData.views.Sat]);
-      heatmapSheet.push(['Sun', ...data.heatmapData.views.Sun]);
+    if (data.heatmapData) {
+      const hours = Array.from({length: 24}, (_, i) => {
+        if (i === 0) return '12am';
+        if (i < 12) return `${i}am`;
+        if (i === 12) return '12pm';
+        return `${i-12}pm`;
+      });
+      
+      // Test ALL metric only first
+      if (data.heatmapData.all) {
+        heatmapSheet.push(['']);
+        heatmapSheet.push(['ALL METRIC - 24 Hour Activity']);
+        
+        // Build header row
+        const headerRow = ['Day'];
+        for (let h = 0; h < hours.length; h++) {
+          headerRow.push(hours[h]);
+        }
+        heatmapSheet.push(headerRow);
+        
+        // Build data rows
+        const allData = data.heatmapData.all;
+        for (const day of ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']) {
+          const row = [day];
+          const dayValues = allData[day];
+          if (dayValues && Array.isArray(dayValues)) {
+            for (let i = 0; i < dayValues.length; i++) {
+              row.push(dayValues[i]);
+            }
+          }
+          heatmapSheet.push(row);
+        }
+      }
     }
     
     const heatmapWS = XLSX.utils.aoa_to_sheet(heatmapSheet);
-    heatmapWS['!cols'] = [{wch: 10}, ...Array(24).fill({wch: 6})];
+    heatmapWS['!cols'] = [{wch: 12}, ...Array(24).fill({wch: 5})];
     XLSX.utils.book_append_sheet(workbook, heatmapWS, 'Heatmap');
     
     // ===== SHEET 4: SEARCH QUERIES =====
