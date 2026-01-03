@@ -51,16 +51,6 @@ export default function Sidebar() {
             <span>Visibility</span>
           </button>
         </Link>
-        <Link href="/activity">
-          <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
-            pathname === '/activity'
-              ? 'bg-gray-100 text-gray-900'
-              : 'text-gray-700 hover:bg-gray-50'
-          }`}>
-            <Clock size={19} />
-            <span>Activity / Busy Times</span>
-          </button>
-        </Link>
         <Link href="/reports">
           <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
             pathname === '/reports'

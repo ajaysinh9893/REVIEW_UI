@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { User, Lock, Globe, Bell, SettingsIcon, Camera, Eye, EyeOff, Building2, Clock, Copy, Plus, X, Calendar, AlertCircle, Mail, Shield, Smartphone, Trash2, Check, CheckCircle, LogOut, MapPin, Chrome, Monitor, Apple, RefreshCw, Link as LinkIcon, Unlink, MessageSquare } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { User, Lock, Globe, Bell, SettingsIcon, Camera, Eye, EyeOff, Building2, Clock, Copy, Plus, X, Calendar, AlertCircle, Mail, Shield, Smartphone, Trash2, Check, CheckCircle, LogOut, MapPin, Chrome, Monitor, Apple, RefreshCw, Link as LinkIcon, Unlink, MessageSquare, Upload, ZoomIn, ZoomOut, RotateCw, Move } from 'lucide-react';
 import Sidebar from '@/src/components/Sidebar';
 import { usePrompt } from '@/src/components/usePrompt';
 
@@ -206,6 +206,127 @@ export default function Settings() {
       { confirmText: 'Send Verification', cancelText: 'Cancel' }
     );
   };
+
+  // Profile Picture Uploader State and Functions
+  const [image, setImage] = useState(null);
+  const [showEditor, setShowEditor] = useState(false);
+  const [zoom, setZoom] = useState(1);
+  const [rotation, setRotation] = useState(0);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [profilePicture, setProfilePicture] = useState(null);
+  
+  const fileInputRef = useRef(null);
+  const imageRef = useRef(null);
+
+  const handleFileSelect = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImage(e.target.result);
+        setShowEditor(true);
+        setZoom(1);
+        setRotation(0);
+        setPosition({ x: 0, y: 0 });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setDragStart({
+      x: e.clientX - position.x,
+      y: e.clientY - position.y
+    });
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging) {
+      setPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleZoomIn = () => {
+    setZoom(prev => Math.min(prev + 0.1, 3));
+  };
+
+  const handleZoomOut = () => {
+    setZoom(prev => Math.max(prev - 0.1, 0.5));
+  };
+
+  const handleRotate = () => {
+    setRotation(prev => (prev + 90) % 360);
+  };
+
+  const handleReset = () => {
+    setZoom(1);
+    setRotation(0);
+    setPosition({ x: 0, y: 0 });
+  };
+
+  const handleSave = () => {
+    if (!imageRef.current) return;
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const size = 300;
+    canvas.width = size;
+    canvas.height = size;
+
+    ctx.beginPath();
+    ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+
+    ctx.fillStyle = '#f3f4f6';
+    ctx.fillRect(0, 0, size, size);
+
+    const img = imageRef.current;
+    const imgWidth = img.naturalWidth;
+    const imgHeight = img.naturalHeight;
+
+    ctx.save();
+    ctx.translate(size / 2, size / 2);
+    ctx.rotate((rotation * Math.PI) / 180);
+    ctx.scale(zoom, zoom);
+    ctx.translate(-size / 2, -size / 2);
+
+    const scale = Math.max(size / imgWidth, size / imgHeight);
+    const scaledWidth = imgWidth * scale;
+    const scaledHeight = imgHeight * scale;
+    const x = (size - scaledWidth) / 2 + position.x;
+    const y = (size - scaledHeight) / 2 + position.y;
+
+    ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
+    ctx.restore();
+
+    const dataUrl = canvas.toDataURL('image/png');
+    setProfilePicture(dataUrl);
+    setShowEditor(false);
+  };
+
+  const handleCancel = () => {
+    setShowEditor(false);
+    setImage(null);
+  };
+
+  const handleRemove = () => {
+    setProfilePicture(null);
+    setImage(null);
+  };
   
   const [settings, setSettings] = useState({
     // Profile
@@ -227,6 +348,7 @@ export default function Settings() {
     pushNotifications: false,
     
     // Google Business
+    googlePlaceId: '',
     businessPhone: '+1 (555) 123-4567',
     businessAddress: '123 Main Street, New York, NY 10001',
     businessCity: 'New York',
@@ -323,28 +445,60 @@ export default function Settings() {
                     </div>
 
                     <div className="space-y-6">
-                      {/* Profile Picture */}
-                      <div className="flex items-center gap-6 pb-6">
-                        <div className="relative">
-                          <div className="w-24 h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-3xl font-bold">
-                            {settings.fullName.split(' ').map(n => n[0]).join('')}
+                      {/* Profile Picture Uploader */}
+                      <div className="flex items-end gap-6">
+                          <div className="relative">
+                            {/* Avatar Circle */}
+                            <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-200 border-4 border-white shadow-xl flex items-center justify-center">
+                              {profilePicture ? (
+                                <img 
+                                  src={profilePicture} 
+                                  alt="Profile" 
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="text-4xl font-bold text-gray-400">
+                                  {settings.fullName.split(' ').map(n => n[0]).join('')}
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Camera Button Overlay */}
+                            <button
+                              onClick={triggerFileInput}
+                              className="absolute bottom-0 right-0 w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-indigo-700 transition-all border-3 border-white"
+                            >
+                              <Camera size={16} />
+                            </button>
+
+                            {/* Remove Button (if picture exists) */}
+                            {profilePicture && (
+                              <button
+                                onClick={handleRemove}
+                                className="absolute top-0 right-0 w-7 h-7 bg-red-500 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-red-600 transition-all"
+                              >
+                                <X size={14} />
+                              </button>
+                            )}
                           </div>
-                          <button className="absolute bottom-0 right-0 p-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-all">
-                            <Camera size={16} />
-                          </button>
+                          <div className="flex flex-col gap-2">
+                            <button
+                              onClick={triggerFileInput}
+                              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all font-medium text-sm"
+                            >
+                              <Upload size={16} />
+                              {profilePicture ? 'Change Photo' : 'Upload Photo'}
+                            </button>
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="font-semibold mb-1 text-gray-900">
-                            Profile Picture
-                          </h3>
-                          <p className="text-sm mb-3 text-gray-600">
-                            PNG, JPG up to 5MB
-                          </p>
-                          <button className="text-sm font-medium px-4 py-2 rounded-lg transition-all bg-gray-100 text-gray-700 hover:bg-gray-200">
-                            Upload New Photo
-                          </button>
-                        </div>
-                      </div>
+                        {/* Hidden File Input */}
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileSelect}
+                          className="hidden"
+                        />
 
                       {/* Form Fields */}
                       <div className="space-y-5">
@@ -419,10 +573,160 @@ export default function Settings() {
                         </button>
                       </div>
                     </div>
+
+                    {/* Image Editor Modal */}
+                    {showEditor && (
+                      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[95vh] overflow-hidden flex flex-col">
+                          
+                          {/* Header */}
+                          <div className="bg-white border-b border-gray-200 p-4">
+                            <h2 className="text-lg font-bold text-gray-900">Edit Profile Picture</h2>
+                            <p className="text-gray-600 text-xs mt-1">Adjust and position your photo</p>
+                          </div>
+
+                          {/* Image Preview Area */}
+                          <div className="p-4 bg-gray-50 flex-1 overflow-y-auto">
+                            <div 
+                              className="relative w-full bg-gray-900 rounded-xl overflow-hidden flex items-center justify-center"
+                              style={{ aspectRatio: '1 / 1', maxHeight: '300px' }}
+                              onMouseMove={handleMouseMove}
+                              onMouseUp={handleMouseUp}
+                              onMouseLeave={handleMouseUp}
+                            >
+                              {/* Circular Crop Preview */}
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div 
+                                  className="relative rounded-full overflow-hidden border-4 border-white shadow-2xl cursor-move"
+                                  style={{ width: '240px', height: '240px' }}
+                                  onMouseDown={handleMouseDown}
+                                >
+                                  {image && (
+                                    <img
+                                      ref={imageRef}
+                                      src={image}
+                                      alt="Preview"
+                                      className="absolute inset-0 w-full h-full object-cover"
+                                      style={{
+                                        transform: `scale(${zoom}) rotate(${rotation}deg) translate(${position.x}px, ${position.y}px)`,
+                                        transformOrigin: 'center center',
+                                        transition: isDragging ? 'none' : 'transform 0.1s ease-out'
+                                      }}
+                                      draggable={false}
+                                    />
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Drag Hint */}
+                              {!isDragging && (
+                                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black/50 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full flex items-center gap-1">
+                                  <Move size={12} />
+                                  Drag
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Controls */}
+                          <div className="p-4 bg-white border-t border-gray-200 flex-shrink-0 space-y-3">
+                            
+                            {/* Zoom Control */}
+                            <div>
+                              <div className="flex items-center justify-between mb-2">
+                                <label className="text-xs font-semibold text-gray-700 flex items-center gap-1">
+                                  <ZoomIn size={14} />
+                                  Zoom
+                                </label>
+                                <span className="text-xs text-gray-500">{Math.round(zoom * 100)}%</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <button
+                                  onClick={handleZoomOut}
+                                  className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center hover:bg-gray-200 transition-all text-gray-600"
+                                >
+                                  <ZoomOut size={14} />
+                                </button>
+                                <input
+                                  type="range"
+                                  min="0.5"
+                                  max="3"
+                                  step="0.1"
+                                  value={zoom}
+                                  onChange={(e) => setZoom(parseFloat(e.target.value))}
+                                  className="flex-1 h-2 bg-gray-200 rounded appearance-none cursor-pointer"
+                                  style={{
+                                    background: `linear-gradient(to right, #4f46e5 0%, #4f46e5 ${((zoom - 0.5) / 2.5) * 100}%, #e5e7eb ${((zoom - 0.5) / 2.5) * 100}%, #e5e7eb 100%)`
+                                  }}
+                                />
+                                <button
+                                  onClick={handleZoomIn}
+                                  className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center hover:bg-gray-200 transition-all text-gray-600"
+                                >
+                                  <ZoomIn size={14} />
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Rotation Control */}
+                            <div>
+                              <div className="flex items-center justify-between mb-2">
+                                <label className="text-xs font-semibold text-gray-700 flex items-center gap-1">
+                                  <RotateCw size={14} />
+                                  Rotation
+                                </label>
+                                <span className="text-xs text-gray-500">{rotation}°</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <button
+                                  onClick={handleRotate}
+                                  className="px-3 py-1 text-xs bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition-all font-medium whitespace-nowrap"
+                                >
+                                  Rotate 90°
+                                </button>
+                                <input
+                                  type="range"
+                                  min="0"
+                                  max="360"
+                                  step="1"
+                                  value={rotation}
+                                  onChange={(e) => setRotation(parseInt(e.target.value))}
+                                  className="flex-1 h-2 bg-gray-200 rounded appearance-none cursor-pointer"
+                                  style={{
+                                    background: `linear-gradient(to right, #4f46e5 0%, #4f46e5 ${(rotation / 360) * 100}%, #e5e7eb ${(rotation / 360) * 100}%, #e5e7eb 100%)`
+                                  }}
+                                />
+                              </div>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex gap-2 pt-2">
+                              <button
+                                onClick={handleCancel}
+                                className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-all font-medium"
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                onClick={handleReset}
+                                className="px-4 py-2 text-sm bg-yellow-100 text-yellow-700 rounded hover:bg-yellow-200 transition-all font-medium"
+                              >
+                                Reset
+                              </button>
+                              <button
+                                onClick={handleSave}
+                                className="flex-1 px-4 py-2 text-sm bg-gradient-to-r from-green-500 to-green-600 text-white rounded hover:from-green-600 hover:to-green-700 transition-all font-bold flex items-center justify-center gap-1"
+                              >
+                                <Check size={16} strokeWidth={3} />
+                                Save
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
-
-                {/* Account Section */}
                 {activeSection === 'account' && (
                   <div className="p-8">
                     <div className="space-y-6">
@@ -841,6 +1145,33 @@ export default function Settings() {
                     </div>
 
                     <div className="space-y-6">
+                      {/* Google Place ID */}
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <label className="block text-sm font-medium text-gray-700">
+                            Google Place ID
+                          </label>
+                          <a
+                            href="https://business.google.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-indigo-600 hover:text-indigo-700 underline"
+                          >
+                            Find Place ID
+                          </a>
+                        </div>
+                        <input
+                          type="text"
+                          value={settings.googlePlaceId}
+                          onChange={(e) => handleSettingChange('googlePlaceId', e.target.value)}
+                          className="w-full px-3 py-2 rounded-lg border border-gray-200 text-gray-900 focus:outline-none focus:border-indigo-500"
+                          placeholder="ChIJIQBpAG2dQIcRfx2ijBLt6zs"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Enter your Google Business Place ID to auto-fetch business information
+                        </p>
+                      </div>
+
                       {/* Business Information */}
                       <div>
                         <h3 className="text-lg font-semibold mb-4 text-gray-900">

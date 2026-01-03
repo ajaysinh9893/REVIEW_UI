@@ -6,6 +6,36 @@ import { LineChart, Line, ResponsiveContainer } from 'recharts';
 export default function KPIOverviewCard({ visibilityData, period = 'daily', selectedTimeframe = 'daily', onTimeframeChange, onCardClick, selectedMetric, showTimeframeButtons = false }) {
   // Calculate KPI metrics from visibility data
   const calculateKPIs = () => {
+    // If visibilityData is already an object with KPI values (not an array)
+    if (!Array.isArray(visibilityData)) {
+      return {
+        impressions: {
+          total: visibilityData.impressions?.value || 0,
+          current: visibilityData.impressions?.value || 0,
+          change: visibilityData.impressions?.trend || 0,
+          data: [visibilityData.impressions?.value || 0]
+        },
+        clicks: {
+          total: visibilityData.websiteClicks?.value || 0,
+          current: visibilityData.websiteClicks?.value || 0,
+          change: visibilityData.websiteClicks?.trend || 0,
+          data: [visibilityData.websiteClicks?.value || 0]
+        },
+        calls: {
+          total: visibilityData.calls?.value || 0,
+          current: visibilityData.calls?.value || 0,
+          change: visibilityData.calls?.trend || 0,
+          data: [visibilityData.calls?.value || 0]
+        },
+        directions: {
+          total: visibilityData.directions?.value || 0,
+          current: visibilityData.directions?.value || 0,
+          change: visibilityData.directions?.trend || 0,
+          data: [visibilityData.directions?.value || 0]
+        }
+      };
+    }
+
     if (!visibilityData || visibilityData.length === 0) return null;
 
     const currentPeriod = visibilityData[visibilityData.length - 1];
