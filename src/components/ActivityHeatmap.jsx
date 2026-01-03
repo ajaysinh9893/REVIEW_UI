@@ -136,8 +136,8 @@ export default function ActivityHeatmap() {
     <div className="w-full h-full">
       <div className="rounded-xl border border-gray-200 p-4 md:p-6 shadow-sm">
       <div className="mb-2">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-4">
-          <div>
+        <div className="flex flex-row items-center justify-between gap-4 mb-4 flex-wrap">
+          <div className="flex-1 min-w-0">
             <h3 className="text-base md:text-lg font-bold text-gray-900">Weekly Activity Heatmap</h3>
             <p className="text-xs md:text-sm text-gray-600 mt-1">Darker colors indicate higher activity</p>
           </div>
@@ -193,6 +193,7 @@ export default function ActivityHeatmap() {
             )}
           </div>
         </div>
+      </div>
 
       {/* Heatmap Grid - Horizontally scrollable on mobile only */}
       <div className="flex flex-col gap-px overflow-x-auto md:overflow-x-visible">
@@ -241,67 +242,71 @@ export default function ActivityHeatmap() {
 
       {/* Legend */}
       <div className="mt-6 pt-4 border-t border-gray-200">
-        <div className="flex items-center justify-center gap-2 md:gap-4 flex-wrap">
-          <span className="text-xs text-gray-600 font-semibold">Low Activity</span>
-          <div className="flex gap-1 md:gap-2">
-            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#A8C7FA' }} title="Blue Light 1"></div>
-            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#A8C7FA' }} title="Blue Light 1"></div>
-            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#4285F4' }} title="Blue Original"></div>
+        <div className="grid grid-cols-2 gap-4 md:gap-6">
+          {/* Low Activity */}
+          <div className="flex items-center justify-between">
+            <span className="text-xs md:text-sm text-gray-600 font-semibold">Low Activity</span>
+            <div className="flex gap-1 md:gap-2">
+              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#A8C7FA' }}></div>
+              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#A8C7FA' }}></div>
+              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#4285F4' }}></div>
+            </div>
           </div>
 
-          <span className="text-xs text-gray-600 font-semibold">Medium Activity</span>
-          <div className="flex gap-1 md:gap-2">
-            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#A8DAB5' }} title="Green Light 1"></div>
-            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#A8DAB5' }} title="Green Light 1"></div>
-            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#34A853' }} title="Green Original"></div>
+          {/* Medium Activity */}
+          <div className="flex items-center justify-between">
+            <span className="text-xs md:text-sm text-gray-600 font-semibold">Medium Activity</span>
+            <div className="flex gap-1 md:gap-2">
+              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#A8DAB5' }}></div>
+              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#A8DAB5' }}></div>
+              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#34A853' }}></div>
+            </div>
           </div>
 
-          <span className="text-xs text-gray-600 font-semibold">Higher Activity</span>
-          <div className="flex gap-1 md:gap-2">
-            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#FDE293' }} title="Yellow Light 1"></div>
-            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#FDE293' }} title="Yellow Light 1"></div>
-            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#FBBC04' }} title="Yellow Original"></div>
+          {/* Higher Activity */}
+          <div className="flex items-center justify-between">
+            <span className="text-xs md:text-sm text-gray-600 font-semibold">Higher Activity</span>
+            <div className="flex gap-1 md:gap-2">
+              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#FDE293' }}></div>
+              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#FDE293' }}></div>
+              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#FBBC04' }}></div>
+            </div>
           </div>
 
-          <span className="text-xs text-gray-600 font-semibold">Peak Activity</span>
-          <div className="flex gap-1 md:gap-2">
-            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#F6AEA9' }} title="Red Light 1"></div>
-            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#F6AEA9' }} title="Red Light 1"></div>
-            <div className="w-4 md:w-5 h-4 md:h-5 rounded" style={{ backgroundColor: '#EA4335' }} title="Red Original"></div>
+          {/* Peak Activity */}
+          <div className="flex items-center justify-between">
+            <span className="text-xs md:text-sm text-gray-600 font-semibold">Peak Activity</span>
+            <div className="flex gap-1 md:gap-2">
+              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#F6AEA9' }}></div>
+              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#F6AEA9' }}></div>
+              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#EA4335' }}></div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Activity Insights */}
-      <div className="mt-6 flex justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 w-full">
-          <div className="rounded-lg p-3 md:p-4 border-2" style={{ borderColor: '#9ca3af' }}>
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#6b7280' }}></div>
-              <h4 className="text-sm md:text-base font-semibold text-gray-900">Peak Hours</h4>
-            </div>
-            <p className="text-xl md:text-2xl font-bold text-gray-900">4pm - 6pm</p>
-            <p className="text-xs md:text-xs text-gray-600 mt-1">Friday evenings are busiest</p>
+      <div className="mt-6">
+        <div className="flex gap-4 md:gap-6 justify-center flex-wrap">
+          {/* Peak Hours */}
+          <div className="flex flex-col items-center">
+            <p className="text-xs md:text-sm font-semibold text-gray-700 mb-2">Peak Hours</p>
+            <p className="text-lg md:text-2xl font-bold text-gray-900">4pm - 6pm</p>
           </div>
 
-          <div className="rounded-lg p-3 md:p-4 border-2" style={{ borderColor: '#9ca3af' }}>
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#6b7280' }}></div>
-              <h4 className="text-sm md:text-base font-semibold text-gray-900">Most Active Day</h4>
-            </div>
-            <p className="text-xl md:text-2xl font-bold text-gray-900">Friday</p>
-            <p className="text-xs md:text-xs text-gray-600 mt-1">28% more activity than average</p>
+          {/* Most Active Day */}
+          <div className="flex flex-col items-center">
+            <p className="text-xs md:text-sm font-semibold text-gray-700 mb-2">Most Active Day</p>
+            <p className="text-lg md:text-2xl font-bold text-gray-900">Friday</p>
           </div>
 
-          <div className="rounded-lg p-3 md:p-4 border-2" style={{ borderColor: '#9ca3af' }}>
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#6b7280' }}></div>
-              <h4 className="text-sm md:text-base font-semibold text-gray-900">Quiet Hours</h4>
-            </div>
-            <p className="text-xl md:text-2xl font-bold text-gray-900">1am - 5am</p>
-            <p className="text-xs md:text-xs text-gray-600 mt-1">Consider scheduling posts outside these hours</p>
+          {/* Quiet Hours */}
+          <div className="flex flex-col items-center">
+            <p className="text-xs md:text-sm font-semibold text-gray-700 mb-2">Quiet Hours</p>
+            <p className="text-lg md:text-2xl font-bold text-gray-900">1am - 5am</p>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

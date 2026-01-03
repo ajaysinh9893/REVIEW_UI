@@ -910,7 +910,7 @@ export default function VisibilityActivityPageRecharts() {
 
   return (
     <div className="min-h-screen font-sans" style={{ backgroundColor: '#FAF9F5' }}>
-      <div className="p-4 md:p-6 lg:p-10 pt-16 md:pt-6 lg:pt-10 max-w-7xl mx-auto">
+      <div className="p-4 md:p-6 lg:p-10 pt-8 md:pt-20 max-w-7xl mx-auto">
         
         {/* KPI Overview Card and Activity Trends - Combined Section */}
         <div className="w-full rounded-xl border border-gray-200 p-4 md:p-6 shadow-sm mb-8">
@@ -988,7 +988,7 @@ export default function VisibilityActivityPageRecharts() {
           </div>
           <div className="flex flex-col lg:flex-row gap-6">
             {/* KPI Overview Card - 40% on desktop, full on mobile */}
-            <div className="w-full lg:w-[40%] border-b lg:border-b-0 lg:border-r border-gray-200 pb-6 lg:pr-6 lg:pb-0">
+            <div className="w-full lg:w-[40%] lg:border-r border-gray-200 lg:pr-6">
               <KPIOverviewCard 
                 visibilityData={getTimeframeKPIData()} 
                 period={selectedTimeframe}
@@ -1004,7 +1004,7 @@ export default function VisibilityActivityPageRecharts() {
             <div className="flex-1">
               <div className="h-64 md:h-72 lg:h-80">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={getChartData()} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                  <LineChart data={getChartData()} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                     <XAxis 
                       dataKey="label" 
@@ -1014,6 +1014,7 @@ export default function VisibilityActivityPageRecharts() {
                     <YAxis 
                       stroke="#9ca3af" 
                       style={{ fontSize: '12px' }}
+                      width={40}
                     />
                     <Tooltip 
                       contentStyle={{ 

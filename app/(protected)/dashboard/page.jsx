@@ -79,7 +79,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen font-sans" style={{ backgroundColor: '#FAF9F5' }}>
-      <div className="p-4 md:p-6 lg:p-10 pt-16 md:pt-6 lg:pt-10 max-w-7xl mx-auto lg:pr-24">
+      <div className="p-4 md:p-6 lg:p-10 pt-8 md:pt-20 max-w-7xl mx-auto lg:pr-24">
           {/* Top Row - Visibility Snapshot, Overall Rating & Alerts */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 mb-8">
             {/* Visibility Snapshot - 50% width */}
@@ -154,7 +154,7 @@ export default function Dashboard() {
                 </div>
 
                 <ResponsiveContainer width="100%" height={280}>
-                  <LineChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 5 }}>
+                  <LineChart data={chartData} margin={{ top: 10, right: 30, left: -10, bottom: 5 }}>
                     <CartesianGrid 
                       strokeDasharray="3 3" 
                       stroke={'#d1d5db'} 
@@ -165,6 +165,7 @@ export default function Dashboard() {
                       style={{ fontSize: '12px', fontWeight: '500' }}
                     />
                     <YAxis 
+                      width={40}
                       stroke={'#4b5563'}
                       style={{ fontSize: '12px', fontWeight: '500' }}
                     />

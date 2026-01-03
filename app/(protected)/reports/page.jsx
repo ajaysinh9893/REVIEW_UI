@@ -473,7 +473,7 @@ export default function ReportsPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="p-10 max-w-7xl mx-auto pr-24">
+      <div className="p-4 md:p-6 lg:p-10 pt-8 md:pt-20 max-w-7xl mx-auto lg:pr-24">
           {/* AI-Powered Search Bar */}
           <div className="rounded-xl border border-gray-200 p-6 mb-8">
             <div className="flex items-center gap-3 mb-4">

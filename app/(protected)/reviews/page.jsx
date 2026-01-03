@@ -330,7 +330,7 @@ export default function ReviewsPage() {
 
   return (
     <div className="min-h-screen font-sans" style={{ backgroundColor: '#FAF9F5' }}>
-      <div className="p-10 pr-24">
+      <div className="p-4 md:p-6 lg:p-10 pt-8 md:pt-20 max-w-7xl mx-auto lg:pr-24">
         <div className="max-w-7xl mx-auto">
           {/* Quick Analytics Panel - Top */}
           <div className="mb-8 w-full">

@@ -71,12 +71,35 @@ export default function ProtectedLayout({ children }) {
 
   return (
     <div className="min-h-screen font-sans flex flex-col md:flex-row" style={{ backgroundColor: '#FAF9F5' }}>
+      {/* Fixed Header */}
+      <div className="fixed top-0 left-0 right-0 h-14 md:h-20 bg-white border-b border-gray-200 z-50 md:hidden flex items-center justify-center px-4 shadow-sm">
+        {/* Centered Logo */}
+        <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center shadow-sm">
+          <span className="text-white text-base font-bold">A</span>
+        </div>
+        
+        {/* Bell Icon - Right */}
+        <div className={`absolute right-4 transition-opacity duration-300 ${
+          showAllNotifications ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}>
+          <button 
+            onClick={() => setShowAllNotifications(!showAllNotifications)}
+            className="relative p-2 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg hover:scale-105 transition-all"
+          >
+            <Bell size={20} className="text-indigo-600" />
+            {unreadCount > 0 && (
+              <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse"></span>
+            )}
+          </button>
+        </div>
+      </div>
+
       <Sidebar />
-      <div className="flex-1 flex flex-col relative w-full md:ml-72">
+      <div className="flex-1 flex flex-col relative w-full md:ml-72 pt-14 md:pt-0">
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden w-full">
-          {/* Notification Bell Icon */}
-          <div className={`fixed top-4 right-4 md:top-8 md:right-4 z-30 transition-opacity duration-300 ${
+          {/* Notification Bell Icon - Desktop Only */}
+          <div className={`fixed top-8 md:top-6 right-4 md:right-6 z-30 transition-opacity duration-300 hidden md:block ${
             showAllNotifications ? 'opacity-0 pointer-events-none' : 'opacity-100'
           }`}>
             <button 

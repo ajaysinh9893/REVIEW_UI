@@ -128,16 +128,16 @@ export default function DashboardVisibilitySnapshot({ visibilityData, period = '
         <p className="text-sm text-gray-500 mt-1">Key performance indicators from your visibility data</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 flex-1">
+      <div className="grid grid-cols-2 gap-2 md:gap-3 flex-1">
         {kpis.map((kpi, index) => (
           <div 
             key={index} 
-            className={`relative overflow-hidden rounded-lg border p-2 transition-all group flex flex-col justify-between ${
+            className={`relative overflow-hidden rounded-lg border p-3 md:p-4 transition-all group flex flex-col justify-between ${
               'border-gray-200 hover:shadow-md'
             }`}>
             {/* Header - Icon & Title */}
-            <div className="flex items-start justify-between mb-2">
-              <div className="flex items-center gap-1.5">
+            <div className="flex items-start justify-between mb-1 md:mb-1">
+              <div className="flex items-center gap-1 md:gap-1.5">
                 <div className={`w-6 h-6 ${kpi.bgColor} rounded flex items-center justify-center flex-shrink-0 ${kpi.color}`}>
                   {kpi.icon}
                 </div>
@@ -148,7 +148,7 @@ export default function DashboardVisibilitySnapshot({ visibilityData, period = '
             </div>
 
             {/* Content Row - Value, Subtitle & Chart with Change on right */}
-            <div className="flex items-end justify-between gap-1">
+            <div className="flex items-end justify-between gap-0.5 md:gap-0.5">
               <div>
                 <p className="text-base font-bold text-gray-900">{kpi.value}</p>
                 <p className="text-sm text-gray-500 leading-none">{kpi.subtitle}</p>
