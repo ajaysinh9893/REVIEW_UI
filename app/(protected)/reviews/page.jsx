@@ -10,6 +10,7 @@ export default function ReviewsPage() {
     const [scrollY, setScrollY] = useState(0);
     const fadeDistance = 80; // Smaller fade distance
     const fadeOpacity = Math.max(0, 1 - scrollY / fadeDistance);
+    const [showMobileFilters, setShowMobileFilters] = useState(false);
 
     useEffect(() => {
       const handleScroll = () => {
@@ -330,18 +331,29 @@ export default function ReviewsPage() {
 
   return (
     <div className="min-h-screen font-sans" style={{ backgroundColor: '#FAF9F5' }}>
-      <div className="p-4 md:p-6 lg:p-10 pt-8 md:pt-20 max-w-7xl mx-auto lg:pr-24">
+      <div className="p-4 md:p-6 lg:p-10 pt-4 md:pt-8 lg:pt-20 max-w-7xl mx-auto lg:pr-24">
         <div className="max-w-7xl mx-auto">
           {/* Quick Analytics Panel - Top */}
-          <div className="mb-8 w-full">
+          <div className="mb-6 md:mb-8 w-full">
             <QuickAnalyticsPanel filteredReviews={filteredReviews} allReviews={reviews} />
           </div>
 
+          {/* Mobile Filter Toggle */}
+          <div className="lg:hidden mb-6 flex gap-2">
+            <button
+              onClick={() => setShowMobileFilters(!showMobileFilters)}
+              className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-all"
+            >
+              <SlidersHorizontal size={18} />
+              {showMobileFilters ? 'Hide' : 'Show'} Filters
+            </button>
+          </div>
+
           {/* Main content */}
-          <div className="grid grid-cols-12 gap-6">
-              {/* Filter Panel - Left Side */}
-              <div className="col-span-3">
-                <div className={`rounded-xl border p-5 border-gray-200`}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              {/* Filter Panel - Left Side - Hidden on mobile */}
+              <div className={`lg:col-span-3 ${showMobileFilters ? 'col-span-1 mb-6' : 'hidden lg:block'}`}>
+                <div className={`rounded-lg md:rounded-xl border p-4 md:p-5 border-gray-200`}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="flex items-center justify-between mb-5">
@@ -478,40 +490,40 @@ export default function ReviewsPage() {
               </div>
 
               {/* Main Content Area */}
-              <div className="col-span-9">
+              <div className="lg:col-span-9">
                 {/* Search Bar */}
-                <div className={`rounded-xl border p-4 mb-6 border-gray-200`}>
+                <div className={`rounded-lg md:rounded-xl border p-3 md:p-4 mb-4 md:mb-6 border-gray-200`}>
                   <div className="relative">
-                    <Search size={20} className={`absolute left-4 top-1/2 -translate-y-1/2 ${'text-gray-400'}`} />
+                    <Search size={18} className={`absolute left-3 md:left-4 top-1/2 -translate-y-1/2 ${'text-gray-400'}`} />
                     <input
                       type="text"
-                      placeholder="Search reviews by name, comment, or keyword..."
+                      placeholder="Search reviews..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className={`w-full pl-12 pr-4 py-3 text-sm rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent border ${'border-gray-300 bg-white text-gray-900 placeholder-gray-500'}`}
+                      className={`w-full pl-10 md:pl-12 pr-4 py-2 md:py-3 text-sm rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent border ${'border-gray-300 bg-white text-gray-900 placeholder-gray-500'}`}
                     />
                   </div>
                 </div>
 
                 {/* Active Filter Chips */}
                 {activeFilters.length > 0 && (
-                  <div className={`rounded-xl border p-4 mb-6 ${'bg-indigo-50 border-indigo-200'}`}>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className={`text-sm font-semibold ${'text-indigo-900'}`}>
-                        Active Filters ({activeFilters.length})
+                  <div className={`rounded-lg md:rounded-xl border p-3 md:p-4 mb-4 md:mb-6 ${'bg-indigo-50 border-indigo-200'}`}>
+                    <div className="flex items-center justify-between mb-2 md:mb-3">
+                      <span className={`text-xs md:text-sm font-semibold ${'text-indigo-900'}`}>
+                        Filters ({activeFilters.length})
                       </span>
                       <button
                         onClick={clearAllFilters}
-                        className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+                        className="text-xs md:text-sm text-indigo-600 hover:text-indigo-700 font-medium"
                       >
-                        Clear all
+                        Clear
                       </button>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {activeFilters.map((filter) => (
                         <div
                           key={filter.key}
-                          className={`inline-flex items-center gap-2 px-3 py-1.5 border text-sm font-medium rounded-lg ${'bg-white border-indigo-300 text-indigo-700'}`}
+                          className={`inline-flex items-center gap-2 px-2 md:px-3 py-1 md:py-1.5 border text-xs md:text-sm font-medium rounded-lg ${'bg-white border-indigo-300 text-indigo-700'}`}
                         >
                           <span>{filter.value}</span>
                           <button
@@ -527,12 +539,12 @@ export default function ReviewsPage() {
                 )}
 
                 {/* Reviews List */}
-                <div className="space-y-4">
+                <div className="space-y-3 md:space-y-4">
                   {filteredReviews.length === 0 ? (
-                    <div className={`rounded-xl shadow-sm border p-12 text-center ${'bg-white border-gray-200'}`}>
-                      <MessageSquare size={48} className={`mx-auto mb-4 ${'text-gray-400'}`} />
-                      <h3 className={`text-lg font-semibold mb-2 ${'text-gray-900'}`}>No reviews found</h3>
-                      <p className={`mb-4 ${'text-gray-600'}`}>Try adjusting your filters or search query</p>
+                    <div className={`rounded-lg md:rounded-xl shadow-sm border p-8 md:p-12 text-center ${'bg-white border-gray-200'}`}>
+                      <MessageSquare size={40} className={`mx-auto mb-3 md:mb-4 ${'text-gray-400'}`} />
+                      <h3 className={`text-base md:text-lg font-semibold mb-1 md:mb-2 ${'text-gray-900'}`}>No reviews found</h3>
+                      <p className={`mb-4 text-sm ${'text-gray-600'}`}>Try adjusting your filters or search query</p>
                       {activeFilters.length > 0 && (
                         <button
                           onClick={clearAllFilters}
@@ -544,31 +556,31 @@ export default function ReviewsPage() {
                     </div>
                   ) : (
                     filteredReviews.map((review) => (
-                      <div key={review.id} className={`rounded-xl border p-6 hover:shadow-md transition-all border-gray-200`}>
-                        <div className="flex items-start gap-4">
-                          <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                      <div key={review.id} className={`rounded-lg md:rounded-xl border p-3 md:p-6 hover:shadow-md transition-all border-gray-200`}>
+                        <div className="flex gap-3 md:gap-4">
+                          <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm md:text-lg flex-shrink-0">
                             {review.name.charAt(0)}
                           </div>
                           
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between mb-2">
-                              <div className="flex-1">
-                                <h3 className={`text-base font-semibold ${'text-gray-900'}`}>{review.name}</h3>
-                                <div className="flex items-center gap-3 mt-1">
+                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 md:gap-0 mb-2">
+                              <div className="flex-1 min-w-0">
+                                <h3 className={`text-sm md:text-base font-semibold ${'text-gray-900'}`}>{review.name}</h3>
+                                <div className="flex flex-wrap items-center gap-1 md:gap-3 mt-1">
                                   <div className="flex items-center gap-1">
                                     {renderStars(review.rating)}
                                   </div>
-                                  <span className={`text-xs ${'text-gray-500'}`}>•</span>
+                                  <span className={`text-xs hidden md:inline ${'text-gray-500'}`}>•</span>
                                   <span className={`text-xs ${'text-gray-500'}`}>{review.dateDisplay}</span>
-                                  <span className={`text-xs ${'text-gray-500'}`}>•</span>
+                                  <span className={`text-xs hidden md:inline ${'text-gray-500'}`}>•</span>
                                   <span className={`text-xs ${'text-gray-500'}`}>{review.source}</span>
                                 </div>
                               </div>
-                              <div className="flex items-center gap-2 flex-shrink-0 ml-4">
+                              <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
                                 {review.replied && (
                                   <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded flex items-center gap-1">
                                     <CheckCircle size={12} />
-                                    Replied
+                                    <span className="hidden md:inline">Replied</span>
                                   </span>
                                 )}
                                 <span className={`px-2 py-1 text-xs font-medium rounded ${
@@ -591,32 +603,32 @@ export default function ReviewsPage() {
                               </div>
                             )}
 
-                            <p className={`text-sm mb-4 leading-relaxed ${'text-gray-700'}`}>{review.comment}</p>
+                            <p className={`text-xs md:text-sm mb-3 md:mb-4 leading-relaxed ${'text-gray-700'}`}>{review.comment}</p>
 
-                            <div className="flex items-center justify-between">
-                              <div className={`flex items-center gap-3 text-xs ${'text-gray-500'}`}>
+                            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                              <div className={`flex flex-wrap items-center gap-2 text-xs ${'text-gray-500'}`}>
                                 <span className="flex items-center gap-1">
                                   <MapPin size={12} />
                                   {review.location}
                                 </span>
-                                <span>•</span>
+                                <span className="hidden md:inline">•</span>
                                 <span className="flex items-center gap-1">
                                   <Tag size={12} />
                                   {review.category}
                                 </span>
                               </div>
-                              <div className="flex gap-2">
+                              <div className="flex gap-2 flex-wrap">
                                 {!review.replied && (
                                   <button 
                                     onClick={() => openReplyModal(review)}
-                                    className="px-4 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all">
+                                    className="flex-1 md:flex-none px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all">
                                     Reply
                                   </button>
                                 )}
                                 {review.sentiment === 'Negative' && !review.resolved && (
                                   <button 
                                     onClick={() => handleMarkResolved(review)}
-                                    className="px-4 py-2 text-sm font-medium bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all">
+                                    className="flex-1 md:flex-none px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm font-medium bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all">
                                     Mark Resolved
                                   </button>
                                 )}
@@ -636,30 +648,30 @@ export default function ReviewsPage() {
         {/* Reply Modal */}
         {replyModal.open && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="rounded-xl w-full max-w-2xl max-h-[90vh] border border-gray-200 shadow-2xl overflow-hidden flex flex-col" style={{ backgroundColor: '#FAF9F5' }}>
-          <div className="sticky top-0 border-b p-6 flex items-center justify-between border-gray-200 rounded-t-xl" style={{ backgroundColor: '#FAF9F5' }}>
-            <h2 className={`text-xl font-bold ${'text-gray-900'}`}>Reply to Review</h2>
+            <div className="rounded-lg md:rounded-xl w-full max-w-2xl max-h-[90vh] border border-gray-200 shadow-2xl overflow-hidden flex flex-col" style={{ backgroundColor: '#FAF9F5' }}>
+          <div className="sticky top-0 border-b p-4 md:p-6 flex items-center justify-between border-gray-200 rounded-t-lg md:rounded-t-xl" style={{ backgroundColor: '#FAF9F5' }}>
+            <h2 className={`text-lg md:text-xl font-bold ${'text-gray-900'}`}>Reply to Review</h2>
             <button onClick={closeReplyModal} className={`p-2 rounded-lg transition-colors ${'hover:bg-gray-100'}`}>
               <X size={20} className={'text-gray-600'} />
             </button>
           </div>
 
-          <div className="p-6">
-              <div className={`mb-6 p-4 rounded-lg border ${'bg-gray-50 border-gray-200'}`}>
+          <div className="p-4 md:p-6">
+              <div className={`mb-4 md:mb-6 p-3 md:p-4 rounded-lg border ${'bg-gray-50 border-gray-200'}`}>
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs md:text-sm">
                     {replyModal.review?.name.charAt(0)}
                   </div>
-                  <h3 className={`font-semibold ${'text-gray-900'}`}>{replyModal.review?.name}</h3>
+                  <h3 className={`font-semibold text-sm ${'text-gray-900'}`}>{replyModal.review?.name}</h3>
                   <div className="flex items-center gap-1">
                     {renderStars(replyModal.review?.rating || 0)}
                   </div>
                 </div>
-                <p className={`text-sm leading-relaxed ${'text-gray-700'}`}>{replyModal.review?.comment}</p>
+                <p className={`text-xs md:text-sm leading-relaxed ${'text-gray-700'}`}>{replyModal.review?.comment}</p>
               </div>
 
-              <div className="mb-6">
-                <label className={`block text-sm font-semibold mb-3 ${'text-gray-900'}`}>Your Reply</label>
+              <div className="mb-4 md:mb-6">
+                <label className={`block text-xs md:text-sm font-semibold mb-2 md:mb-3 ${'text-gray-900'}`}>Your Reply</label>
                 <textarea
                   value={selectedReply}
                   onChange={(e) => setSelectedReply(e.target.value)}
@@ -669,15 +681,15 @@ export default function ReviewsPage() {
                 />
               </div>
 
-              <div className="flex justify-end gap-3">
+              <div className="flex justify-end gap-2 md:gap-3">
                 <button
                   onClick={closeReplyModal}
-                  className={`px-6 py-2.5 text-sm font-medium rounded-lg border transition-all ${'text-gray-700 bg-white border-gray-300 hover:bg-gray-50'}`}>
+                  className={`px-4 md:px-6 py-2 md:py-2.5 text-xs md:text-sm font-medium rounded-lg border transition-all ${'text-gray-700 bg-white border-gray-300 hover:bg-gray-50'}`}>
                   Cancel
                 </button>
                 <button 
                   onClick={handleReplySubmit}
-                  className="px-6 py-2.5 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md">
+                  className="px-4 md:px-6 py-2 md:py-2.5 text-xs md:text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md">
                   Send Reply
                 </button>
               </div>
