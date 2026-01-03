@@ -303,7 +303,6 @@ export default function ActivityHeatmap() {
           </div>
         </div>
       </div>
-      </div>
     </div>
   );
 }
