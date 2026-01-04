@@ -1,12 +1,13 @@
 'use client';
 
-import { TrendingUp, TrendingDown, MessageSquare, ThumbsUp, ThumbsDown, Clock, BarChart3, AlertCircle, Eye, Target, Zap, X, Send, Globe, Building2, Lock, Star, Flag } from 'lucide-react';
+import { TrendingUp, TrendingDown, MessageSquare, ThumbsUp, ThumbsDown, Clock, BarChart3, AlertCircle, Eye, Target, Zap, X, Send, Globe, Building2, Lock, Star, Flag, ChevronDown } from 'lucide-react';
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
 import { useState, useEffect, useMemo } from 'react';
 
 export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
   const [period, setPeriod] = useState('weekly'); // weekly, monthly, yearly, all
   const [activeTab, setActiveTab] = useState('metrics'); // 'metrics' or 'advanced'
+  const [showPeriodDropdown, setShowPeriodDropdown] = useState(false);
   const metrics = useMemo(() => {
     // Base numbers for current and previous periods
     const baseTotals = {
@@ -119,6 +120,18 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
       repliedReviews
     };
   }, [period]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (showPeriodDropdown && !e.target.closest('.period-dropdown-container')) {
+        setShowPeriodDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showPeriodDropdown]);
 
   // Format number based on period
   const formatNumber = (num) => {
@@ -252,8 +265,9 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
           <p className="text-sm text-gray-500 mt-0.5">Key metrics at a glance</p>
         </div>
         
-        {/* Period Selector */}
-        <div className="flex gap-2 bg-gray-100 p-1 rounded-lg flex-shrink-0">
+        {/* Period Selector - Buttons on desktop, Dropdown on mobile */}
+        {/* Desktop buttons */}
+        <div className="hidden md:flex gap-2 bg-gray-100 p-1 rounded-lg flex-shrink-0">
           <button
             onClick={() => setPeriod('weekly')}
             className={`px-4 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap ${
@@ -296,10 +310,56 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
           </button>
         </div>
 
-        {/* Advanced Toggle Button */}
+        {/* Mobile dropdown */}
+        <div className="md:hidden relative flex-shrink-0 period-dropdown-container">
+          <button 
+            onClick={() => setShowPeriodDropdown(!showPeriodDropdown)}
+            className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-all"
+          >
+            <span>{period.charAt(0).toUpperCase() + period.slice(1)}</span>
+            <ChevronDown size={16} className={`transition-transform ${showPeriodDropdown ? 'rotate-180' : ''}`} />
+          </button>
+          {showPeriodDropdown && (
+            <div className="absolute top-full right-0 mt-2 w-40 rounded-lg shadow-lg z-50 border border-gray-200 bg-white overflow-hidden">
+              {['weekly', 'monthly', 'yearly', 'all'].map((option) => (
+                <button
+                  key={option}
+                  onClick={() => {
+                    setPeriod(option);
+                    setShowPeriodDropdown(false);
+                  }}
+                  className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                    period === option 
+                      ? 'bg-indigo-50 text-indigo-700 font-medium'
+                      : 'text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  {option.charAt(0).toUpperCase() + option.slice(1)}
+                </button>
+              ))}
+              <div className="border-t border-gray-200">
+                <button
+                  onClick={() => {
+                    setActiveTab(activeTab === 'advanced' ? 'metrics' : 'advanced');
+                    setShowPeriodDropdown(false);
+                  }}
+                  className={`w-full text-left px-4 py-2.5 text-sm font-medium transition-colors ${
+                    activeTab === 'advanced'
+                      ? 'bg-indigo-50 text-indigo-700'
+                      : 'text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  Advanced
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Advanced Toggle Button - Desktop only */}
         <button
           onClick={() => setActiveTab(activeTab === 'advanced' ? 'metrics' : 'advanced')}
-          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap flex-shrink-0 ${
+          className={`hidden md:block px-4 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap flex-shrink-0 ${
             activeTab === 'advanced'
               ? 'bg-indigo-600 text-white'
               : 'bg-gray-100 text-gray-700 hover:text-gray-900'
@@ -311,8 +371,8 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
 
       {/* METRICS SECTION - Always Visible */}
       <div className="w-full">
-        {/* Metrics Grid - 6 column layout for full metrics in compact view */}
-        <div className="grid grid-cols-6 gap-2.5 w-full">
+        {/* Metrics Grid - 2 column on mobile, 6 column on desktop */}
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-2.5 w-full">
         <MetricCard 
           icon={MessageSquare} 
           label="Total Reviews" 
@@ -427,15 +487,11 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
       {/* ADVANCED ANALYTICS - Expand/Collapse Below Metrics */}
       {activeTab === 'advanced' && (
       <div className="w-full mt-6">
-        {/* Advanced Cards - Single Row Layout */}
-        <div className="grid gap-3 w-full" style={{ 
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gridAutoRows: 'auto'
-        }}>
+        {/* Advanced Cards - 1 column on mobile, 3 columns on desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full">
         
         {/* Recent Critical Reviews */}
-        <div className="relative overflow-hidden rounded-lg border border-gray-200 p-2 hover:shadow-md transition-all group flex flex-col justify-between h-full w-full"
-             style={{ gridColumn: 'span 1' }}>
+        <div className="relative overflow-hidden rounded-lg border border-gray-200 p-1.5 md:p-2 hover:shadow-md transition-all group flex flex-col justify-between h-full w-full">
           {/* Header - Icon & Label */}
           <div className="flex items-start justify-between mb-1.5 w-full">
             <div className="flex items-center gap-1.5 min-w-0 flex-1">
@@ -467,7 +523,7 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
         </div>
 
         {/* AI Action Suggestions */}
-        <div className="flex-1 min-w-[180px] relative overflow-hidden rounded-lg border border-gray-200 p-2 hover:shadow-md transition-all group flex flex-col justify-between h-full w-full">
+        <div className="flex-1 min-w-[180px] relative overflow-hidden rounded-lg border border-gray-200 p-1.5 md:p-2 hover:shadow-md transition-all group flex flex-col justify-between h-full w-full">
           {/* Header - Icon & Label */}
           <div className="flex items-start justify-between mb-1.5 w-full">
             <div className="flex items-center gap-1.5 min-w-0 flex-1">
@@ -495,7 +551,7 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
         </div>
 
         {/* Keywords - Negative & Positive */}
-        <div className="relative overflow-hidden rounded-lg border border-gray-200 p-2 hover:shadow-md transition-all group flex flex-col justify-between h-full w-full">
+        <div className="relative overflow-hidden rounded-lg border border-gray-200 p-1.5 md:p-2 hover:shadow-md transition-all group flex flex-col justify-between h-full w-full">
           {/* Header - Icon & Label */}
           <div className="flex items-start justify-between mb-1.5 w-full">
             <div className="flex items-center gap-1.5 min-w-0 flex-1">

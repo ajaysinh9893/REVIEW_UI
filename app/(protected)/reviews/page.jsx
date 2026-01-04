@@ -1,16 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Search, Star, X, ChevronDown, Filter, Calendar, MessageSquare, TrendingUp, MapPin, Tag, CheckCircle, Clock, SlidersHorizontal } from 'lucide-react';
 import { usePrompt } from '@/src/components/usePrompt';
 import QuickAnalyticsPanel from '@/src/components/QuickAnalyticsPanel';
+import StickyFilterIcon from '@/src/components/StickyFilterIcon';
 
 export default function ReviewsPage() {
     const prompt = usePrompt();
     const [scrollY, setScrollY] = useState(0);
-    const fadeDistance = 80; // Smaller fade distance
+    const fadeDistance = 80;
     const fadeOpacity = Math.max(0, 1 - scrollY / fadeDistance);
     const [showMobileFilters, setShowMobileFilters] = useState(false);
+    const searchBarRef = useRef(null);
 
     useEffect(() => {
       const handleScroll = () => {
@@ -23,6 +25,7 @@ export default function ReviewsPage() {
     const [searchQuery, setSearchQuery] = useState('');
   const [replyModal, setReplyModal] = useState({ open: false, review: null });
   const [selectedReply, setSelectedReply] = useState('');
+  const [aiReplyLoading, setAiReplyLoading] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   
   const [filters, setFilters] = useState({
@@ -236,11 +239,71 @@ export default function ReviewsPage() {
   const openReplyModal = (review) => {
     setReplyModal({ open: true, review });
     setSelectedReply('');
+    generateAiReply(review);
+  };
+
+  const generateAiReply = async (review) => {
+    setAiReplyLoading(true);
+    
+    // Simulate AI reply generation based on review sentiment and content
+    setTimeout(() => {
+      const replies = {
+        positive: [
+          `Thank you so much for taking the time to share your wonderful feedback! We're thrilled that you had such a great experience. Your kind words mean a lot to us, and we're committed to maintaining the same high standards that impressed you. We'd love to welcome you back soon!`,
+          `We truly appreciate your glowing review! It's feedback like yours that motivates our team to deliver excellence every day. Thank you for being such a valued customer, and we look forward to serving you again in the future.`,
+          `Your kind words have absolutely made our day! We're so glad you enjoyed your experience with us. Thank you for the wonderful feedback, and we can't wait to see you again soon.`,
+          `We're so grateful for your enthusiastic review! Your satisfaction is our greatest reward, and we appreciate you choosing us. Thank you for the kind words—we look forward to seeing you again!`,
+          `It's wonderful to hear that we exceeded your expectations! Your positive feedback truly inspires us to continue delivering exceptional service. We're honored to have you as part of our community.`,
+          `Thank you for this amazing review! We're delighted you had such a positive experience. Our team works hard every day to provide the best service possible, and comments like yours make it all worthwhile.`,
+          `We're thrilled you're happy with our service! Your appreciation motivates us to keep raising the bar. Thank you for being a valued customer, and we hope to see you soon!`,
+          `Your wonderful feedback made everyone on our team smile! We're so proud to have provided you with an exceptional experience. Thank you for the kind words and for choosing us!`,
+          `We can't thank you enough for taking the time to share such positive feedback! It's customers like you that make what we do so rewarding. We look forward to serving you again.`,
+          `Thank you for the five-star review! We pride ourselves on delivering quality and excellence, and we're so glad it showed in your experience. We can't wait to welcome you back!`
+        ],
+        neutral: [
+          `Thank you for your feedback! We appreciate you taking the time to share your thoughts. If there's anything we can do to improve your experience in the future, please don't hesitate to reach out.`,
+          `We appreciate your review and feedback. Your input helps us continue to improve our services. If you have any suggestions, we'd love to hear them!`,
+          `Thank you for choosing us! We value your feedback and are always working to enhance our services.`,
+          `We're grateful for your review. Your feedback is important to us as we strive to serve you better. Feel free to contact us if you have any additional comments!`,
+          `Thank you for taking the time to leave a review. We appreciate customer input and are always looking for ways to improve. We hope to serve you again soon!`,
+          `We appreciate you sharing your thoughts with us. Your feedback helps us understand what's working well and where we can do better. Thank you for being a customer!`,
+          `Thank you for this feedback! We value your opinion and use customer reviews to continuously improve our services. We'd love to have you visit us again.`,
+          `We're grateful for your review. Your perspective is valuable to us, and we're committed to delivering the best experience possible. Thank you for your patronage!`
+        ],
+        negative: [
+          `Thank you for bringing this to our attention. We sincerely apologize that we didn't meet your expectations. Your feedback is invaluable to us, and we'd like the opportunity to make things right. Please contact us directly so we can address your concerns.`,
+          `We're sorry to hear about your experience. Your satisfaction is important to us, and we appreciate you sharing this feedback. We'd love to discuss how we can improve and regain your trust.`,
+          `We truly appreciate your honest feedback and apologize for falling short. We take your concerns seriously and are committed to doing better. Please reach out to us directly—we'd like to make this right.`,
+          `We sincerely apologize for the disappointing experience you had. Your feedback is crucial to us, and we take it very seriously. We would greatly appreciate the opportunity to address this and make amends.`,
+          `Thank you for your honest review. We're sorry we didn't meet your expectations on this visit. We'd like to understand what went wrong and work to improve. Please get in touch with us directly.`,
+          `We regret that your experience wasn't up to our standards. Your feedback helps us identify areas for improvement. We'd genuinely like to make this right—please reach out to our team.`,
+          `We're truly sorry you had a negative experience with us. Your satisfaction matters greatly, and we want to learn from this. We'd love the chance to address your concerns and do better.`,
+          `Thank you for your candid feedback. We apologize that we disappointed you. We're committed to improvement and would welcome the opportunity to discuss your concerns directly with you.`,
+          `We appreciate you taking the time to share your concerns. We regret that we fell short of your expectations. Please don't hesitate to contact us—we want to make things right.`,
+          `Your feedback is important to us, and we sincerely apologize for not delivering the experience you deserved. We'd like to have the opportunity to address this and improve. Thank you for giving us a chance to respond.`
+        ]
+      };
+
+      // Determine sentiment based on rating and keywords
+      let sentiment = 'neutral';
+      if (review.rating >= 4) {
+        sentiment = 'positive';
+      } else if (review.rating <= 2) {
+        sentiment = 'negative';
+      }
+
+      const replyOptions = replies[sentiment];
+      const randomReply = replyOptions[Math.floor(Math.random() * replyOptions.length)];
+      
+      setSelectedReply(randomReply);
+      setAiReplyLoading(false);
+    }, 1500);
   };
 
   const closeReplyModal = () => {
     setReplyModal({ open: false, review: null });
     setSelectedReply('');
+    setAiReplyLoading(false);
   };
 
   const handleReplySubmit = () => {
@@ -331,7 +394,7 @@ export default function ReviewsPage() {
 
   return (
     <div className="min-h-screen font-sans" style={{ backgroundColor: '#FAF9F5' }}>
-      <div className="p-4 md:p-6 lg:p-10 pt-4 md:pt-8 lg:pt-20 max-w-7xl mx-auto lg:pr-24">
+      <div className="p-4 md:p-6 lg:p-10 md:pt-8 lg:pt-20 max-w-7xl mx-auto lg:pr-24">
         <div className="max-w-7xl mx-auto">
           {/* Quick Analytics Panel - Top */}
           <div className="mb-6 md:mb-8 w-full">
@@ -339,7 +402,7 @@ export default function ReviewsPage() {
           </div>
 
           {/* Mobile Filter Toggle */}
-          <div className="lg:hidden mb-6 flex gap-2">
+          <div className="hidden md:flex mb-6 gap-2">
             <button
               onClick={() => setShowMobileFilters(!showMobileFilters)}
               className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-all"
@@ -436,17 +499,6 @@ export default function ReviewsPage() {
                       />
                     </div>
 
-                    <div>
-                      <label className={`block text-xs font-semibold mb-2 uppercase tracking-wide ${'text-gray-700'}`}>
-                        Source
-                      </label>
-                      <FilterDropdown 
-                        label="Source" 
-                        filterKey="source" 
-                        options={filterOptions.source}
-                        icon={MessageSquare}
-                      />
-                    </div>
 
                     <div>
                       <label className={`block text-xs font-semibold mb-2 uppercase tracking-wide ${'text-gray-700'}`}>
@@ -492,7 +544,7 @@ export default function ReviewsPage() {
               {/* Main Content Area */}
               <div className="lg:col-span-9">
                 {/* Search Bar */}
-                <div className={`rounded-lg md:rounded-xl border p-3 md:p-4 mb-4 md:mb-6 border-gray-200`}>
+                <div ref={searchBarRef} className={`rounded-lg md:rounded-xl border p-3 md:p-4 mb-4 md:mb-6 border-gray-200`}>
                   <div className="relative">
                     <Search size={18} className={`absolute left-3 md:left-4 top-1/2 -translate-y-1/2 ${'text-gray-400'}`} />
                     <input
@@ -671,13 +723,32 @@ export default function ReviewsPage() {
               </div>
 
               <div className="mb-4 md:mb-6">
-                <label className={`block text-xs md:text-sm font-semibold mb-2 md:mb-3 ${'text-gray-900'}`}>Your Reply</label>
+                <div className="flex items-center justify-between mb-2 md:mb-3">
+                  <label className={`block text-xs md:text-sm font-semibold ${'text-gray-900'}`}>Your Reply (AI Generated)</label>
+                  <button
+                    onClick={() => generateAiReply(replyModal.review)}
+                    disabled={aiReplyLoading}
+                    className={`text-xs font-medium px-3 py-1.5 rounded-lg flex items-center gap-1 transition-all ${
+                      aiReplyLoading 
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                        : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'
+                    }`}
+                  >
+                    <svg className={`w-4 h-4 ${aiReplyLoading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    {aiReplyLoading ? 'Generating...' : 'Refresh'}
+                  </button>
+                </div>
                 <textarea
                   value={selectedReply}
                   onChange={(e) => setSelectedReply(e.target.value)}
                   rows={6}
-                  className={`w-full px-4 py-3 text-sm rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none border ${'border-gray-300 bg-white text-gray-900 placeholder-gray-500'}`}
-                  placeholder="Write a professional and helpful response..."
+                  className={`w-full px-4 py-3 text-sm rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none border ${
+                    aiReplyLoading ? 'bg-gray-100 opacity-60' : ''
+                  } ${'border-gray-300 bg-white text-gray-900 placeholder-gray-500'}`}
+                  placeholder="AI reply will be generated..."
+                  disabled={aiReplyLoading}
                 />
               </div>
 
@@ -697,6 +768,16 @@ export default function ReviewsPage() {
           </div>
         </div>
       )}
+
+      {/* Sticky Filter Icon - Mobile Only */}
+      <StickyFilterIcon 
+        searchBarRef={searchBarRef}
+        filters={filters}
+        setFilters={setFilters}
+        filterOptions={filterOptions}
+        clearAllFilters={clearAllFilters}
+        getActiveFilters={getActiveFilters}
+      />
 
       {/* Prompt Renderer */}
       <prompt.PromptRenderer />

@@ -187,40 +187,40 @@ export default function FAQPage() {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="p-10 max-w-7xl mx-auto pr-24">
+    <div className="min-h-screen font-sans overflow-y-scroll" style={{ backgroundColor: '#FAF9F5' }}>
+      <div className="p-4 md:p-6 lg:p-10 md:pt-8 lg:pt-20 max-w-7xl mx-auto lg:pr-24">
       {/* Header Section */}
-      <div className="text-center mb-12">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-full mb-4">
-          <HelpCircle className="text-indigo-600" size={32} />
+      <div className="text-center mb-8 md:mb-12">
+        <div className="inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 bg-indigo-100 rounded-full mb-3 md:mb-4">
+          <HelpCircle className="text-indigo-600" size={24} />
         </div>
-        <h1 className="text-4xl font-bold text-gray-900 mb-3">Frequently Asked Questions</h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 md:mb-3">Frequently Asked Questions</h1>
+        <p className="text-sm md:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto">
           Find answers to common questions about our platform. Can&apos;t find what you&apos;re looking for? Contact our support team.
         </p>
       </div>
 
       {/* Search Bar */}
-      <div className="max-w-3xl mx-auto mb-8">
+      <div className="max-w-3xl mx-auto mb-6 md:mb-8">
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
           <input
             type="text"
             placeholder="Search for answers..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-4 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm"
+            className="w-full pl-12 pr-4 py-3 md:py-4 text-sm md:text-base border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm"
           />
         </div>
       </div>
 
       {/* Category Pills */}
-      <div className="flex justify-center gap-3 mb-10 flex-wrap">
+      <div className="flex justify-center gap-2 md:gap-3 mb-8 md:mb-10 flex-wrap">
         {categories.map(category => (
           <button
             key={category}
             onClick={() => setActiveCategory(category)}
-            className={`px-5 py-2.5 rounded-lg font-medium transition-all ${
+            className={`px-3 md:px-5 py-2 md:py-2.5 text-sm md:text-base rounded-lg font-medium transition-all ${
               activeCategory === category
                 ? 'bg-indigo-600 text-white shadow-md'
                 : 'bg-white text-gray-700 border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50'
@@ -231,12 +231,12 @@ export default function FAQPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
         {/* Main FAQ Section */}
-        <div className="col-span-8">
+        <div className="lg:col-span-2">
           {filteredFAQs.map((category) => (
             <div key={category.category} className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">{category.category}</h2>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 md:mb-4">{category.category}</h2>
               <div className="space-y-3">
                 {category.questions.map((faq) => (
                   <div
@@ -245,9 +245,9 @@ export default function FAQPage() {
                   >
                     <button
                       onClick={() => toggleFAQ(faq.id)}
-                      className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
+                      className="w-full px-4 md:px-6 py-4 md:py-5 flex items-center justify-between text-left hover:bg-gray-50 transition-colors gap-2"
                     >
-                      <span className="font-semibold text-gray-900 pr-4">{faq.question}</span>
+                      <span className="font-medium md:font-semibold text-sm md:text-base text-gray-900">{faq.question}</span>
                       {openFAQ === faq.id ? (
                         <ChevronUp className="text-indigo-600 flex-shrink-0" size={20} />
                       ) : (
@@ -255,7 +255,7 @@ export default function FAQPage() {
                       )}
                     </button>
                     {openFAQ === faq.id && (
-                      <div className="px-6 pb-5 pt-2 text-gray-600 leading-relaxed border-t border-gray-100">
+                      <div className="px-4 md:px-6 pb-4 md:pb-5 pt-2 text-sm md:text-base text-gray-600 leading-relaxed border-t border-gray-100">
                         {faq.answer}
                       </div>
                     )}
@@ -266,25 +266,25 @@ export default function FAQPage() {
           ))}
 
           {filteredFAQs.length === 0 && (
-            <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-              <Search size={48} className="mx-auto text-gray-400 mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No results found</h3>
-              <p className="text-gray-600">Try adjusting your search or browse all categories</p>
+            <div className="bg-white rounded-lg md:rounded-xl border border-gray-200 p-8 md:p-12 text-center">
+              <Search size={40} className="mx-auto text-gray-400 mb-3 md:mb-4" />
+              <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2">No results found</h3>
+              <p className="text-sm md:text-base text-gray-600">Try adjusting your search or browse all categories</p>
             </div>
           )}
         </div>
 
         {/* Sidebar - Quick Links & Contact */}
-        <div className="col-span-4 space-y-6">
+        <div className="lg:col-span-1 space-y-6">
           {/* Quick Links */}
-          <div className="rounded-xl border border-gray-200 p-6 sticky top-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h3>
+          <div className="rounded-lg md:rounded-xl border border-gray-200 p-4 md:p-6 sticky top-6">
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4">Quick Links</h3>
             <div className="space-y-2">
               {categories.slice(1).map(category => (
                 <button
                   key={category}
                   onClick={() => setActiveCategory(category)}
-                  className="w-full text-left px-4 py-2.5 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-all font-medium"
+                  className="w-full text-left px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-all font-medium"
                 >
                   {category}
                 </button>
@@ -293,25 +293,25 @@ export default function FAQPage() {
           </div>
 
           {/* Resources */}
-          <div className="rounded-xl border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Helpful Resources</h3>
+          <div className="rounded-lg md:rounded-xl border border-gray-200 p-4 md:p-6">
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4">Helpful Resources</h3>
             <div className="space-y-3">
               {resources.map((resource, idx) => (
                 <a
                   key={idx}
                   href={resource.link}
-                  className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-all group"
+                  className="flex items-start gap-3 p-2 md:p-3 rounded-lg hover:bg-gray-50 transition-all group"
                 >
-                  <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 flex-shrink-0">
+                  <div className="w-9 h-9 md:w-10 md:h-10 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 flex-shrink-0">
                     {resource.icon}
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-medium text-gray-900 group-hover:text-indigo-600 transition-colors mb-1">
+                    <h4 className="font-medium text-sm md:text-base text-gray-900 group-hover:text-indigo-600 transition-colors mb-1">
                       {resource.title}
                     </h4>
-                    <p className="text-sm text-gray-600">{resource.description}</p>
+                    <p className="text-xs md:text-sm text-gray-600">{resource.description}</p>
                   </div>
-                  <ExternalLink size={16} className="text-gray-400 group-hover:text-indigo-600 transition-colors mt-1" />
+                  <ExternalLink size={14} className="text-gray-400 group-hover:text-indigo-600 transition-colors mt-1 flex-shrink-0" />
                 </a>
               ))}
             </div>
@@ -320,29 +320,29 @@ export default function FAQPage() {
       </div>
 
       {/* Contact Support Section */}
-      <div className="mt-16 rounded-2xl p-10 border border-gray-200" style={{ backgroundColor: '#F3F1ED' }}>
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">Still need help?</h2>
-          <p className="text-lg text-gray-600">
+      <div className="mt-12 md:mt-16 rounded-lg md:rounded-2xl p-6 md:p-10 border border-gray-200" style={{ backgroundColor: '#F3F1ED' }}>
+        <div className="text-center mb-8 md:mb-10">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 md:mb-3">Still need help?</h2>
+          <p className="text-sm md:text-lg text-gray-600">
             If you couldn&apos;t find the answer you&apos;re looking for, our support team is ready to assist you.
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
           {contactOptions.map((option, idx) => {
             const colors = getColorClasses(option.colorClass);
             return (
               <div
                 key={idx}
-                className="rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-all"
+                className="rounded-lg md:rounded-xl border border-gray-200 p-4 md:p-6 hover:shadow-lg transition-all"
               >
-                <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${colors.bg} ${colors.text} mb-4`}>
+                <div className={`w-11 h-11 md:w-14 md:h-14 rounded-lg md:rounded-xl flex items-center justify-center ${colors.bg} ${colors.text} mb-3 md:mb-4`}>
                   {option.icon}
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">{option.title}</h3>
-                <p className="text-sm text-gray-600 mb-3">{option.description}</p>
-                <p className="text-sm font-semibold text-gray-700 mb-4">{option.contact}</p>
-                <button className={`w-full text-white px-4 py-2.5 rounded-lg transition-all font-medium ${colors.button}`}>
+                <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">{option.title}</h3>
+                <p className="text-xs md:text-sm text-gray-600 mb-2 md:mb-3">{option.description}</p>
+                <p className="text-xs md:text-sm font-semibold text-gray-700 mb-3 md:mb-4">{option.contact}</p>
+                <button className={`w-full text-white px-4 py-2 md:py-2.5 rounded-lg transition-all font-medium text-sm md:text-base ${colors.button}`}>
                   {option.action}
                 </button>
               </div>
@@ -351,68 +351,68 @@ export default function FAQPage() {
         </div>
 
         {/* Contact Form */}
-        <div className="rounded-xl border border-gray-200 p-8 max-w-3xl mx-auto">
-          <h3 className="text-xl font-bold text-gray-900 mb-6">Send us a message</h3>
-          <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="rounded-lg md:rounded-xl border border-gray-200 p-6 md:p-8 max-w-3xl mx-auto">
+          <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4 md:mb-6">Send us a message</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Name</label>
               <input
                 type="text"
                 placeholder="John Doe"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full px-3 md:px-4 py-2 md:py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Email</label>
               <input
                 type="email"
                 placeholder="john@example.com"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full px-3 md:px-4 py-2 md:py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
             </div>
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+            <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Subject</label>
             <input
               type="text"
               placeholder="How can we help?"
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full px-3 md:px-4 py-2 md:py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
           </div>
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+            <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Message</label>
             <textarea
               rows={5}
               placeholder="Describe your issue or question..."
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+              className="w-full px-3 md:px-4 py-2 md:py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
             />
           </div>
-          <button className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-all font-medium shadow-sm hover:shadow-md flex items-center justify-center gap-2">
-            <Send size={20} />
+          <button className="w-full bg-indigo-600 text-white px-6 py-2.5 md:py-3 text-sm md:text-base rounded-lg hover:bg-indigo-700 transition-all font-medium shadow-sm hover:shadow-md flex items-center justify-center gap-2">
+            <Send size={18} />
             Send Message
           </button>
         </div>
       </div>
 
       {/* Business Hours */}
-      <div className="mt-8 rounded-xl border border-gray-200 p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
-              <Clock className="text-indigo-600" size={24} />
+      <div className="mt-6 md:mt-8 rounded-lg md:rounded-xl border border-gray-200 p-4 md:p-6">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-4">
+          <div className="flex items-start md:items-center gap-3 md:gap-4 flex-1">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Clock className="text-indigo-600" size={20} />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Support Hours</h3>
-              <p className="text-sm text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM EST</p>
+              <h3 className="font-semibold text-sm md:text-base text-gray-900">Support Hours</h3>
+              <p className="text-xs md:text-sm text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM EST</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <MapPin className="text-green-600" size={24} />
+          <div className="flex items-start md:items-center gap-3 md:gap-4 flex-1">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <MapPin className="text-green-600" size={20} />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Our Location</h3>
-              <p className="text-sm text-gray-600">123 Business St, Suite 100, New York, NY 10001</p>
+              <h3 className="font-semibold text-sm md:text-base text-gray-900">Our Location</h3>
+              <p className="text-xs md:text-sm text-gray-600">123 Business St, Suite 100, New York, NY 10001</p>
             </div>
           </div>
         </div>

@@ -79,7 +79,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen font-sans" style={{ backgroundColor: '#FAF9F5' }}>
-      <div className="p-4 md:p-6 lg:p-10 pt-8 md:pt-20 max-w-7xl mx-auto lg:pr-24">
+      <div className="p-4 md:p-6 lg:p-10 md:pt-8 lg:pt-20 max-w-7xl mx-auto lg:pr-24">
           {/* Top Row - Visibility Snapshot, Overall Rating & Alerts */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 mb-8">
             {/* Visibility Snapshot - 50% width */}

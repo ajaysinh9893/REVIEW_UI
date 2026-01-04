@@ -59,8 +59,8 @@ export default function SubscriptionMinimal() {
   };
 
   return (
-    <div className="min-h-screen font-sans" style={{ backgroundColor: '#FAF9F5' }}>
-      <div className="py-12 px-6 pr-24" style={{ maskImage: `linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,${Math.min(1, fadeOpacity + 0.5)}) 80px, rgba(0,0,0,1) 160px)`, WebkitMaskImage: `linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,${Math.min(1, fadeOpacity + 0.5)}) 80px, rgba(0,0,0,1) 160px)` }}>
+    <div className="min-h-screen font-sans overflow-y-scroll" style={{ backgroundColor: '#FAF9F5' }}>
+      <div className="p-4 md:p-6 lg:p-10 md:pt-8 lg:pt-20 lg:pr-24">
         {/* Header with glass effect - sticky */}
         <div className="sticky top-0 z-10 -mx-6 px-6 pt-4 pb-6 mb-8" style={{ opacity: scrollOpacity, backdropFilter: `blur(${10 - scrollOpacity * 10}px)`, backgroundColor: scrollOpacity < 0.9 ? 'rgba(250, 249, 245, 0.7)' : 'transparent' }}>
         </div>

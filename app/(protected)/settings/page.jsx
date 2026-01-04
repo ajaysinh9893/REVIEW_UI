@@ -393,7 +393,7 @@ export default function Settings() {
       <Sidebar />
       
       <div className="overflow-auto">
-        <div className="p-10 pr-24">
+        <div className="p-4 md:p-6 lg:p-10 md:pt-8 lg:pt-20 lg:pr-24">
           <div className="max-w-7xl mx-auto">
             {/* Header */}
             <div className="mb-8">

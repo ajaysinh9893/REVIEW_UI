@@ -95,7 +95,7 @@ export default function ProtectedLayout({ children }) {
       </div>
 
       <Sidebar />
-      <div className="flex-1 flex flex-col relative w-full md:ml-72 pt-14 md:pt-0">
+      <div className="flex-1 flex flex-col relative w-full md:ml-72 pt-14 md:pt-0 overflow-hidden">
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden w-full">
           {/* Notification Bell Icon - Desktop Only */}

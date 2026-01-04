@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Search, Sparkles, Calendar, Filter, Download, RefreshCw, ChevronDown, X, Plus } from 'lucide-react';
 
 export default function ReportsPage() {
   const [scrollY, setScrollY] = useState(0);
+  const resultsRef = useRef(null);
   const fadeDistance = 80; // Smaller fade distance
   const fadeOpacity = Math.max(0, 1 - scrollY / fadeDistance);
 
@@ -51,7 +52,13 @@ export default function ReportsPage() {
   ];
 
   const handleSearch = async () => {
+    if (!searchQuery) {
+      alert('Please enter a search query');
+      return;
+    }
+    
     setIsProcessing(true);
+    
     // Simulate AI processing - Replace with actual Google API call
     setTimeout(() => {
       setReportData({
@@ -64,6 +71,14 @@ export default function ReportsPage() {
         filters: activeFilters
       });
       setIsProcessing(false);
+      
+      // Scroll to results on both mobile and desktop when data loads
+      setTimeout(() => {
+        const resultsElement = document.querySelector('[data-results-section="true"]');
+        if (resultsElement) {
+          resultsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     }, 2000);
   };
 
@@ -473,78 +488,147 @@ export default function ReportsPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="p-4 md:p-6 lg:p-10 pt-8 md:pt-20 max-w-7xl mx-auto lg:pr-24">
+      <div className="p-4 md:p-6 lg:p-10 md:pt-8 lg:pt-20 max-w-7xl mx-auto lg:pr-24">
           {/* AI-Powered Search Bar */}
-          <div className="rounded-xl border border-gray-200 p-6 mb-8">
-            <div className="flex items-center gap-3 mb-4">
-              <Sparkles size={24} className="text-indigo-600" />
-              <h2 className="text-lg font-semibold text-gray-900">AI-Powered Report Builder</h2>
+          <div className="rounded-lg md:rounded-xl border border-gray-200 p-4 md:p-6 mb-6 md:mb-8">
+            <div className="flex items-center gap-2 md:gap-3 mb-4">
+              <Sparkles size={20} className="md:w-6 md:h-6 text-indigo-600 flex-shrink-0" />
+              <h2 className="text-base md:text-lg font-semibold text-gray-900">AI-Powered Report Builder</h2>
             </div>
 
             {/* Main Search Input */}
             <div className="relative mb-4">
-              <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Search size={18} className="md:w-5 md:h-5 absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-gray-400 flex-shrink-0" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                placeholder="Ask anything... e.g., 'Show me call details every Monday' or 'Get all 5-star reviews from last week'"
-                className="w-full pl-12 pr-4 py-4 text-base border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all placeholder:text-gray-400"
+                placeholder="Ask anything... e.g., 'Show call details'"
+                className="w-full pl-10 md:pl-12 pr-3 md:pr-4 py-2.5 md:py-4 text-sm md:text-base border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all placeholder:text-gray-400"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full transition-all"
+                  className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full transition-all"
                 >
-                  <X size={18} className="text-gray-400" />
+                  <X size={16} className="md:w-5 md:h-5 text-gray-400" />
                 </button>
               )}
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex items-center gap-3">
-                <button
-                  onClick={handleSearch}
-                  disabled={!searchQuery || isProcessing}
-                  className="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isProcessing ? (
-                    <>
-                      <RefreshCw size={18} className="animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles size={18} />
-                      Generate Report
-                    </>
-                  )}
-                </button>
+            {/* Filter Button - Mobile Only */}
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="md:hidden w-full flex items-center justify-center gap-1 px-3 py-2.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-all mb-4"
+            >
+              <Filter size={16} className="flex-shrink-0" />
+              <span>{showFilters ? 'Hide' : 'Show'} Advanced Filters</span>
+              <ChevronDown size={14} className={`transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+            </button>
 
-                <button
-                  onClick={() => setShowFilters(!showFilters)}
-                  className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
-                >
-                  <Filter size={18} />
-                  Advanced Filters
-                  <ChevronDown size={16} className={`transition-transform ${showFilters ? 'rotate-180' : ''}`} />
-                </button>
-
-                {searchQuery && (
-                  <button
-                    onClick={handleSaveQuery}
-                    className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
-                  >
-                    <Plus size={18} />
-                    Save Query
-                  </button>
-                )}
-              </div>
-
-            {/* Advanced Filters */}
+            {/* Advanced Filters - Mobile Collapsible */}
             {showFilters && (
-              <div className="mt-6 pt-6 border-t border-gray-200 grid grid-cols-3 gap-4">
+              <div className="mb-4 pt-4 border-t border-gray-200 max-h-64 overflow-y-auto">
+                <div className="space-y-3 pb-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-2">Data Type</label>
+                    <select
+                      value={activeFilters.dataType}
+                      onChange={(e) => setActiveFilters({...activeFilters, dataType: e.target.value})}
+                      className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    >
+                      {dataTypeOptions.map(opt => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-2">Date Range</label>
+                    <input
+                      type="date"
+                      value={activeFilters.dateRange}
+                      onChange={(e) => setActiveFilters({...activeFilters, dateRange: e.target.value})}
+                      className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 mb-2">Frequency</label>
+                    <select
+                      value={activeFilters.frequency}
+                      onChange={(e) => setActiveFilters({...activeFilters, frequency: e.target.value})}
+                      className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    >
+                      {frequencyOptions.map(opt => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Saved Queries - Mobile Only */}
+            <div className="md:hidden mb-4 pt-4 border-t border-gray-200">
+              <h3 className="text-xs font-semibold text-gray-900 mb-2.5">Quick Queries</h3>
+              <div className="flex flex-wrap gap-2">
+                {savedQueries.map((query, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleQuickQuery(query)}
+                    className="px-2.5 py-1.5 text-xs font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-300 transition-all"
+                  >
+                    {query}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Action Buttons - Desktop View */}
+            <div className="hidden md:flex md:flex-row md:items-center md:gap-3">
+              <button
+                onClick={handleSearch}
+                disabled={!searchQuery || isProcessing}
+                className="flex items-center justify-center gap-2 px-6 py-2.5 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isProcessing ? (
+                  <>
+                    <RefreshCw size={16} className="animate-spin" />
+                    <span>Processing...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={16} />
+                    <span>Generate Report</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
+              >
+                <Filter size={18} />
+                Advanced Filters
+                <ChevronDown size={16} className={`transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+              </button>
+
+              {searchQuery && (
+                <button
+                  onClick={handleSaveQuery}
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
+                >
+                  <Plus size={18} />
+                  Save Query
+                </button>
+              )}
+            </div>
+
+            {/* Advanced Filters - Desktop View */}
+            {showFilters && (
+              <div className="hidden md:block mt-6 pt-6 border-t border-gray-200 grid grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Data Type</label>
                   <select
@@ -583,9 +667,9 @@ export default function ReportsPage() {
               </div>
             )}
 
-            {/* Saved Queries */}
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <h3 className="text-base font-semibold text-gray-900 mb-4">Saved Queries</h3>
+            {/* Saved Queries - Desktop View */}
+            <div className="hidden md:block mt-6 pt-6 border-t border-gray-200">
+              <h3 className="text-base font-semibold text-gray-900 mb-3">Saved Queries</h3>
               <div className="flex flex-wrap gap-2">
                 {savedQueries.map((query, index) => (
                   <button
@@ -598,70 +682,117 @@ export default function ReportsPage() {
                 ))}
               </div>
             </div>
+
+            {/* Generate Button - Mobile Only (at the bottom) */}
+            <button
+              onClick={handleSearch}
+              disabled={!searchQuery || isProcessing}
+              className="md:hidden w-full flex items-center justify-center gap-2 px-4 py-2.5 mt-4 bg-indigo-600 text-white text-xs font-semibold rounded-lg hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isProcessing ? (
+                <>
+                  <RefreshCw size={16} className="animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <Sparkles size={16} />
+                  Generate Report
+                </>
+              )}
+            </button>
           </div>
 
-          {/* Results Table */}
+          {/* Results - Card View on Mobile, Table on Desktop */}
           {reportData && (
-            <div className="rounded-xl border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-6">
+            <div ref={resultsRef} data-results-section="true">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">Report Results</h3>
-                  <p className="text-sm text-gray-500 mt-1">Query: &quot;{reportData.query}&quot;</p>
+                  <h3 className="text-base md:text-lg font-semibold text-gray-900">Report Results</h3>
+                  <p className="text-xs md:text-sm text-gray-500 mt-1 truncate">Query: &quot;{reportData.query}&quot;</p>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="relative">
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className="relative flex-1 md:flex-none">
                     <button 
                       onClick={() => setShowExportMenu(!showExportMenu)}
-                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
+                      className="w-full md:w-auto flex items-center justify-center gap-1 md:gap-2 px-3 md:px-4 py-2 text-xs md:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
                     >
-                      <Download size={18} />
-                      Export Report
-                      <ChevronDown size={16} className={`transition-transform ${showExportMenu ? 'rotate-180' : ''}`} />
+                      <Download size={16} className="md:w-5 md:h-5 flex-shrink-0" />
+                      <span className="hidden md:inline">Export</span>
+                      <ChevronDown size={14} className={`md:w-4 md:h-4 transition-transform ${showExportMenu ? 'rotate-180' : ''}`} />
                     </button>
                     
                     {showExportMenu && (
-                      <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg z-50">
+                      <div className="absolute left-0 md:right-0 mt-2 w-full md:w-48 bg-white border border-gray-300 rounded-lg shadow-lg z-50">
                         <button
                           onClick={() => {
                             handleExportCSV();
                             setShowExportMenu(false);
                           }}
-                          className="w-full text-left px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 border-b border-gray-200 transition-all"
+                          className="w-full text-left px-4 py-2.5 md:py-3 text-xs md:text-sm font-medium text-gray-700 hover:bg-gray-50 border-b border-gray-200 transition-all"
                         >
-                          📄 CSV File
+                          📄 CSV
                         </button>
                         <button
                           onClick={() => {
                             handleExportPDF();
                             setShowExportMenu(false);
                           }}
-                          className="w-full text-left px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 border-b border-gray-200 transition-all"
+                          className="w-full text-left px-4 py-2.5 md:py-3 text-xs md:text-sm font-medium text-gray-700 hover:bg-gray-50 border-b border-gray-200 transition-all"
                         >
-                          📕 PDF File
+                          📕 PDF
                         </button>
                         <button
                           onClick={() => {
                             handleExportExcel();
                             setShowExportMenu(false);
                           }}
-                          className="w-full text-left px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all rounded-b-lg"
+                          className="w-full text-left px-4 py-2.5 md:py-3 text-xs md:text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all rounded-b-lg"
                         >
-                          📊 Excel File
+                          📊 Excel
                         </button>
                       </div>
                     )}
                   </div>
-                  <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-all">
+                  <button className="hidden md:flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-all">
                     <Calendar size={18} />
-                    Schedule Report
+                    Schedule
                   </button>
                 </div>
               </div>
 
-              {/* Data Table */}
-              <div className="overflow-x-auto">
+              {/* Mobile Card View */}
+              <div className={`md:hidden space-y-3 ${reportData.results.length > 5 ? 'overflow-y-auto' : ''}`} style={reportData.results.length > 5 ? { maxHeight: 'calc(100vh - 400px)' } : {}}>
+                {reportData.results.map((row, index) => (
+                  <div key={index} className="rounded-lg border border-gray-200 bg-white hover:border-indigo-300 hover:shadow-md transition-all p-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Date</p>
+                        <p className="text-base font-bold text-gray-900">{row.date}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Calls</p>
+                        <p className="text-base font-bold text-indigo-600">{row.calls}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Duration</p>
+                        <p className="text-base font-bold text-gray-900">{row.duration}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Source</p>
+                        <span className="px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700">
+                          {row.source}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop Table View */}
+              <div className={`hidden md:block overflow-x-auto rounded-lg ${reportData.results.length > 10 ? 'overflow-y-auto' : ''}`} style={reportData.results.length > 10 ? { maxHeight: 'calc(100vh - 400px)' } : {}}>
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
+                  <thead className="bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
                     <tr>
                       <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                         Date
@@ -699,22 +830,22 @@ export default function ReportsPage() {
               </div>
 
               {/* Summary Stats */}
-              <div className="mt-6 pt-6 border-t border-gray-200 grid grid-cols-4 gap-4">
-                <div className="text-center">
-                  <p className="text-sm text-blue-700 font-semibold mb-2">Total Calls</p>
-                  <p className="text-2xl font-bold text-gray-900">85</p>
+              <div className="mt-6 pt-6 border-t border-gray-200 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                <div className="text-center p-3 md:p-4 bg-blue-50 rounded-lg">
+                  <p className="text-xs md:text-sm text-blue-700 font-semibold mb-2">Total Calls</p>
+                  <p className="text-xl md:text-2xl font-bold text-gray-900">85</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-sm text-red-700 font-semibold mb-2">Avg. Duration</p>
-                  <p className="text-2xl font-bold text-gray-900">2h 19m</p>
+                <div className="text-center p-3 md:p-4 bg-red-50 rounded-lg">
+                  <p className="text-xs md:text-sm text-red-700 font-semibold mb-2">Avg. Duration</p>
+                  <p className="text-xl md:text-2xl font-bold text-gray-900">2h 19m</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-sm text-yellow-700 font-semibold mb-2">Peak Day</p>
-                  <p className="text-2xl font-bold text-gray-900">Mon, Dec 9</p>
+                <div className="text-center p-3 md:p-4 bg-yellow-50 rounded-lg">
+                  <p className="text-xs md:text-sm text-yellow-700 font-semibold mb-2">Peak Day</p>
+                  <p className="text-xl md:text-2xl font-bold text-gray-900">Mon</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-sm text-green-700 font-semibold mb-2">Growth</p>
-                  <p className="text-2xl font-bold text-green-700">+12.5%</p>
+                <div className="text-center p-3 md:p-4 bg-green-50 rounded-lg">
+                  <p className="text-xs md:text-sm text-green-700 font-semibold mb-2">Growth</p>
+                  <p className="text-xl md:text-2xl font-bold text-green-700">+12.5%</p>
                 </div>
               </div>
             </div>

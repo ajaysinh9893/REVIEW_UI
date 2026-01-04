@@ -133,8 +133,8 @@ export default function ActivityHeatmap() {
   };
 
   return (
-    <div className="w-full h-full">
-      <div className="rounded-xl border border-gray-200 p-4 md:p-6 shadow-sm">
+    <div className="w-full h-full overflow-hidden">
+      <div className="rounded-xl border border-gray-200 p-4 md:p-6 shadow-sm overflow-hidden h-full flex flex-col">
       <div className="mb-2">
         <div className="flex flex-row items-center justify-between gap-4 mb-4 flex-wrap">
           <div className="flex-1 min-w-0">
@@ -195,8 +195,9 @@ export default function ActivityHeatmap() {
         </div>
       </div>
 
-      {/* Heatmap Grid - Horizontally scrollable on mobile only */}
-      <div className="flex flex-col gap-px overflow-x-auto md:overflow-x-visible">
+      {/* Heatmap Grid - Responsive sizing, scrollbar only when needed */}
+      <div className="w-full overflow-x-auto overflow-y-hidden flex-1 scrollbar-hide" style={{ scrollbarGutter: 'stable' }}>
+        <div className="flex flex-col gap-px w-full\">
         {/* Hour labels (top) */}
         <div className="flex gap-px">
           <div className="w-10 h-[20px] flex-shrink-0"></div>
@@ -228,8 +229,8 @@ export default function ActivityHeatmap() {
                   className="w-full h-full transition-all hover:scale-110 hover:shadow-lg cursor-pointer rounded"
                   title={`${day} ${hours[hourIdx]}: ${intensity} interactions`}
                 >
-                  {/* Tooltip on hover */}
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-white text-gray-900 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 border border-gray-200">
+                  {/* Tooltip on hover - positioned above to stay visible */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-white text-gray-900 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-[9999] border border-gray-200\">
                     <div className="font-semibold">{day} {hours[hourIdx]}</div>
                     <div>{intensity} interactions</div>
                   </div>
@@ -238,10 +239,11 @@ export default function ActivityHeatmap() {
             ))}
           </div>
         ))}
+        </div>
       </div>
 
       {/* Legend */}
-      <div className="mt-6 pt-4 border-t border-gray-200">
+      <div className="pt-4 border-t border-gray-200">
         <div className="grid grid-cols-2 gap-4 md:gap-6">
           {/* Low Activity */}
           <div className="flex items-center justify-between">

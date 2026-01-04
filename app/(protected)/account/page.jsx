@@ -28,7 +28,7 @@ export default function Account() {
 
   return (
     <div style={{ backgroundColor: '#FAF9F5' }}>
-      <div className="p-10 max-w-5xl mx-auto">
+      <div className="p-4 md:p-6 lg:p-10 md:pt-8 lg:pt-20 max-w-7xl mx-auto lg:pr-24">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Account Settings</h1>
         <p className="text-gray-600 mb-8">Manage your account information and preferences</p>
         

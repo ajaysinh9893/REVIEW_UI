@@ -909,7 +909,7 @@ export default function VisibilityActivityPageRecharts() {
   };
 
   return (
-    <div className="min-h-screen font-sans" style={{ backgroundColor: '#FAF9F5' }}>
+    <div className="min-h-screen font-sans overflow-y-scroll overflow-x-hidden" style={{ backgroundColor: '#FAF9F5' }}>
       <div className="p-4 md:p-6 lg:p-10 pt-8 md:pt-20 max-w-7xl mx-auto">
         
         {/* KPI Overview Card and Activity Trends - Combined Section */}
@@ -1128,14 +1128,14 @@ export default function VisibilityActivityPageRecharts() {
         </div>
 
         {/* Activity Heatmap and Top Locations Row */}
-        <div className="flex flex-col lg:flex-row gap-3 mb-6">
+        <div className="flex flex-col lg:flex-row gap-3 mb-6 overflow-hidden">
           {/* Activity Heatmap - flex-1 */}
-          <div className="flex-1">
+          <div className="flex-1 min-w-0 overflow-hidden">
             <ActivityHeatmap />
           </div>
 
           {/* Top Locations - 30% on desktop, full on mobile */}
-          <div className="w-full lg:w-[30%] rounded-xl border border-gray-200 p-4 md:p-6 shadow-sm flex flex-col">
+          <div className="w-full lg:w-[30%] rounded-xl border border-gray-200 p-4 md:p-6 shadow-sm flex flex-col flex-shrink-0">
             <div className="flex items-center gap-2 mb-4">
               <MapPin className="text-red-600 w-4 md:w-[18px] md:h-[18px]" size={18} />
               <h3 className="text-base md:text-lg font-bold text-gray-900">Top Locations</h3>
