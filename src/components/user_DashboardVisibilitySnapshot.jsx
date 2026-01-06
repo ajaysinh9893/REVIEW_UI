@@ -1,9 +1,10 @@
 'use client';
 
+import React, { useMemo } from 'react';
 import { TrendingUp, TrendingDown, Eye, MousePointer, Phone, Navigation } from 'lucide-react';
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
 
-export default function DashboardVisibilitySnapshot({ visibilityData, period = 'daily' }) {
+function DashboardVisibilitySnapshot({ visibilityData, period = 'daily' }) {
   // Calculate KPI metrics from visibility data
   const calculateKPIs = () => {
     if (!visibilityData || visibilityData.length === 0) return null;
@@ -217,3 +218,5 @@ export default function DashboardVisibilitySnapshot({ visibilityData, period = '
     </div>
   );
 }
+
+export default React.memo(DashboardVisibilitySnapshot);

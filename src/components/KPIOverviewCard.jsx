@@ -212,7 +212,7 @@ export default function KPIOverviewCard({ visibilityData, period = 'daily', sele
 
               <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
                 {/* Mini Sparkline Chart */}
-                <div className="h-6 w-12 flex-shrink-0">
+                <div className="h-6 w-12 flex-shrink-0" style={{ width: '48px', height: '24px' }}>
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={kpi.data.map((value, i) => ({ value, index: i }))}>
                       <Line

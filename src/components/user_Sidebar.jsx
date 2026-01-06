@@ -1,0 +1,150 @@
+'use client';
+
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { BarChart3, User, FileText, TrendingUp, Clock, HelpCircle, Users, Settings, LogOut, Lock, CreditCard, Menu, X } from 'lucide-react';
+import { useLogout } from '@/src/context/user_LogoutContext';
+import { useState, useEffect } from 'react';
+
+export default function Sidebar() {
+  const pathname = usePathname();
+  const { openLogoutConfirm } = useLogout();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  return (
+    <>
+      {/* Mobile Menu Toggle */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="fixed top-2 left-4 z-50 md:hidden p-2 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all"
+      >
+        {isOpen ? <X size={24} className="text-gray-900" /> : <Menu size={24} className="text-gray-900" />}
+      </button>
+
+      {/* Mobile Overlay */}
+      {isOpen && isMobile && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-40 z-40 md:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={`fixed left-0 top-0 h-screen w-72 bg-white border-r border-gray-200 p-[12px] pb-[30px] flex flex-col transition-all duration-300 z-40 ${
+        isMobile ? (isOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'
+      } md:translate-x-0`}>
+      <div className="flex items-center gap-3 mb-3 pl-5 pt-0.5">
+        <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center shadow-sm flex-shrink-0">
+          <span className="text-white text-base font-bold">A</span>
+        </div>
+        <span className="text-lg font-semibold text-gray-900">App Name</span>
+      </div>
+
+      <div className="border-t border-gray-200 mb-4"></div>
+
+      <nav className="space-y-1.5">
+        <Link href="/user/dashboard">
+          <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
+            pathname === '/user/dashboard'
+              ? 'bg-gray-100 text-gray-900'
+              : 'text-gray-700 hover:bg-gray-50'
+          }`}>
+            <BarChart3 size={19} />
+            <span>Dashboard</span>
+          </button>
+        </Link>
+        <Link href="/user/reviews">
+          <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
+            pathname === '/user/reviews'
+              ? 'bg-gray-100 text-gray-900'
+              : 'text-gray-700 hover:bg-gray-50'
+          }`}>
+            <FileText size={19} />
+            <span>Reviews</span>
+          </button>
+        </Link>
+        <Link href="/user/visibility">
+          <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
+            pathname === '/user/visibility'
+              ? 'bg-gray-100 text-gray-900'
+              : 'text-gray-700 hover:bg-gray-50'
+          }`}>
+            <TrendingUp size={19} />
+            <span>Visibility</span>
+          </button>
+        </Link>
+        <Link href="/user/reports">
+          <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
+            pathname === '/user/reports'
+              ? 'bg-gray-100 text-gray-900'
+              : 'text-gray-700 hover:bg-gray-50'
+          }`}>
+            <BarChart3 size={19} />
+            <span>Reports</span>
+          </button>
+        </Link>
+        <Link href="/user/directory">
+          <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
+            pathname === '/user/directory'
+              ? 'bg-gray-100 text-gray-900'
+              : 'text-gray-700 hover:bg-gray-50'
+          }`}>
+            <Users size={19} />
+            <span>Directory</span>
+          </button>
+        </Link>
+        <Link href="/user/faq">
+          <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
+            pathname === '/user/faq'
+              ? 'bg-gray-100 text-gray-900'
+              : 'text-gray-700 hover:bg-gray-50'
+          }`}>
+            <HelpCircle size={19} />
+            <span>FAQ</span>
+          </button>
+        </Link>
+      </nav>
+
+      <div className="border-t border-gray-200 mt-auto pt-4 mb-4"></div>
+
+      <nav className="space-y-1.5">
+        <Link href="/user/subscription">
+          <button className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
+            pathname === '/user/subscription'
+              ? 'bg-gray-100 text-gray-900'
+              : 'text-gray-700 hover:bg-gray-50'
+          }`}>
+            <CreditCard size={19} />
+            <span>Subscription</span>
+          </button>
+        </Link>
+        <Link href="/user/settings">
+          <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all text-gray-700 hover:bg-gray-50">
+            <Settings size={19} />
+            <span>Settings</span>
+          </button>
+        </Link>
+        <div className="border-t border-gray-200 my-2"></div>
+        <button onClick={openLogoutConfirm} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all text-red-600 hover:bg-red-50">
+          <LogOut size={19} />
+          <span>Logout</span>
+        </button>
+      </nav>
+    </div>
+    </>
+  );
+}

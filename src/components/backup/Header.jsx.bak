@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Bell, Settings, LogOut, User, X } from 'lucide-react';
-import { useLogout } from '@/src/context/LogoutContext';
+import { useLogout } from '@/src/context/user_LogoutContext';
 
 export default function Header() {
   const { openLogoutConfirm } = useLogout();

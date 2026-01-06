@@ -1,11 +1,57 @@
 'use client';
 
-import { TrendingUp, TrendingDown, Eye, MousePointer, Phone, Navigation } from 'lucide-react';
+import React, { useMemo } from 'react';
+import { TrendingUp, TrendingDown, Eye, MousePointer, Phone, Navigation, Calendar } from 'lucide-react';
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
 
-export default function DashboardVisibilitySnapshot({ visibilityData, period = 'daily' }) {
+function KPIOverviewCard({ visibilityData, period = 'daily', selectedTimeframe = 'daily', onTimeframeChange, onCardClick, selectedMetric, showTimeframeButtons = false }) {
   // Calculate KPI metrics from visibility data
   const calculateKPIs = () => {
+    // If visibilityData is already an object with KPI values (not an array)
+    if (!Array.isArray(visibilityData)) {
+      // Generate mock data points for sparkline visualization
+      const generateSparklineData = (value) => {
+        const baseValue = value * 0.8;
+        return [
+          baseValue * 0.7,
+          baseValue * 0.85,
+          baseValue * 0.9,
+          baseValue * 0.95,
+          value * 0.98,
+          value,
+          value * 1.02,
+          value * 0.99
+        ];
+      };
+
+      return {
+        impressions: {
+          total: visibilityData.impressions?.value || 0,
+          current: visibilityData.impressions?.value || 0,
+          change: visibilityData.impressions?.trend || 0,
+          data: generateSparklineData(visibilityData.impressions?.value || 0)
+        },
+        clicks: {
+          total: visibilityData.websiteClicks?.value || 0,
+          current: visibilityData.websiteClicks?.value || 0,
+          change: visibilityData.websiteClicks?.trend || 0,
+          data: generateSparklineData(visibilityData.websiteClicks?.value || 0)
+        },
+        calls: {
+          total: visibilityData.calls?.value || 0,
+          current: visibilityData.calls?.value || 0,
+          change: visibilityData.calls?.trend || 0,
+          data: generateSparklineData(visibilityData.calls?.value || 0)
+        },
+        directions: {
+          total: visibilityData.directions?.value || 0,
+          current: visibilityData.directions?.value || 0,
+          change: visibilityData.directions?.trend || 0,
+          data: generateSparklineData(visibilityData.directions?.value || 0)
+        }
+      };
+    }
+
     if (!visibilityData || visibilityData.length === 0) return null;
 
     const currentPeriod = visibilityData[visibilityData.length - 1];
@@ -20,7 +66,7 @@ export default function DashboardVisibilitySnapshot({ visibilityData, period = '
     // Calculate changes
     const calcChange = (current, previous) => {
       if (!previous || previous === 0) return 0;
-      return (((current - previous) / previous) * 100).toFixed(1);
+      return ((current - previous) / previous * 100).toFixed(1);
     };
 
     const impressionsChange = calcChange(currentPeriod.impressions, previousPeriod.impressions);
@@ -30,6 +76,9 @@ export default function DashboardVisibilitySnapshot({ visibilityData, period = '
 
     // Calculate click-through rate
     const ctr = ((totalClicks / totalImpressions) * 100).toFixed(1);
+
+    // Calculate average per day
+    const avgPerDay = (totalImpressions / visibilityData.length).toFixed(0);
 
     return {
       impressions: {
@@ -56,6 +105,7 @@ export default function DashboardVisibilitySnapshot({ visibilityData, period = '
         change: directionsChange,
         data: visibilityData.map(d => d.directions)
       },
+      avgPerDay: avgPerDay,
       ctr: ctr
     };
   };
@@ -63,77 +113,84 @@ export default function DashboardVisibilitySnapshot({ visibilityData, period = '
   const kpiData = calculateKPIs();
 
   if (!kpiData) {
-    return <div className="text-gray-500 p-6">No data available</div>;
+    return <div className="text-gray-500">No data available</div>;
   }
 
   const kpis = [
     {
       metric: 'impressions',
       title: 'Impressions',
-      value: kpiData?.impressions?.total?.toLocaleString?.() || '0',
-      change: `${parseFloat(kpiData?.impressions?.change || 0) > 0 ? '+' : ''}${kpiData?.impressions?.change || '0'}%`,
-      isPositive: parseFloat(kpiData?.impressions?.change || 0) >= 0,
-      icon: <Eye size={24} />,
+      value: kpiData.impressions.total.toString(),
+      change: `${parseFloat(kpiData.impressions.change) > 0 ? '+' : ''}${kpiData.impressions.change}%`,
+      isPositive: parseFloat(kpiData.impressions.change) >= 0,
+      icon: <Eye size={20} />,
       color: 'text-blue-600',
       bgColor: 'bg-blue-50',
       chartColor: '#2563eb',
-      data: kpiData?.impressions?.data || [],
-      subtitle: `${kpiData?.impressions?.current?.toLocaleString?.() || '0'} today`
+      data: kpiData.impressions.data,
+      subtitle: `${kpiData.impressions.current.toString()} latest`
     },
     {
       metric: 'clicks',
       title: 'Clicks',
-      value: kpiData?.clicks?.total?.toLocaleString?.() || '0',
-      change: `${parseFloat(kpiData?.clicks?.change || 0) > 0 ? '+' : ''}${kpiData?.clicks?.change || '0'}%`,
-      isPositive: parseFloat(kpiData?.clicks?.change || 0) >= 0,
-      icon: <MousePointer size={24} />,
+      value: kpiData.clicks.total.toString(),
+      change: `${parseFloat(kpiData.clicks.change) > 0 ? '+' : ''}${kpiData.clicks.change}%`,
+      isPositive: parseFloat(kpiData.clicks.change) >= 0,
+      icon: <MousePointer size={20} />,
       color: 'text-red-600',
       bgColor: 'bg-red-50',
       chartColor: '#dc2626',
-      data: kpiData?.clicks?.data || [],
-      subtitle: `${kpiData?.ctr || '0'}% CTR`
+      data: kpiData.clicks.data,
+      subtitle: `${kpiData.ctr}% CTR`
     },
     {
       metric: 'calls',
       title: 'Calls',
-      value: kpiData?.calls?.total?.toLocaleString?.() || '0',
-      change: `${parseFloat(kpiData?.calls?.change || 0) > 0 ? '+' : ''}${kpiData?.calls?.change || '0'}%`,
-      isPositive: parseFloat(kpiData?.calls?.change || 0) >= 0,
-      icon: <Phone size={24} />,
+      value: kpiData.calls.total.toString(),
+      change: `${parseFloat(kpiData.calls.change) > 0 ? '+' : ''}${kpiData.calls.change}%`,
+      isPositive: parseFloat(kpiData.calls.change) >= 0,
+      icon: <Phone size={20} />,
       color: 'text-yellow-600',
       bgColor: 'bg-yellow-50',
       chartColor: '#d97706',
-      data: kpiData?.calls?.data || [],
-      subtitle: `${kpiData?.calls?.current || '0'} today`
+      data: kpiData.calls.data,
+      subtitle: `${kpiData.calls.current} latest`
     },
     {
       metric: 'directions',
       title: 'Directions',
-      value: kpiData?.directions?.total?.toLocaleString?.() || '0',
-      change: `${parseFloat(kpiData?.directions?.change || 0) > 0 ? '+' : ''}${kpiData?.directions?.change || '0'}%`,
-      isPositive: parseFloat(kpiData?.directions?.change || 0) >= 0,
-      icon: <Navigation size={24} />,
+      value: kpiData.directions.total.toString(),
+      change: `${parseFloat(kpiData.directions.change) > 0 ? '+' : ''}${kpiData.directions.change}%`,
+      isPositive: parseFloat(kpiData.directions.change) >= 0,
+      icon: <Navigation size={20} />,
       color: 'text-green-600',
       bgColor: 'bg-green-50',
       chartColor: '#16a34a',
-      data: kpiData?.directions?.data || [],
-      subtitle: `${kpiData?.directions?.current || '0'} today`
+      data: kpiData.directions.data,
+      subtitle: `${kpiData.directions.current} latest`
     }
   ];
 
-  return (
-    <div className="rounded-xl border border-gray-200 p-6 h-full flex flex-col bg-transparent">
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold text-gray-900">Visibility Snapshot</h2>
-        <p className="text-sm text-gray-500 mt-1">Key performance indicators from your visibility data</p>
-      </div>
+  // Determine period label
+  const periodLabel = period === 'daily' ? 'This Week' : period === 'weekly' ? 'This Month' : 'Last 6 Months';
 
+  return (
+    <div className="rounded-xl h-full flex flex-col">
       <div className="grid grid-cols-2 gap-2 md:gap-3 flex-1">
         {kpis.map((kpi, index) => (
           <div 
             key={index} 
-            className={`relative overflow-hidden rounded-lg border p-3 md:p-4 transition-all group flex flex-col justify-between ${
-              'border-gray-200 hover:shadow-md'
+            onClick={() => {
+              if (kpi.metric !== 'avgPerDay') {
+                onCardClick && onCardClick(selectedMetric === kpi.metric ? null : kpi.metric);
+              }
+            }}
+            className={`relative overflow-hidden rounded-lg border p-2 md:p-3 transition-all group flex flex-col justify-between ${
+              kpi.metric === 'avgPerDay' ? 'cursor-not-allowed' : 'cursor-pointer'
+            } ${
+              selectedMetric === kpi.metric 
+                ? 'border-indigo-600 bg-indigo-50 shadow-md' 
+                : 'border-gray-200 hover:shadow-md'
             }`}>
             {/* Header - Icon & Title */}
             <div className="flex items-start justify-between mb-1 md:mb-1">
@@ -154,7 +211,7 @@ export default function DashboardVisibilitySnapshot({ visibilityData, period = '
                 <p className="text-sm text-gray-500 leading-none">{kpi.subtitle}</p>
               </div>
 
-              <div className="flex flex-col items-end gap-0.5">
+              <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
                 {/* Mini Sparkline Chart */}
                 <div className="h-6 w-12 flex-shrink-0" style={{ width: '48px', height: '24px' }}>
                   <ResponsiveContainer width="100%" height="100%">
@@ -163,9 +220,11 @@ export default function DashboardVisibilitySnapshot({ visibilityData, period = '
                         type="monotone"
                         dataKey="value"
                         stroke={kpi.chartColor}
-                        strokeWidth={1.5}
+                        strokeWidth={2}
                         dot={false}
                         isAnimationActive={false}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                     </LineChart>
                   </ResponsiveContainer>
@@ -199,17 +258,17 @@ export default function DashboardVisibilitySnapshot({ visibilityData, period = '
           <div>
             <p className="text-xs text-gray-600 mb-0.5">Total Engagement</p>
             <p className="text-base font-bold text-gray-900">
-              {((kpiData?.clicks?.total || 0) + (kpiData?.calls?.total || 0) + (kpiData?.directions?.total || 0)).toLocaleString()}
+              {(kpiData.clicks.total + kpiData.calls.total + kpiData.directions.total).toString()}
             </p>
           </div>
           <div>
             <p className="text-xs text-gray-600 mb-0.5">Click-Through Rate</p>
-            <p className="text-base font-bold text-indigo-600">{kpiData?.ctr || '0'}%</p>
+            <p className="text-base font-bold text-indigo-600">{kpiData.ctr}%</p>
           </div>
           <div>
             <p className="text-xs text-gray-600 mb-0.5">Conversion Rate</p>
             <p className="text-base font-bold text-gray-900">
-              {(((kpiData?.calls?.total || 0) / (kpiData?.impressions?.total || 1)) * 100).toFixed(2)}%
+              {((kpiData.calls.total / kpiData.impressions.total) * 100).toFixed(2)}%
             </p>
           </div>
         </div>
@@ -217,3 +276,5 @@ export default function DashboardVisibilitySnapshot({ visibilityData, period = '
     </div>
   );
 }
+
+export default React.memo(KPIOverviewCard);

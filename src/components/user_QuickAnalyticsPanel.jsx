@@ -1,10 +1,11 @@
 'use client';
 
+import React from 'react';
 import { TrendingUp, TrendingDown, MessageSquare, ThumbsUp, ThumbsDown, Clock, BarChart3, AlertCircle, Eye, Target, Zap, X, Send, Globe, Building2, Lock, Star, Flag, ChevronDown } from 'lucide-react';
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
 import { useState, useEffect, useMemo } from 'react';
 
-export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
+function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
   const [period, setPeriod] = useState('weekly'); // weekly, monthly, yearly, all
   const [activeTab, setActiveTab] = useState('metrics'); // 'metrics' or 'advanced'
   const [showPeriodDropdown, setShowPeriodDropdown] = useState(false);
@@ -590,3 +591,5 @@ export default function QuickAnalyticsPanel({ filteredReviews, allReviews }) {
     </div>
   );
 }
+
+export default React.memo(QuickAnalyticsPanel);
