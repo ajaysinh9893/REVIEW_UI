@@ -69,72 +69,62 @@ export default function ActivityHeatmap() {
 
   const currentData = weeklyHeatmapData[selectedMetric];
 
-  // Color palette - 3 variations for each color
-  const colorPalette = {
-    blue: ['#A8C7FA', '#4285F4', '#4285F4'], // Light 1, Original, Original
-    red: ['#F6AEA9', '#EA4335', '#EA4335'],   // Light 1, Original, Original
-    yellow: ['#FDE293', '#FBBC04', '#FBBC04'], // Light 1, Original, Original
-    green: ['#A8DAB5', '#34A853', '#34A853']   // Light 1, Original, Original
-  };
-
-  // Get color based on intensity (0-100) - limited 3-color palette
+  // Get color based on intensity (0-100) - single blue color with intensity variations
   const getColor = (intensity) => {
     if (intensity === 0) return 'bg-gray-100';
+    if (intensity < 15) return 'bg-blue-100';
+    if (intensity < 30) return 'bg-blue-200';
+    if (intensity < 45) return 'bg-blue-300';
+    if (intensity < 60) return 'bg-blue-400';
+    if (intensity < 75) return 'bg-blue-500';
+    if (intensity < 90) return 'bg-blue-600';
+    return 'bg-blue-700';
+  };
+
+  // Get color style using blue gradient with intensity
+  const getColorStyle = (intensity) => {
+    if (intensity === 0) return { backgroundColor: '#f3f4f6' };
+    if (intensity < 15) return { backgroundColor: '#dbeafe' }; // blue-100
+    if (intensity < 30) return { backgroundColor: '#bfdbfe' }; // blue-200
+    if (intensity < 45) return { backgroundColor: '#93c5fd' }; // blue-300
+    if (intensity < 60) return { backgroundColor: '#60a5fa' }; // blue-400
+    if (intensity < 75) return { backgroundColor: '#3b82f6' }; // blue-500
+    if (intensity < 90) return { backgroundColor: '#2563eb' }; // blue-600
+    return { backgroundColor: '#1d4ed8' }; // blue-700
+  };
+
+  // Get tooltip position class based on hour index to avoid off-screen tooltips
+  const getTooltipPosition = (hourIdx, dayIdx) => {
+    const totalDays = days.length;
+    const isLastRow = dayIdx === totalDays - 1;
     
-    // Map intensity to one of 12 levels using 4 color groups with 3 variations each
-    if (intensity < 13) {
-      // Blue - Light variations
-      if (intensity < 5) return 'bg-opacity-30' + ' bg-blue-400';
-      if (intensity < 9) return 'bg-opacity-60' + ' bg-blue-400';
-      return 'bg-opacity-100 bg-blue-400';
-    } else if (intensity < 26) {
-      // Green - Light variations
-      if (intensity < 17) return 'bg-opacity-30 bg-green-500';
-      if (intensity < 22) return 'bg-opacity-60 bg-green-500';
-      return 'bg-opacity-100 bg-green-500';
-    } else if (intensity < 39) {
-      // Yellow - Light variations
-      if (intensity < 30) return 'bg-opacity-30 bg-yellow-400';
-      if (intensity < 35) return 'bg-opacity-60 bg-yellow-400';
-      return 'bg-opacity-100 bg-yellow-400';
+    if (hourIdx === 0) {
+      // First column: always shift right by 1
+      return 'left-0 translate-x-8';
+    } else if (hourIdx === 23) {
+      // Last column: shift left by 1
+      return 'right-0 -translate-x-8';
     } else {
-      // Red - Light variations
-      if (intensity < 60) return 'bg-opacity-30 bg-red-500';
-      if (intensity < 80) return 'bg-opacity-60 bg-red-500';
-      return 'bg-opacity-100 bg-red-500';
+      // Middle columns
+      if (isLastRow) {
+        return 'left-1/2 -translate-x-1/2 -translate-x-8'; // Last row: center then shift left by 1
+      } else {
+        return 'left-1/2 -translate-x-1/2'; // Other rows: center
+      }
     }
   };
 
-  // Alternative simpler approach using inline styles for exact colors
-  const getColorStyle = (intensity) => {
-    if (intensity === 0) return { backgroundColor: '#f3f4f6' };
-    
-    if (intensity < 13) {
-      // Blue variations
-      if (intensity < 5) return { backgroundColor: '#A8C7FA' }; // Blue Light 1
-      if (intensity < 9) return { backgroundColor: '#A8C7FA' }; // Blue Light 1
-      return { backgroundColor: '#4285F4' }; // Blue Original
-    } else if (intensity < 26) {
-      // Green variations
-      if (intensity < 17) return { backgroundColor: '#A8DAB5' }; // Green Light 1
-      if (intensity < 22) return { backgroundColor: '#A8DAB5' }; // Green Light 1
-      return { backgroundColor: '#34A853' }; // Green Original
-    } else if (intensity < 39) {
-      // Yellow variations
-      if (intensity < 30) return { backgroundColor: '#FDE293' }; // Yellow Light 1
-      if (intensity < 35) return { backgroundColor: '#FDE293' }; // Yellow Light 1
-      return { backgroundColor: '#FBBC04' }; // Yellow Original
-    } else {
-      // Red variations
-      if (intensity < 60) return { backgroundColor: '#F6AEA9' }; // Red Light 1
-      if (intensity < 80) return { backgroundColor: '#F6AEA9' }; // Red Light 1
-      return { backgroundColor: '#EA4335' }; // Red Original
-    }
+  // Get tooltip vertical position based on day index to avoid off-screen tooltips
+  const getTooltipVerticalPosition = (dayIdx) => {
+    const totalDays = days.length;
+    if (dayIdx === 0) return 'top-full mt-2 translate-y-3'; // First row: show below by -1 position
+    if (dayIdx === totalDays - 1) return 'bottom-full mb-2 -translate-y-3'; // Last row: show above by -1 position (reverse of top)
+    return 'bottom-full mb-2'; // Middle rows: show above
   };
 
   return (
-    <div className="w-full h-full overflow-hidden">
-      <div className="rounded-xl border border-gray-200 p-4 md:p-6 shadow-sm overflow-hidden h-full flex flex-col">
+    <div className="w-full h-full">
+      <div className="rounded-xl border border-gray-200 p-4 md:p-6 shadow-sm h-full flex flex-col">
       <div className="mb-2">
         <div className="flex flex-row items-center justify-between gap-4 mb-4 flex-wrap">
           <div className="flex-1 min-w-0">
@@ -196,7 +186,7 @@ export default function ActivityHeatmap() {
       </div>
 
       {/* Heatmap Grid - Responsive sizing, scrollbar only when needed */}
-      <div className="w-full overflow-x-auto overflow-y-hidden flex-1 scrollbar-hide" style={{ scrollbarGutter: 'stable' }}>
+      <div className="w-full overflow-x-auto flex-1 scrollbar-hide pt-6" style={{ scrollbarGutter: 'stable' }}>
         <div className="flex flex-col gap-px w-full\">
         {/* Hour labels (top) */}
         <div className="flex gap-px">
@@ -211,7 +201,7 @@ export default function ActivityHeatmap() {
         </div>
 
         {/* Heatmap rows */}
-        {days.map((day) => (
+        {days.map((day, dayIdx) => (
           <div key={day} className="flex items-center gap-px">
             {/* Day label */}
             <div className="w-10 flex-shrink-0 h-[28px] flex items-center justify-end pr-2">
@@ -227,13 +217,15 @@ export default function ActivityHeatmap() {
                 <div
                   style={getColorStyle(intensity)}
                   className="w-full h-full transition-all hover:scale-110 hover:shadow-lg cursor-pointer rounded"
-                  title={`${day} ${hours[hourIdx]}: ${intensity} interactions`}
                 >
-                  {/* Tooltip on hover - positioned above to stay visible */}
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-white text-gray-900 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-[9999] border border-gray-200\">
-                    <div className="font-semibold">{day} {hours[hourIdx]}</div>
-                    <div>{intensity} interactions</div>
-                  </div>
+                </div>
+                {/* Tooltip on hover - positioned outside the colored cell */}
+                <div 
+                  className={`absolute ${getTooltipVerticalPosition(dayIdx)} ${getTooltipPosition(hourIdx, dayIdx)} px-2 py-1 bg-white text-gray-900 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 border border-gray-200`}
+                  style={dayIdx === days.length - 1 && hourIdx !== 0 && hourIdx !== 23 ? { left: 'calc(50% - 32px)' } : {}}
+                >
+                  <div className="font-semibold">{day} {hours[hourIdx]}</div>
+                  <div>{intensity} interactions</div>
                 </div>
               </div>
             ))}
@@ -243,46 +235,22 @@ export default function ActivityHeatmap() {
       </div>
 
       {/* Legend */}
-      <div className="pt-4 border-t border-gray-200">
-        <div className="grid grid-cols-2 gap-4 md:gap-6">
-          {/* Low Activity */}
-          <div className="flex items-center justify-between">
-            <span className="text-xs md:text-sm text-gray-600 font-semibold">Low Activity</span>
-            <div className="flex gap-1 md:gap-2">
-              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#A8C7FA' }}></div>
-              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#A8C7FA' }}></div>
-              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#4285F4' }}></div>
+      <div className="mt-8 pt-6 border-t border-gray-200">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-gray-700">Activity Intensity</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500">Less</span>
+            <div className="flex gap-1">
+              <div className="w-6 h-6 bg-gray-100 rounded"></div>
+              <div className="w-6 h-6 bg-blue-100 rounded"></div>
+              <div className="w-6 h-6 bg-blue-200 rounded"></div>
+              <div className="w-6 h-6 bg-blue-300 rounded"></div>
+              <div className="w-6 h-6 bg-blue-400 rounded"></div>
+              <div className="w-6 h-6 bg-blue-500 rounded"></div>
+              <div className="w-6 h-6 bg-blue-600 rounded"></div>
+              <div className="w-6 h-6 bg-blue-700 rounded"></div>
             </div>
-          </div>
-
-          {/* Medium Activity */}
-          <div className="flex items-center justify-between">
-            <span className="text-xs md:text-sm text-gray-600 font-semibold">Medium Activity</span>
-            <div className="flex gap-1 md:gap-2">
-              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#A8DAB5' }}></div>
-              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#A8DAB5' }}></div>
-              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#34A853' }}></div>
-            </div>
-          </div>
-
-          {/* Higher Activity */}
-          <div className="flex items-center justify-between">
-            <span className="text-xs md:text-sm text-gray-600 font-semibold">Higher Activity</span>
-            <div className="flex gap-1 md:gap-2">
-              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#FDE293' }}></div>
-              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#FDE293' }}></div>
-              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#FBBC04' }}></div>
-            </div>
-          </div>
-
-          {/* Peak Activity */}
-          <div className="flex items-center justify-between">
-            <span className="text-xs md:text-sm text-gray-600 font-semibold">Peak Activity</span>
-            <div className="flex gap-1 md:gap-2">
-              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#F6AEA9' }}></div>
-              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#F6AEA9' }}></div>
-              <div className="w-3 md:w-4 h-3 md:h-4 rounded" style={{ backgroundColor: '#EA4335' }}></div>
-            </div>
+            <span className="text-xs text-gray-500">More</span>
           </div>
         </div>
       </div>
